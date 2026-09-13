@@ -1,0 +1,21 @@
+draw*.html
+*.php
+*.bak
+*.backup*
+.gitconfig.gui
+open-git-gui.bat
+git-home/
+.ftpquota
+Baby/
+Customer/
+Logo/
+Products/
+QR/
+New products/
+LOGO.pdf
+README_FIXED.md
+README_SECURITY.md
+contact - Copy.html
+contact_backup.html
+contact_backup2.html
+products.html.backup.*
