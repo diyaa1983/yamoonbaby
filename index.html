@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>يامون بيبي - حفاظات أطفال عالية الجودة</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* Override hero layout for this page only */
+        .hero-content {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+        
+        .hero-text {
+            flex: 1;
+            order: 2;
+            margin-right: 2rem;
+        }
+        
+        .hero-image {
+            flex: none;
+            order: 1;
+            text-align: left;
+            margin-left: -2rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .hero-img {
+            width: 520px !important;
+            height: 520px !important;
+            max-width: none !important;
+            object-fit: cover;
+            border-radius: 30px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+        
+        .hero-title {
+            white-space: nowrap !important;
+            overflow: visible !important;
+        }
+
+        .btn-raffle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+            padding: 15px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1rem;
+            color: #3b2a00;
+            background: linear-gradient(135deg, #ffe66d 0%, #ffd166 45%, #ffb703 100%);
+            box-shadow: 0 8px 25px rgba(255, 183, 3, 0.45);
+            border: 2px solid rgba(255, 255, 255, 0.55);
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .btn-raffle:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 32px rgba(255, 183, 3, 0.55);
+            color: #3b2a00;
+        }
+
+        @media (max-width: 768px) {
+            .btn-raffle {
+                width: 100%;
+                max-width: 320px;
+                margin-left: auto;
+                margin-right: auto;
+                font-size: 0.95rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+                justify-content: center;
+            }
+            
+            .hero-text {
+                order: 1;
+                margin-right: 0;
+                width: 100%;
+                max-width: 100%;
+                padding: 0 0.75rem;
+            }
+            
+            .hero-image {
+                order: 2;
+                text-align: center;
+                flex: none;
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .hero-img {
+                width: min(380px, 86vw) !important;
+                height: auto !important;
+                max-width: 100% !important;
+            }
+            
+            .hero-title {
+                font-size: clamp(1.4rem, 6vw, 2.1rem) !important;
+                white-space: normal !important;
+                line-height: 1.4 !important;
+                overflow-wrap: break-word;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-img {
+                width: min(300px, 88vw) !important;
+                height: auto !important;
+                max-width: 100% !important;
+            }
+            
+            .hero-title {
+                font-size: clamp(1.35rem, 6.5vw, 1.85rem) !important;
+                white-space: normal !important;
+                line-height: 1.4 !important;
+            }
+        }
+        
+        /* Slide Up Button Styles */
+        .slide-up-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .slide-up-btn:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .slide-up-btn.show {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .slide-up-btn i {
+            transition: transform 0.3s ease;
+        }
+        
+        .slide-up-btn:hover i {
+            transform: translateY(-2px);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .slide-up-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .slide-up-btn {
+                bottom: 15px;
+                right: 15px;
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+<div class="header-logo-right">
+                    <img src="Logo/LOGO.png" alt="يامون بيبي" class="header-logo-img">
+                </div>
+                <div class="social-header">
+                    <a href="https://www.facebook.com/people/Ya-Moon-Baby/61572601671368/" class="social-header-link facebook" target="_blank">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://www.instagram.com/yamoon_baby/?igsh=d25sYmpzYnV0aHMy&utm_source=qr#" class="social-header-link instagram" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/962780991323" class="social-header-link whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+                
+
+
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link active">الرئيسية</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="products.html" class="nav-link">منتجاتنا</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="about.html" class="nav-link">من نحن</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="contact.html" class="nav-link">التواصل</a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-image">
+                    <img src="baby.png" alt="طفل سعيد" class="hero-img">
+                </div>
+                <div class="hero-text">
+                    <h1 class="hero-title" style="white-space: nowrap;">أفضل حفاظات الأطفال</h1>
+                    <p class="hero-subtitle">جودة عالية • حماية مثالية • راحة مطلقة</p>
+                    <p class="hero-description">
+                        اربح جائزة بقيمة 65000 الف دينار مع يامون بيبي
+                        <br>
+                        موعد السحب: 30-06-2027
+                    </p>
+                    <a href="raffle.html" class="btn btn-raffle">
+                        <i class="fas fa-gift"></i>
+                        للدخول إلى السحب اضغط هنا
+                    </a>
+                    <div class="hero-buttons">
+                        <a href="products.html" class="btn btn-primary">
+                            <i class="fas fa-shopping-cart"></i>
+                            تسوق الآن
+                        </a>
+                        <a href="about.html" class="btn btn-secondary">
+                            <i class="fas fa-info-circle"></i>
+                            تعرف علينا
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+    </section>
+
+    <!-- Company Overview Section -->
+    <section class="company-overview-section">
+        <div class="container">
+            <div class="overview-content">
+                <div class="overview-text">
+                    <h2 class="overview-title">نبذة عن الشركة</h2>
+                    <p class="overview-description">
+                        <strong>يامون بيبي</strong> هي جزء من شركة <strong>رامي سليمان وشريكه</strong>، 
+                        تأسست عام 2023 في الزرقاء - وادي العش، كشركة صناعية رائدة في إنتاج حفاظات الأطفال عالية الجودة.
+                    </p>
+                    <div class="overview-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">8400</div>
+                            <div class="stat-label">متر مربع</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">2023</div>
+                            <div class="stat-label">سنة التأسيس</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">جودة عربية</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="overview-image">
+                    <img src="Home1.jpg" alt="مصنع يامون بيبي" class="overview-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">لماذا تختارنا؟</h2>
+                <p class="section-subtitle">نحن نضع راحة طفلك وسلامته في المقام الأول</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>حماية مثالية</h3>
+                    <p>حفاظات مصممة بتقنية متقدمة لحماية طفلك من التسرب والبلل طوال اليوم</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>مواد طبيعية</h3>
+                    <p>مصنوعة من مواد طبيعية آمنة على بشرة طفلك الحساسة، خالية من المواد الضارة</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>راحة مطلقة</h3>
+                    <p>تصميم مريح يضمن راحة طفلك وحركته الطبيعية طوال اليوم</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3>معتمد عالمياً</h3>
+                    <p>شهادة ISO 9001:2015 وعلامة الجودة الأردنية، ضمان لجودة منتجاتنا</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h3>مصنع حديث</h3>
+                    <p>مصنع متكامل بأحدث التقنيات والآلات لضمان أعلى معايير الجودة</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>صناعة وطنية</h3>
+                    <p>نفخر بصناعتنا الوطنية ونطمح للتنافس عالمياً بجودة الصناعة الأردنية</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Showcase Section -->
+    <section class="products-showcase">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">منتجاتنا المميزة</h2>
+                <p class="section-subtitle">مجموعة شاملة من الأحجام تناسب جميع مراحل نمو طفلك</p>
+            </div>
+            
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Products/1.jpg" alt="حفاظات حديثي الولادة" class="product-img">
+                        <div class="product-badge new">جديد</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>حفاظات حجم 3</h3>
+                        <p> مخصص للأطفال من وزن 6 كيلو ولغاية 12 كيلو </p>
+                        <div class="product-features">
+                            <span class="feature-tag">حماية عالية</span>
+                            <span class="feature-tag">مريح</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Products/2.jpg" alt="حفاظات حجم 4" class="product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3>حفاظات حج 4</h3>
+                        <p>مخصص للأطفال من وزن 10 كيلو ولغاية 18 كيلو</p>
+                        <div class="product-features">
+                            <span class="feature-tag">امتصاص سريع</span>
+                            <span class="feature-tag">جودة عالية</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Products/3.jpg" alt="حفاظات حجم 4" class="product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3>حفاظات حجم 5</h3>
+                        <p>مخصص للأطفال من وزن 14 كيلو ولغاية 25 كيلو</p>
+                        <div class="product-features">
+                            <span class="feature-tag">مقاوم للتسرب</span>
+                            <span class="feature-tag">ناعم</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Products/4.jpg" alt="حفاظات حجم 6" class="product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3>حفاظات حجم 6</h3>
+                        <p>مخصص للاطفال + 16 كيلو</p>
+                        <div class="product-features">
+                            <span class="feature-tag">مريح</span>
+                            <span class="feature-tag">آمن</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Products/5.jpg" alt="حفاظات حج 7" class="product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3>حفاظات حج 7</h3>
+                        <p>مخصص للأطفال + 18 كيلو</p>
+                        <div class="product-features">
+                            <span class="feature-tag">قوي</span>
+                            <span class="feature-tag">دائم</span>
+                        </div>
+                    </div>
+                </div>
+              
+                       
+                   
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="products-cta">
+                <a href="products.html" class="btn btn-primary btn-large">
+                    <i class="fas fa-eye"></i>
+                    عرض جميع المنتجات
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quality Section -->
+    <section class="quality-section">
+        <div class="container">
+            <div class="quality-content">
+                <div class="quality-text">
+                    <h2>معايير الجودة العالمية</h2>
+                    <p>نلتزم بأعلى معايير الجودة العالمية لضمان سلامة طفلك وراحته</p>
+                    <div class="quality-features">
+                        <div class="quality-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>شهادة ISO 9001:2015</span>
+                        </div>
+                        <div class="quality-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>علامة الجودة الأردنية</span>
+                        </div>
+                        <div class="quality-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>مواد آمنة 100%</span>
+                        </div>
+                        <div class="quality-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>اختبارات دورية</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="quality-image">
+                    <img src="Logo/LOGO.png" alt="شعار يامون بيبي" class="quality-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>ابدأ رحلة الراحة مع يامون بيبي</h2>
+                <p>اكتشف الفرق في جودة حفاظات الأطفال العربية</p>
+                <div class="cta-buttons">
+                    <a href="products.html" class="btn btn-primary btn-large">
+                        <i class="fas fa-shopping-bag"></i>
+                        تسوق الآن
+                    </a>
+                    <a href="contact.html" class="btn btn-secondary btn-large">
+                        <i class="fas fa-phone"></i>
+                        تواصل معنا
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    
+                    <p>شركة رامي سليمان وشريكه - مصنع حديث متكامل معتمد بمواصفات الجودة العالمية لإنتاج حفاظات الأطفال عالية الجودة في مدينة الزرقاء</p>
+                </div>
+                <div class="footer-section">
+                    <h3>روابط سريعة</h3>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="products.html">منتجاتنا</a></li>
+                        <li><a href="about.html">من نحن</a></li>
+                        <li><a href="contact.html">التواصل</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>تواصل معنا</h3>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> 0780991323</p>
+                        <p><i class="fas fa-clock"></i> من السبت إلى الخميس: 8:00 ص - 4:00 م</p>
+                        <p><i class="fas fa-map-marker-alt"></i> الزرقاء - وادي العش</p>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>تابعنا</h3>
+                    <div class="social-footer">
+                        <a href="https://www.facebook.com/people/Ya-Moon-Baby/61572601671368/" class="social-footer-link facebook" target="_blank">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="https://www.instagram.com/yamoon_baby/?igsh=d25sYmpzYnV0aHMy&utm_source=qr#" class="social-footer-link instagram" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/00962780991323" class="social-footer-link whatsapp" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 شركة رامي سليمان وشريكه - يامون بيبي. جميع الحقوق محفوظة</p>
+            </div>
+        </div>
+        
+        <!-- Slide Up Button -->
+        <button id="slideUpBtn" class="slide-up-btn" title="العودة للأعلى">
+            <i class="fas fa-chevron-up"></i>
+        </button>
+    </footer>
+
+    <script src="script.js"></script>
+    
+    <script>
+        // Slide Up Button Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const slideUpBtn = document.getElementById('slideUpBtn');
+            
+            // Show button when scrolling down
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    slideUpBtn.classList.add('show');
+                } else {
+                    slideUpBtn.classList.remove('show');
+                }
+            });
+            
+            // Smooth scroll to top when button is clicked
+            slideUpBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Add hover effect for mobile devices
+            slideUpBtn.addEventListener('touchstart', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+            
+            slideUpBtn.addEventListener('touchend', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
