@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التواصل - يامون بيبي</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Location Section Styles */
+        .location-section {
+            padding: 60px 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin-top: 40px;
+        }
+        
+        .location-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .location-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        .location-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .location-info {
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .location-info h3 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .location-info p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .location-info p i {
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+        
+        .location-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .location-btn:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        
+        .location-btn i {
+            font-size: 1.1rem;
+        }
+        
+        .location-map {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .location-map iframe {
+            border-radius: 20px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .location-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .location-info {
+                padding: 20px;
+            }
+            
+            .location-section h2 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .location-section {
+                padding: 40px 0;
+            }
+            
+            .location-info h3 {
+                font-size: 1.5rem;
+            }
+            
+            .location-info p {
+                font-size: 1rem;
+            }
+            
+            .location-btn {
+                padding: 12px 25px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Slide Up Button Styles */
+        .slide-up-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .slide-up-btn:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .slide-up-btn.show {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .slide-up-btn i {
+            transition: transform 0.3s ease;
+        }
+        
+        .slide-up-btn:hover i {
+            transform: translateY(-2px);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .slide-up-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .slide-up-btn {
+                bottom: 15px;
+                right: 15px;
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+        }
+        
+        /* QR Codes Styling */
+        .qr-codes {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .qr-code {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .qr-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        
+        .qr-code p {
+            color: #666;
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .qr-codes {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+            
+            .qr-img {
+                width: 180px;
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+
+              <div class="social-header">
+                    <a href="https://www.facebook.com/people/Ya-Moon-Baby/61572601671368/" class="social-header-link facebook" target="_blank">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://www.instagram.com/yamoon_baby/?igsh=d25sYmpzYnV0aHMy&utm_source=qr#" class="social-header-link instagram" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/962780991323" class="social-header-link whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+                <div class="header-logo-right">
+                    <img src="Logo/LOGO.png" alt="يامون بيبي" class="header-logo-img">
+                </div>
+
+
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">الرئيسية</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="products.html" class="nav-link">منتجاتنا</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="about.html" class="nav-link">من نحن</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="contact.html" class="nav-link active">التواصل</a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contact Hero Section -->
+    <section class="contact-hero">
+        <div class="container">
+            <div class="contact-hero-content">
+                
+                <p class="contact-hero-subtitle">-</p>
+				<h1 class="contact-hero-title">-</h1>
+                <p class="contact-hero-subtitle">-</p>
+				<h1 class="contact-hero-title">تواصل معنا</h1>
+                <p class="contact-hero-subtitle">نحن هنا للإجابة على استفساراتكم ومساعدتكم</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info">
+				
+                    
+					<h2>معلومات التواصل</h2>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h3>الهاتف</h3>
+                            <p>962780991323+</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-whatsapp"></i>
+                        <div>
+                            <h3>واتساب</h3>
+                            <p>962780991323+</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h3>البريد الإلكتروني</h3>
+                            <p>info@yamoonbaby.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h3>العنوان</h3>
+                            <p>الزرقاء – وادي العش، الأردن</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h3>ساعات الدوام</h3>
+                            <p>من السبت إلى الخميس: من الساعة 8:00 صباحاً حتى الساعة 4:00 مساءً</p>
+                            <p>الجمعة: عطلة</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Location Section -->
+                <div class="location-section">
+                    <h2>موقعنا</h2>
+                    <div class="location-content">
+                        <div class="location-info">
+                            <h3>مصنع يامون بيبي</h3>
+                            <p><i class="fas fa-map-marker-alt"></i> الزرقاء – وادي العش، الأردن</p>
+                            <p><i class="fas fa-industry"></i> مصنع حديث متكامل على مساحة 8400 متر مربع</p>
+                            <a href="https://maps.app.goo.gl/tzSLVwnNWjw4Geo88" class="location-btn" target="_blank">
+                                <i class="fas fa-map"></i>
+                                عرض الموقع على الخريطة
+                            </a>
+                        </div>
+                        <div class="location-map">
+                            <iframe 
+                                src="https://maps.google.com/maps?q=%D8%B4%D8%B1%D9%83%D8%A9+%D8%B1%D8%A7%D9%85%D9%8A+%D8%B3%D9%84%D9%8A%D9%85%D8%A7%D9%86+-+%D9%8A%D8%A7%D9%85%D9%88%D9%86+%D8%A8%D9%8A%D8%A8%D9%8A%2C+%D9%88%D8%A7%D8%AF%D9%8A+%D8%A7%D9%84%D8%B9%D8%B4%2C+Zarqa+13125&output=embed"
+                                width="100%" 
+                                height="400" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Media Section -->
+    <section class="social-section">
+        <div class="container">
+            <h2 class="section-title">تابعنا على وسائل التواصل الاجتماعي</h2>
+            <div class="social-content">
+                <div class="social-info">
+                    <h3>ابق على تواصل معنا</h3>
+                    <p>تابعنا على فيسبوك للحصول على آخر العروض والمنتجات الجديدة</p>
+                   
+                </div>
+                <div class="qr-codes">
+                    <div class="qr-code">
+                        <img src="QR/facebook-qr-code.png" alt="Facebook Page QR Code" class="qr-img" width="200" height="200">
+                        <p>امسح رمز QR للوصول إلى صفحتنا</p>
+                    </div>
+                    <div class="qr-code">
+                        <img src="QR/homepage-qr-code.png" alt="Yamoon Baby Homepage QR Code" class="qr-img" width="200" height="200">
+                        <p>امسح رمز QR للوصول الى موقعنا</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">الأسئلة الشائعة</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>كيف أختار الحجم المناسب لطفلي؟</h3>
+                    <p>يمكنك اختيار الحجم المناسب بناءً على وزن طفلك. نقدم أحجام مختلفة من حديثي الولادة حتى الأطفال الأكبر سناً.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>هل منتجاتكم آمنة للأطفال؟</h3>
+                    <p>نعم، جميع منتجاتنا مصنوعة من مواد آمنة ومختبرة، ومتوافقة مع معايير السلامة العالمية.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>كيف يمكنني طلب المنتجات؟</h3>
+                    <p>يمكنك التواصل معنا عبر الهاتف أو البريد الإلكتروني أو من خلال صفحتنا على فيسبوك.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>هل تقدمون خدمة التوصيل؟</h3>
+                    <p>نعم، نقدم خدمة التوصيل لجميع المناطق مع ضمان وصول المنتجات بسلامة.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>يامون بيبي</h3>
+                    <p>شركة رامي سليمان وشريكه - مصنع حديث متكامل معتمد بمواصفات الجودة العالمية لإنتاج حفاظات الأطفال عالية الجودة في مدينة الزرقاء</p>
+                </div>
+                <div class="footer-section">
+                    <h3>روابط سريعة</h3>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="products.html">منتجاتنا</a></li>
+                        <li><a href="about.html">من نحن</a></li>
+
+                        <li><a href="contact.html">التواصل</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>تواصل معنا</h3>
+                    <p><i class="fas fa-phone"></i> 0780991323</p>
+                    <p><i class="fas fa-clock"></i> من السبت إلى الخميس: 8:00 ص - 4:00 م</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/people/Ya-Moon-Baby/61572601671368/" target="_blank">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 شركة رامي سليمان وشريكه - يامون بيبي. جميع الحقوق محفوظة</p>
+            </div>
+        </div>
+        
+        <!-- Slide Up Button -->
+        <button id="slideUpBtn" class="slide-up-btn" title="العودة للأعلى">
+            <i class="fas fa-chevron-up"></i>
+        </button>
+    </footer>
+
+    <script src="script.js"></script>
+    
+    <script>
+        // Slide Up Button Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const slideUpBtn = document.getElementById('slideUpBtn');
+            
+            // Show button when scrolling down
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    slideUpBtn.classList.add('show');
+                } else {
+                    slideUpBtn.classList.remove('show');
+                }
+            });
+            
+            // Smooth scroll to top when button is clicked
+            slideUpBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Add hover effect for mobile devices
+            slideUpBtn.addEventListener('touchstart', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+            
+            slideUpBtn.addEventListener('touchend', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
+                < ! - -   S l i d e   U p   B u t t o n   - - > 
+ 
+                 < b u t t o n   i d = \ 
+ 
+ s l i d e U p B t n \   c l a s s = \ s l i d e - u p - b t n \   t i t l e = \ 'D9H/)
+ 
+ DD#9DI\ > 
+ 
+                         < i   c l a s s = \ 
+ 
+ f a s 
+ 
+ f a - c h e v r o n - u p \ > < / i > 
+ 
+                 < / b u t t o n > 
+ 
+ 

@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>من نحن - يامون بيبي</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Products Page Specific Styles */
+        .products-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 120px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .products-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .products-hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .products-hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .products-hero-subtitle {
+            font-size: 1.3rem;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .hero-stats .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        
+        .hero-stats .stat-item i {
+            font-size: 2rem;
+            color: #ffd700;
+        }
+        
+        .hero-stats .stat-item span {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .products-section {
+            padding: 80px 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            position: relative;
+        }
+        
+        .products-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(102,126,234,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+            padding: 20px 0;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .product-card {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.6);
+            position: relative;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            opacity: 1;
+        }
+        
+        
+        
+        .product-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            margin: 8px;
+        }
+        
+        .product-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            object-position: right top;
+            border-radius: 15px;
+            filter: brightness(1.1) contrast(1.05);
+        }
+        
+        
+        
+        
+        .product-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+        }
+        
+        
+        .product-overlay-content {
+            text-align: center;
+            color: white;
+        }
+        
+        .product-overlay-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .product-overlay-content p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .product-info {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .product-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .product-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .product-features-section {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            color: #2c3e50;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        .product-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+        
+        .product-feature-item {
+            text-align: center;
+            padding: 40px 30px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            border-top: 4px solid #667eea;
+        }
+        
+        
+        .feature-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        
+        
+        .feature-icon-wrapper i {
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .product-feature-item h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .product-feature-item p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .quality-assurance-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .quality-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        
+        .quality-text h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+        
+        .quality-text p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .quality-badges {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .quality-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        
+        .quality-badge i {
+            font-size: 1.2rem;
+            color: #ffd700;
+        }
+        
+        .quality-image {
+            text-align: left;
+            margin-top: -50px;
+            display: flex;
+            justify-content: flex-start;
+        }
+        
+        .quality-img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            margin-right: auto;
+            margin-left: 0;
+        }
+        
+
+        
+        .cta-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .cta-content h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .cta-content p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .cta-btn {
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .cta-btn.primary {
+            background: #ffd700;
+            color: #2c3e50;
+        }
+        
+        .cta-btn.secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        
+        
+        @media (max-width: 768px) {
+            .products-hero {
+                padding: 110px 16px 50px;
+            }
+
+            .products-hero-title {
+                font-size: clamp(1.5rem, 7vw, 2.4rem);
+            }
+            
+            .hero-stats {
+                gap: 20px;
+            }
+            
+            .quality-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        /* Image Slider Styles */
+        .image-slider {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            margin: 0 auto 2rem;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .slider-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slider-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            border-radius: 18px;
+        }
+        
+        .slider-image.active {
+            opacity: 1;
+        }
+        
+        .slider-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+        }
+        
+        .slider-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+        
+        
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        
+        .slider-nav.prev {
+            left: 20px;
+        }
+        
+        .slider-nav.next {
+            right: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .image-slider {
+                max-width: 600px;
+                height: 300px;
+                margin-bottom: 1.5rem;
+            }
+            
+            .slider-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            
+            .slider-nav.prev {
+                left: 10px;
+            }
+            
+            .slider-nav.next {
+                right: 10px;
+            }
+            
+            .slider-dots {
+                bottom: 15px;
+            }
+            
+            .slider-dot {
+                width: 10px;
+                height: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+
+                 <div class="social-header">
+                    <a href="https://www.facebook.com/people/Ya-Moon-Baby/61572601671368/" class="social-header-link facebook" target="_blank">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://www.instagram.com/yamoon_baby/?igsh=d25sYmpzYnV0aHMy&utm_source=qr#" class="social-header-link instagram" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/962780991323" class="social-header-link whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+                <div class="header-logo-right">
+                    <img src="Logo/LOGO.png" alt="يامون بيبي" class="header-logo-img">
+                </div>
+
+
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">الرئيسية</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="products.html" class="nav-link active">منتجاتنا</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="about.html" class="nav-link">من نحن</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="contact.html" class="nav-link">التواصل</a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Products Hero Section -->
+    <section class="products-hero">
+        <div class="container">
+            <div class="products-hero-content">
+                <div class="image-slider">
+                    <div class="slider-container">
+                        <img src="Products/all product 3.png" alt="منتجات يامون بيبي" class="slider-image active">
+                        <img src="Products/all product.png" alt="منتجات يامون بيبي" class="slider-image">
+                        <img src="Products/all product 2.png" alt="منتجات يامون بيبي" class="slider-image">
+                        
+                        <button class="slider-nav prev" onclick="changeSlide(-1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="slider-nav next" onclick="changeSlide(1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        
+                        <div class="slider-dots">
+                            <span class="slider-dot active" onclick="currentSlide(1)"></span>
+                            <span class="slider-dot" onclick="currentSlide(2)"></span>
+                            <span class="slider-dot" onclick="currentSlide(3)"></span>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="products-hero-title">منتجاتنا المميزة</h1>
+                <p class="products-hero-subtitle">اكتشف تشكيلتنا المتطورة من حفاظات الأطفال عالية الجودة</p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-star"></i>
+                        <span>جودة عالية</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>حماية مثالية</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-certificate"></i>
+                        <span>معتمد عالمياً</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section">
+        <div class="container">
+            <div class="products-grid">
+                <div class="product-card" data-category="newborn">
+                    <div class="product-image">
+                        <img src="Products/1.jpg" alt="حفاظات حجم 3" class="product-img">
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="small">
+                    <div class="product-image">
+                        <img src="Products/2.jpg" alt="حفاظات حجم 4" class="product-img">
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="small">
+                    <div class="product-image">
+                        <img src="Products/3.jpg" alt="حفاظات حجم 5" class="product-img">
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="medium">
+                    <div class="product-image">
+                        <img src="Products/4.jpg" alt="حفاطات حجم 6" class="product-img">
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="medium">
+                    <div class="product-image">
+                        <img src="Products/5.jpg" alt="حفاظات حجم 7" class="product-img">
+                    </div>
+                </div>
+
+                
+
+                <div class="product-card" data-category="large">
+                    <div class="product-image">
+                        <img src="Products/7.jpg" alt="حفاظات حجم 1" class="product-img">
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="large">
+                    <div class="product-image">
+                        <img src="Products/8.jpg" alt="حفاظات حج م 2" class="product-img">
+                    </div>
+                </div>
+
+                <!-- New Products from New products folder -->
+                <div class="product-card" data-category="newborn">
+                    <div class="product-image">
+                        <img src="New products/1.jpg" alt="منتج جديد 1" class="product-img">
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="small">
+                    <div class="product-image">
+                        <img src="New products/2.jpg" alt="منتج جديد 2" class="product-img">
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="medium">
+                    <div class="product-image">
+                        <img src="New products/3.jpg" alt="منتج جديد 3" class="product-img">
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="large">
+                    <div class="product-image">
+                        <img src="New products/4.jpg" alt="منتج جديد 4" class="product-img">
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="newborn">
+                    <div class="product-image">
+                        <img src="New products/5.jpg" alt="منتج جديد 5" class="product-img">
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="small">
+                    <div class="product-image">
+                        <img src="New products/6.jpg" alt="منتج جديد 6" class="product-img">
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="medium">
+                    <div class="product-image">
+                        <img src="New products/7.jpg" alt="منتج جديد 7" class="product-img">
+                    </div>
+                </div>
+
+                
+    </section>
+
+
+
+    <!-- Product Features Section -->
+    <section class="product-features-section">
+        <div class="container">
+            <h2 class="section-title">لماذا تختار يامون بيبي؟</h2>
+            <div class="product-features-grid">
+                <div class="product-feature-item">
+                    <div class="feature-icon-wrapper">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>حماية مثالية</h3>
+                    <p>تصميم متطور يضمن حماية طفلك من التسرب طوال اليوم مع طبقات امتصاص متعددة</p>
+                </div>
+                <div class="product-feature-item">
+                    <div class="feature-icon-wrapper">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>مواد طبيعية</h3>
+                    <p>مصنوعة من مواد طبيعية آمنة على بشرة طفلك الحساسة مع تقنية التنفس الطبيعي</p>
+                </div>
+                <div class="product-feature-item">
+                    <div class="feature-icon-wrapper">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>راحة مطلقة</h3>
+                    <p>تصميم مريح يضمن راحة طفلك وحركته الطبيعية مع أشرطة لاصقة قابلة للتعديل</p>
+                </div>
+                <div class="product-feature-item">
+                    <div class="feature-icon-wrapper">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3>معتمد عالمياً</h3>
+                    <p>شهادة ISO 9001:2015 وعلامة الجودة الأردنية تؤكد التزامنا بأعلى معايير الجودة</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quality Assurance Section -->
+    <section class="quality-assurance-section">
+        <div class="container">
+            <div class="quality-content">
+                <div class="quality-text">
+                    <h2>جودة مضمونة</h2>
+                    <p>نفخر بتقديم منتجات عالية الجودة مصنوعة بأحدث التقنيات ومطابقة لأعلى المعايير العالمية</p>
+                    <div class="quality-badges">
+                        <div class="quality-badge">
+                            <i class="fas fa-award"></i>
+                            <span>ISO 9001:2015</span>
+                        </div>
+                        <div class="quality-badge">
+                            <i class="fas fa-star"></i>
+                            <span>الجودة الأردنية</span>
+                        </div>
+                        <div class="quality-badge">
+                            <i class="fas fa-check-circle"></i>
+                            <span>اختبارات شاملة</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="quality-image">
+                    <img src="baby.png" alt="طفل سعيد" class="quality-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>احصل على أفضل حفاظات لطفلك</h2>
+                <p>تواصل معنا الآن للحصول على منتجات عالية الجودة وأسعار مناسبة تناسب جميع الميزانيات</p>
+                <div class="cta-buttons">
+                    <a href="contact.html" class="cta-btn primary">
+                        <i class="fas fa-phone"></i>
+                        تواصل معنا
+                    </a>
+                    <a href="https://wa.me/962780991323" class="cta-btn secondary" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        واتساب
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>يامون بيبي</h3>
+                    <p>شركة رامي سليمان وشريكه - مصنع حديث متكامل معتمد بمواصفات الجودة العالمية لإنتاج حفاظات الأطفال عالية الجودة في مدينة الزرقاء</p>
+                </div>
+                <div class="footer-section">
+                    <h3>روابط سريعة</h3>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="products.html">منتجاتنا</a></li>
+                        <li><a href="about.html">من نحن</a></li>
+
+                        <li><a href="contact.html">التواصل</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>تواصل معنا</h3>
+                    <p><i class="fas fa-phone"></i> 0780991323</p>
+                    <p><i class="fas fa-clock"></i> من السبت إلى الخميس: 8:00 ص - 4:00 م</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/people/Ya-Moon-Baby/61572601671368/" target="_blank">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 شركة رامي سليمان وشريكه - يامون بيبي. جميع الحقوق محفوظة</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    
+    <script>
+        // Image Slider Functionality (Manual Only)
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slider-image');
+        const dots = document.querySelectorAll('.slider-dot');
+        
+        function showSlide(index) {
+            // Hide all slides
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            // Show current slide
+            if (slides[index]) {
+                slides[index].classList.add('active');
+                dots[index].classList.add('active');
+            }
+        }
+        
+        function changeSlide(direction) {
+            currentSlideIndex += direction;
+            
+            if (currentSlideIndex >= slides.length) {
+                currentSlideIndex = 0;
+            } else if (currentSlideIndex < 0) {
+                currentSlideIndex = slides.length - 1;
+            }
+            
+            showSlide(currentSlideIndex);
+        }
+        
+        function currentSlide(index) {
+            currentSlideIndex = index - 1;
+            showSlide(currentSlideIndex);
+        }
+    </script>
+</body>
+</html>

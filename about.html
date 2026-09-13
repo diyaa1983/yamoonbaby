@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>من نحن - يامون بيبي</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* About Page Specific Styles */
+        .about-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 120px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .about-hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        
+        .about-hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .about-hero-subtitle {
+            font-size: 1.3rem;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+        
+        .about-content {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        
+        .about-text h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .about-text h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        .about-text h3 {
+            font-size: 1.5rem;
+            color: #34495e;
+            margin: 2rem 0 1rem;
+        }
+        
+        .about-text p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+        
+        .about-image {
+            text-align: center;
+            position: relative;
+        }
+        
+        .about-img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .about-img:hover {
+            transform: translateY(-10px);
+        }
+        
+        .mission-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .mission-content {
+            text-align: center;
+        }
+        
+        .mission-content h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+        
+        .mission-content p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+        
+        .mission-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .mission-feature {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        
+        .mission-feature:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .mission-feature i {
+            font-size: 1.5rem;
+            color: #ffd700;
+        }
+        
+        .mission-feature span {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .stats-section {
+            padding: 80px 0;
+            background: #2c3e50;
+            color: white;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 20px;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #3498db;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            color: #bdc3c7;
+        }
+        
+        .values-section {
+            padding: 80px 0;
+            background: #ecf0f1;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .value-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 4px solid #667eea;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .value-card i {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .value-card h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .value-card p {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .certificates-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .certificates-content {
+            text-align: center;
+        }
+        
+        .certificates-content h2 {
+            font-size: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .certificate-card {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .certificate-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .certificate-card i {
+            font-size: 3rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+        
+        .certificate-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .certificate-card p {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .timeline-section {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        
+        .timeline-content h2 {
+            text-align: center;
+            font-size: 3rem;
+            color: #2c3e50;
+            margin-bottom: 3rem;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 50%;
+            width: 4px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            transform: translateX(50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            width: 45%;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            right: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 0;
+        }
+        
+        .timeline-content {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            left: -20px;
+            border-right-color: white;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content::before {
+            right: -20px;
+            border-left-color: white;
+        }
+        
+        .timeline-year {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        .timeline-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-description {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .about-hero {
+                padding: 110px 16px 50px;
+            }
+            
+            .about-hero-title {
+                font-size: clamp(1.5rem, 7vw, 2.4rem);
+            }
+            
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .timeline::before {
+                right: 20px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                right: 0 !important;
+                left: 0 !important;
+            }
+            
+            .timeline-item .timeline-content::before {
+                left: -20px !important;
+                border-right-color: white !important;
+                border-left-color: transparent !important;
+            }
+        }
+        
+        /* Slide Up Button Styles */
+        .slide-up-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .slide-up-btn:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .slide-up-btn.show {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .slide-up-btn i {
+            transition: transform 0.3s ease;
+        }
+        
+        .slide-up-btn:hover i {
+            transform: translateY(-2px);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .slide-up-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .slide-up-btn {
+                bottom: 15px;
+                right: 15px;
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+
+                <div class="social-header">
+                    <a href="https://www.facebook.com/people/Ya-Moon-Baby/61572601671368/" class="social-header-link facebook" target="_blank">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://www.instagram.com/yamoon_baby/?igsh=d25sYmpzYnV0aHMy&utm_source=qr#" class="social-header-link instagram" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/962780991323" class="social-header-link whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+                <div class="header-logo-right">
+                    <img src="Logo/LOGO.png" alt="يامون بيبي" class="header-logo-img">
+                </div>
+
+
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">الرئيسية</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="products.html" class="nav-link">منتجاتنا</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="about.html" class="nav-link active">من نحن</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="contact.html" class="nav-link">التواصل</a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- About Hero Section -->
+    <section class="about-hero">
+        <div class="container">
+            <div class="about-hero-content">
+                <h1 class="about-hero-title">من نحن</h1>
+                <p class="about-hero-subtitle">شركة رامي سليمان وشريكه - مصنع حديث متكامل معتمد بمواصفات الجودة العالمية</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">2023</span>
+                    <div class="stat-label">سنة التأسيس</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">8400</span>
+                    <div class="stat-label">متر مربع مساحة المصنع</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <div class="stat-label">جودة مضمونة</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">24/7</span>
+                    <div class="stat-label">مراقبة الجودة</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Content -->
+    <section class="about-content">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2>قصة يامون بيبي</h2>
+                    <p>تأسست شركة رامي سليمان وشريكه في عام 2023 في مدينة الزرقاء – وادي العش، لتكون إحدى الشركات الصناعية الرائدة في مجال إنتاج حفاظات الأطفال عالية الجودة. تسعى الشركة إلى تلبية احتياجات السوق المحلي والإقليمي من خلال تقديم منتجات آمنة وفعالة باستخدام أحدث ما توصلت إليه تقنيات التصنيع في هذا القطاع.</p>
+                    
+                    <h3>مصنعنا الحديث</h3>
+                    <p>يمتد المصنع على مساحة تبلغ 8400 متر مربع، ويضم خط إنتاج حديث. نفتخر بامتلاكنا لأحدث التقنيات والمعدات التي تضمن إنتاج حفاظات عالية الجودة تلبي أعلى المعايير العالمية.</p>
+                    
+                    <h3>مرافق المصنع المتطورة</h3>
+                    <p>يوجد بالمصنع مستودعات للمواد الخام، ومستودعات للمنتجات تامة الصنع وهي معدة ومجهزة لتناسب تخزين المواد ويتم قياس معدل الحرارة ودرجة الرطوبة داخل المستودعات لضمان التخزين بأعلى المواصفات المثالية.</p>
+                </div>
+                <div class="about-image">
+                    <img src="baby.png" alt="طفل سعيد" class="about-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline-section">
+        <div class="container">
+            <div class="timeline-content">
+                <h2>رحلة التطور</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2023</div>
+                            <h3 class="timeline-title">بداية المشروع</h3>
+                            <p class="timeline-description">تأسيس شركة رامي سليمان وشريكه في مدينة الزرقاء</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2023</div>
+                            <h3 class="timeline-title">بناء المصنع</h3>
+                            <p class="timeline-description">إنشاء مصنع حديث بمساحة 8400 متر مربع</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2024</div>
+                            <h3 class="timeline-title">شهادة ISO</h3>
+                            <p class="timeline-description">الحصول على شهادة ISO 9001:2015</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-year">2024</div>
+                            <h3 class="timeline-title">علامة الجودة</h3>
+                            <p class="timeline-description">الحصول على علامة الجودة الأردنية</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values-section">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 3rem; color: #2c3e50; margin-bottom: 3rem;">قيمنا الأساسية</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <i class="fas fa-star"></i>
+                    <h3>الجودة العالية</h3>
+                    <p>نلتزم بأعلى معايير الجودة في كل منتج نقدمه</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>الابتكار</h3>
+                    <p>نطور تقنيات جديدة لتحسين تجربة طفلك</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>رعاية الطفل</h3>
+                    <p>نضع صحة وراحة طفلك في المقام الأول</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-leaf"></i>
+                    <h3>الاستدامة</h3>
+                    <p>نستخدم مواد صديقة للبيئة</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-handshake"></i>
+                    <h3>الثقة</h3>
+                    <p>نحافظ على ثقة عملائنا من خلال الشفافية</p>
+                </div>
+                <div class="value-card">
+                    <i class="fas fa-users"></i>
+                    <h3>المسؤولية الاجتماعية</h3>
+                    <p>نشارك في تطوير مجتمعنا المحلي</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="mission-section">
+        <div class="container">
+            <div class="mission-content">
+                <h2>مهمتنا</h2>
+                <p>نحن ملتزمون بتقديم حفاظات أطفال عالية الجودة تضمن راحة طفلك وحمايته طوال اليوم. نستخدم أحدث التقنيات والمواد الآمنة في مصنعنا الحديث لضمان تجربة مثالية لكل طفل وأسرة.</p>
+                
+                <div class="mission-features">
+                    <div class="mission-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>مصنع حديث بمساحة 8400 متر مربع</span>
+                    </div>
+                    <div class="mission-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <sp> خط إنتاج متطور Full Servo Baby Diaper Production Line <sp>
+                    </div>
+                    <div class="mission-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>مختبر جودة بأحدث الأجهزة</span>
+                    </div>
+                    <div class="mission-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>مستودعات مجهزة مع مراقبة الحرارة والرطوبة</span>
+                    </div>
+                    <div class="mission-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>ماكنات حديثة للطباعة والتغليف</span>
+                    </div>
+                    <div class="mission-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>كادر مدرب ومؤهل من ذوي الخبرة</span>
+                    </div>
+                    <div class="mission-feature">
+                        <i class="fas fa-certificate"></i>
+                        <span>شهادة ISO 9001:2015</span>
+                    </div>
+                    <div class="mission-feature">
+                        <i class="fas fa-award"></i>
+                        <span>علامة الجودة الأردنية</span>
+                    </div>
+                    <div class="mission-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>مواد آمنة 100%</span>
+                    </div>
+                    <div class="mission-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>حماية مثالية من التسرب</span>
+                    </div>
+                    <div class="mission-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>راحة مطلقة للطفل</span>
+                    </div>
+                    <div class="mission-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>أسعار مناسبة للجميع</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certificates Section -->
+    <section class="certificates-section">
+        <div class="container">
+            <div class="certificates-content">
+                <h2>شهاداتنا واعتماداتنا</h2>
+                <div class="certificates-grid">
+                    <div class="certificate-card">
+                        <i class="fas fa-certificate"></i>
+                        <h3>شهادة ISO 9001:2015</h3>
+                        <p>شهادة دولية معترف بها لنظام إدارة الجودة، تؤكد التزامنا بأعلى معايير الجودة العالمية</p>
+                    </div>
+                    <div class="certificate-card">
+                        <i class="fas fa-award"></i>
+                        <h3>علامة الجودة الأردنية</h3>
+                        <p>اعتماد من مؤسسة المواصفات والمقاييس الأردنية، تأكيداً على التزامنا بمعايير الجودة المحلية</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>يامون بيبي</h3>
+                    <p>شركة رامي سليمان وشريكه - مصنع حديث متكامل معتمد بمواصفات الجودة العالمية لإنتاج حفاظات الأطفال عالية الجودة في مدينة الزرقاء</p>
+                </div>
+                <div class="footer-section">
+                    <h3>روابط سريعة</h3>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="products.html">منتجاتنا</a></li>
+                        <li><a href="about.html">من نحن</a></li>
+
+                        <li><a href="contact.html">التواصل</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>تواصل معنا</h3>
+                    <p><i class="fas fa-phone"></i> 0780991323</p>
+                    <p><i class="fas fa-clock"></i> من السبت إلى الخميس: 8:00 ص - 4:00 م</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/people/Ya-Moon-Baby/61572601671368/" target="_blank">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 شركة رامي سليمان وشريكه - يامون بيبي. جميع الحقوق محفوظة</p>
+            </div>
+        </div>
+        
+        <!-- Slide Up Button -->
+        <button id="slideUpBtn" class="slide-up-btn" title="العودة للأعلى">
+            <i class="fas fa-chevron-up"></i>
+        </button>
+    </footer>
+
+    <script src="script.js"></script>
+    
+    <script>
+        
+        // Slide Up Button Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const slideUpBtn = document.getElementById('slideUpBtn');
+            
+            // Show button when scrolling down
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    slideUpBtn.classList.add('show');
+                } else {
+                    slideUpBtn.classList.remove('show');
+                }
+            });
+            
+            // Smooth scroll to top when button is clicked
+            slideUpBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Add hover effect for mobile devices
+            slideUpBtn.addEventListener('touchstart', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+            
+            slideUpBtn.addEventListener('touchend', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
