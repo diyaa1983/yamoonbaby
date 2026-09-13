@@ -1,7 +1,7 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=$HOME/public_html/yamoonbaby.com/
+    - export DEPLOYPATH=/home5/bawaliiz/public_html/yamoonbaby.com/
     - /bin/cp -f index.html $DEPLOYPATH
     - /bin/cp -f index.php $DEPLOYPATH
     - /bin/cp -f raffle.html $DEPLOYPATH
