@@ -208,6 +208,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
             <a class="<?php echo $tab === 'cards' ? 'active' : ''; ?>" href="home.php?tab=cards"><i class="fas fa-id-card"></i> البطاقات المدخلة</a>
             <a class="<?php echo $tab === 'report' ? 'active' : ''; ?>" href="home.php?tab=report"><i class="fas fa-chart-line"></i> تقرير البطاقات</a>
             <?php if ($isAdmin): ?>
+                <a href="../tools/print-test-cards.php"><i class="fas fa-print"></i> طباعة كوبون تجريبي</a>
                 <a href="draw.php"><i class="fas fa-dharmachakra"></i> السحب على الفائز</a>
                 <a class="<?php echo $tab === 'audit' ? 'active' : ''; ?>" href="home.php?tab=audit"><i class="fas fa-clock-rotate-left"></i> سجل العمليات</a>
                 <a class="<?php echo $tab === 'users' ? 'active' : ''; ?>" href="home.php?tab=users"><i class="fas fa-users-gear"></i> المستخدمون</a>
