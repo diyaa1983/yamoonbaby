@@ -26,18 +26,14 @@ AddType image/webp .webp
     RewriteRule ^print-a4-cards\.php$ tools/print-a4-cards.php [L]
     RewriteRule ^print-test-cards\.php$ tools/print-test-cards.php [L]
     RewriteRule ^build-a4-pdf\.php$ tools/build-a4-pdf.php [L]
-    RewriteCond %{HTTP_HOST} ^www\.yamoonbaby\.com$ [NC]
-    RewriteRule ^(.*)$ https://yamoonbaby.com/$1 [L,R=301]
     RewriteCond %{HTTP_HOST} !^localhost [NC]
     RewriteCond %{HTTP_HOST} !^127\.0\.0\.1
     RewriteCond %{HTTPS} !=on
     RewriteCond %{HTTP:X-Forwarded-Proto} !=https
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-    RewriteRule ^cards/yamoon-ticket.*\.jpg$ - [E=TICKET_IMG:1]
 </IfModule>
 
 <IfModule mod_headers.c>
-    Header set Cache-Control "public, max-age=120, must-revalidate" env=TICKET_IMG
     Header always set Content-Security-Policy "frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
     Header always set X-Content-Type-Options "nosniff"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"

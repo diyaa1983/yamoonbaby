@@ -51,10 +51,18 @@ function panel_user() {
     ];
 }
 
+function panel_web_root() {
+    $script = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? ''));
+    if (preg_match('#^(.*?)/(admin|tools)/#', $script, $m)) {
+        return $m[1];
+    }
+    return '';
+}
+
 function panel_require_login() {
     $user = panel_user();
     if (!$user) {
-        header('Location: index.php');
+        header('Location: ' . panel_web_root() . '/admin/index.php');
         exit;
     }
     return $user;
@@ -63,7 +71,7 @@ function panel_require_login() {
 function panel_require_admin() {
     $user = panel_require_login();
     if ($user['role'] !== 'admin') {
-        header('Location: home.php');
+        header('Location: ' . panel_web_root() . '/admin/home.php');
         exit;
     }
     return $user;

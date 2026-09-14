@@ -44,12 +44,10 @@ function coupon_from_token($token, $secret) {
 
 function coupon_ticket_src($file) {
     $name = basename((string) $file);
-    $qs = 'v=20260525';
-    $host = (string) ($_SERVER['HTTP_HOST'] ?? '');
-    if ($host !== '' && stripos($host, 'localhost') === false && $host !== '127.0.0.1') {
-        return 'https://yamoonbaby.com/cards/' . rawurlencode($name) . '?' . $qs;
+    if ($name === 'yamoon-ticket-blank.jpg') {
+        return 'ticket-blank.jpg?v=20260525';
     }
-    return '../cards/' . rawurlencode($name) . '?' . $qs;
+    return '../cards/' . rawurlencode($name) . '?v=20260525';
 }
 
 function coupon_cards_config() {
