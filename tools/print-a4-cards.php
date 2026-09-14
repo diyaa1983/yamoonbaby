@@ -112,16 +112,16 @@ $pdfExists = is_file(dirname(__DIR__) . '/cards/' . $pdfName);
             width: 19.34%;
             height: 6.16%;
             background: #fff;
-            border: 0.4mm solid #1a2744;
+            border: 0.35mm solid #1a2744;
             border-radius: 999px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: Arial, Helvetica, sans-serif;
-            font-weight: 900;
-            font-size: 3.6mm;
-            letter-spacing: 0.2mm;
-            color: #000;
+            font-weight: 800;
+            font-size: 3.2mm;
+            letter-spacing: 0.08mm;
+            color: #111;
         }
         @page { size: 274mm 222mm; margin: 0; }
         @media print {
@@ -153,7 +153,7 @@ $pdfExists = is_file(dirname(__DIR__) . '/cards/' . $pdfName);
             <div class="ticket">
                 <img class="ticket-bg" src="<?php echo htmlspecialchars(coupon_ticket_src('yamoon-ticket-blank.jpg'), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($coupon, ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="qr-box" id="qr-<?php echo $i; ?>" data-url="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8'); ?>"></div>
-                <div class="num-box"><?php echo htmlspecialchars($coupon, ENT_QUOTES, 'UTF-8'); ?></div>
+                <div class="num-box"><?php echo htmlspecialchars(coupon_public_label($coupon), ENT_QUOTES, 'UTF-8'); ?></div>
             </div>
         </div>
         <?php endforeach; ?>

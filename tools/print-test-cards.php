@@ -100,16 +100,16 @@ $cards = [
             width: 19.34%;
             height: 6.16%;
             background: #fff;
-            border: 2.5px solid #1a2744;
+            border: 2px solid #1a2744;
             border-radius: 999px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: Arial, Helvetica, sans-serif;
-            font-weight: 900;
-            font-size: clamp(14px, 1.8vw, 18px);
-            letter-spacing: 0.5px;
-            color: #000;
+            font-weight: 800;
+            font-size: clamp(13px, 1.55vw, 17px);
+            letter-spacing: 0.2px;
+            color: #111;
             box-sizing: border-box;
         }
         .open-link {
@@ -143,7 +143,7 @@ $cards = [
         <?php foreach ($cards as $i => $coupon):
             $token = coupon_encrypt($coupon, $cfg['secret']);
             $url = $cfg['base_url'] . '?t=' . rawurlencode($token);
-            $display = $coupon;
+            $display = coupon_public_label($coupon);
         ?>
         <div class="ticket-wrap">
             <div class="ticket">

@@ -73,9 +73,10 @@ foreach ($cards as $i => $card) {
     imagefilledrectangle($page, $x + $numX, $y + $numY, $x + $numX + $numW, $y + $numY + $numH, $white);
     imagerectangle($page, $x + $numX, $y + $numY, $x + $numX + $numW, $y + $numY + $numH, $navy);
 
+    $label = coupon_public_label($card['coupon']);
     if (is_file($fontFile)) {
-        $size = max(10, (int) ($numH * 0.62));
-        $bbox = imagettfbbox($size, 0, $fontFile, $card['coupon']);
+        $size = max(9, (int) ($numH * 0.52));
+        $bbox = imagettfbbox($size, 0, $fontFile, $label);
         $tw = $bbox[2] - $bbox[0];
         $th = $bbox[1] - $bbox[7];
         imagettftext(
@@ -86,18 +87,18 @@ foreach ($cards as $i => $card) {
             $y + $numY + (int) (($numH + $th) / 2),
             $black,
             $fontFile,
-            $card['coupon']
+            $label
         );
     } else {
         $font = 5;
-        $tw = imagefontwidth($font) * strlen($card['coupon']);
+        $tw = imagefontwidth($font) * strlen($label);
         $th = imagefontheight($font);
         imagestring(
             $page,
             $font,
             $x + $numX + (int) (($numW - $tw) / 2),
             $y + $numY + (int) (($numH - $th) / 2),
-            $card['coupon'],
+            $label,
             $black
         );
     }

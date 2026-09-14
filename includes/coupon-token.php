@@ -1,4 +1,9 @@
 <?php
+function coupon_public_label($coupon) {
+    $coupon = coupon_pad($coupon);
+    return $coupon === '' ? '' : 'YM' . $coupon;
+}
+
 function coupon_pad($value) {
     $digits = preg_replace('/\D/', '', (string) $value);
     if ($digits === '') {
