@@ -53,7 +53,7 @@
     <div class="wrap">
         <a class="back" href="draw.php">كل النماذج</a>
         <div class="ticket">
-            <img class="hero" src="../cards/yamoon-ticket.jpg?v=20260525" alt="">
+            <img class="hero" src="../cards/yamoon-ticket.jpg?v=20260915b" alt="">
             <div class="ribbon">الطفل يلف العجلات بالترتيب من 1 إلى 6</div>
             <div class="board-wrap">
                 <div class="board-label">رقم المشاركة</div>
