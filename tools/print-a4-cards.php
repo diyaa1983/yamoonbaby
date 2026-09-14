@@ -125,9 +125,10 @@ $pdfExists = is_file(dirname(__DIR__) . '/cards/' . $pdfName);
         }
         @page { size: 274mm 222mm; margin: 0; }
         @media print {
-            html, body { width: 274mm; height: 222mm; background: #fff; }
+            html, body { width: 274mm; background: #fff; }
             .toolbar { display: none !important; }
             .page { margin: 0; box-shadow: none; }
+            .page + .page { page-break-before: always; break-before: page; }
         }
     </style>
 </head>
@@ -153,6 +154,15 @@ $pdfExists = is_file(dirname(__DIR__) . '/cards/' . $pdfName);
                 <img class="ticket-bg" src="<?php echo htmlspecialchars(coupon_ticket_src('yamoon-ticket-blank.jpg'), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($coupon, ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="qr-box" id="qr-<?php echo $i; ?>" data-url="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8'); ?>"></div>
                 <div class="num-box"><?php echo htmlspecialchars($coupon, ENT_QUOTES, 'UTF-8'); ?></div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <div class="page">
+        <?php foreach ($cards as $coupon): ?>
+        <div class="card">
+            <div class="ticket">
+                <img class="ticket-bg" src="<?php echo htmlspecialchars(coupon_ticket_src('yamoon-ticket-back.jpg'), ENT_QUOTES, 'UTF-8'); ?>" alt="ظهر البطاقة">
             </div>
         </div>
         <?php endforeach; ?>

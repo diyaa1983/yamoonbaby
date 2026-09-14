@@ -39,10 +39,12 @@ deployment:
     - /bin/cp -f tools/index.php $DEPLOYPATH/tools/
     - /bin/cp -f tools/.htaccess $DEPLOYPATH/tools/
     - /bin/cp -f cards/yamoon-ticket-blank.jpg $DEPLOYPATH/tools/ticket-blank.jpg
+    - /bin/cp -f cards/yamoon-ticket-back.jpg $DEPLOYPATH/tools/ticket-back.jpg
     - /bin/cp -f cards/yamoon-ticket.jpg $DEPLOYPATH/cards/
     - /bin/cp -f cards/yamoon-ticket-blank.jpg $DEPLOYPATH/cards/
-    - if [ -f /home5/bawaliz/public_html/tools/print-test-cards.php ]; then mkdir -p /home5/bawaliz/public_html/cards /home5/bawaliz/public_html/tools; /bin/cp -f cards/yamoon-ticket.jpg cards/yamoon-ticket-blank.jpg /home5/bawaliz/public_html/cards/; /bin/cp -f tools/print-test-cards.php tools/print-a4-cards.php tools/build-a4-pdf.php tools/index.php tools/ticket-blank.jpg /home5/bawaliz/public_html/tools/; /bin/cp -f raffle.html raffle-used.html .htaccess /home5/bawaliz/public_html/; fi
-    - if [ -f /home5/bawaliz/public_html/www.yamoonbaby.com/tools/print-test-cards.php ]; then mkdir -p /home5/bawaliz/public_html/www.yamoonbaby.com/cards /home5/bawaliz/public_html/www.yamoonbaby.com/tools; /bin/cp -f cards/yamoon-ticket.jpg cards/yamoon-ticket-blank.jpg /home5/bawaliz/public_html/www.yamoonbaby.com/cards/; /bin/cp -f tools/print-test-cards.php tools/print-a4-cards.php tools/build-a4-pdf.php tools/index.php tools/ticket-blank.jpg /home5/bawaliz/public_html/www.yamoonbaby.com/tools/; /bin/cp -f raffle.html raffle-used.html .htaccess /home5/bawaliz/public_html/www.yamoonbaby.com/; fi
+    - /bin/cp -f cards/yamoon-ticket-back.jpg $DEPLOYPATH/cards/
+    - if [ -f /home5/bawaliz/public_html/tools/print-test-cards.php ]; then mkdir -p /home5/bawaliz/public_html/cards /home5/bawaliz/public_html/tools; /bin/cp -f cards/yamoon-ticket.jpg cards/yamoon-ticket-blank.jpg cards/yamoon-ticket-back.jpg /home5/bawaliz/public_html/cards/; /bin/cp -f tools/print-test-cards.php tools/print-a4-cards.php tools/build-a4-pdf.php tools/index.php tools/ticket-blank.jpg tools/ticket-back.jpg /home5/bawaliz/public_html/tools/; /bin/cp -f raffle.html raffle-used.html .htaccess /home5/bawaliz/public_html/; fi
+    - if [ -f /home5/bawaliz/public_html/www.yamoonbaby.com/tools/print-test-cards.php ]; then mkdir -p /home5/bawaliz/public_html/www.yamoonbaby.com/cards /home5/bawaliz/public_html/www.yamoonbaby.com/tools; /bin/cp -f cards/yamoon-ticket.jpg cards/yamoon-ticket-blank.jpg cards/yamoon-ticket-back.jpg /home5/bawaliz/public_html/www.yamoonbaby.com/cards/; /bin/cp -f tools/print-test-cards.php tools/print-a4-cards.php tools/build-a4-pdf.php tools/index.php tools/ticket-blank.jpg tools/ticket-back.jpg /home5/bawaliz/public_html/www.yamoonbaby.com/tools/; /bin/cp -f raffle.html raffle-used.html .htaccess /home5/bawaliz/public_html/www.yamoonbaby.com/; fi
     - /bin/cp -f admin/index.php $DEPLOYPATH/admin/
     - /bin/cp -f admin/home.php $DEPLOYPATH/admin/
     - /bin/cp -f admin/draw.php $DEPLOYPATH/admin/

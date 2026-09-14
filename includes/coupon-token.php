@@ -45,9 +45,12 @@ function coupon_from_token($token, $secret) {
 function coupon_ticket_src($file) {
     $name = basename((string) $file);
     if ($name === 'yamoon-ticket-blank.jpg') {
-        return 'ticket-blank.jpg?v=20260915b';
+        return 'ticket-blank.jpg?v=20260915c';
     }
-    return '../cards/' . rawurlencode($name) . '?v=20260915b';
+    if ($name === 'yamoon-ticket-back.jpg') {
+        return 'ticket-back.jpg?v=20260915c';
+    }
+    return '../cards/' . rawurlencode($name) . '?v=20260915c';
 }
 
 function coupon_cards_config() {

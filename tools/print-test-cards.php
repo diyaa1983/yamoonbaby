@@ -136,7 +136,7 @@ $cards = [
 </head>
 <body>
     <div class="toolbar">
-        <h1>10 بطاقات تجريبية — اطبع أو امسح رمز QR</h1>
+        <h1>10 بطاقات تجريبية — الوجه والظهر</h1>
         <button type="button" onclick="window.print()">طباعة البطاقات</button>
     </div>
     <div class="sheet">
@@ -147,11 +147,16 @@ $cards = [
         ?>
         <div class="ticket-wrap">
             <div class="ticket">
-                <img class="ticket-bg" src="<?php echo htmlspecialchars(coupon_ticket_src('yamoon-ticket-blank.jpg'), ENT_QUOTES, 'UTF-8'); ?>" alt="بطاقة سحب <?php echo htmlspecialchars($display, ENT_QUOTES, 'UTF-8'); ?>">
+                <img class="ticket-bg" src="<?php echo htmlspecialchars(coupon_ticket_src('yamoon-ticket-blank.jpg'), ENT_QUOTES, 'UTF-8'); ?>" alt="وجه البطاقة <?php echo htmlspecialchars($display, ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="qr-box" id="qr-<?php echo $i; ?>" data-url="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8'); ?>"></div>
                 <div class="num-box"><?php echo htmlspecialchars($display, ENT_QUOTES, 'UTF-8'); ?></div>
             </div>
             <a class="open-link" href="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8'); ?>">فتح النموذج — <?php echo htmlspecialchars($display, ENT_QUOTES, 'UTF-8'); ?></a>
+        </div>
+        <div class="ticket-wrap">
+            <div class="ticket">
+                <img class="ticket-bg" src="<?php echo htmlspecialchars(coupon_ticket_src('yamoon-ticket-back.jpg'), ENT_QUOTES, 'UTF-8'); ?>" alt="ظهر البطاقة <?php echo htmlspecialchars($display, ENT_QUOTES, 'UTF-8'); ?>">
+            </div>
         </div>
         <?php endforeach; ?>
     </div>
