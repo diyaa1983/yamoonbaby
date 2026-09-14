@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const videoContainer = heroVideo.parentElement;
             if (videoContainer) {
                 videoContainer.innerHTML = `
-                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: linear-gradient(135deg, #ff6b9d, #4ecdc4); color: white; border-radius: 23px; background-image: url('Home1.jpg'); background-size: cover; background-position: center;">
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: linear-gradient(135deg, #ff6b9d, #4ecdc4); color: white; border-radius: 23px; background-image: url('assets/img/home.jpg'); background-size: cover; background-position: center;">
                         <div style="text-align: center; background: rgba(0,0,0,0.7); padding: 2rem; border-radius: 15px;">
                             <i class="fas fa-image" style="font-size: 3rem; margin-bottom: 1rem;"></i>
                             <p>صورة بديلة</p>

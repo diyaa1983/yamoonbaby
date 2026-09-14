@@ -1,6 +1,6 @@
 <?php
 function raffle_pdo() {
-    $configFile = __DIR__ . '/db-config.php';
+    $configFile = dirname(__DIR__) . '/db-config.php';
     if (!is_readable($configFile)) {
         throw new RuntimeException('db-config');
     }
@@ -60,7 +60,7 @@ function panel_audit(PDO $pdo, $actor, $action, $coupon = null, $entryId = null,
 }
 
 function raffle_entry_image($coupon, $phone) {
-    $pattern = __DIR__ . DIRECTORY_SEPARATOR . 'Archive' . DIRECTORY_SEPARATOR . $coupon . '_' . $phone . '.*';
+    $pattern = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Archive' . DIRECTORY_SEPARATOR . $coupon . '_' . $phone . '.*';
     $files = glob($pattern) ?: [];
     foreach ($files as $file) {
         if (is_file($file)) {

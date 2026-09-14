@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/coupon-token.php';
-$cfg = require __DIR__ . '/cards-secret.php';
+require dirname(__DIR__) . '/includes/coupon-token.php';
+$cfg = require dirname(__DIR__) . '/cards-secret.php';
 $start = max(1, min(500000, (int) ($_GET['start'] ?? 1)));
 $cards = [];
 for ($n = 0; $n < 6; $n++) {
@@ -13,8 +13,8 @@ for ($n = 0; $n < 6; $n++) {
 $first = $cards[0] ?? '000001';
 $last = $cards[count($cards) - 1] ?? $first;
 $pdfName = 'yamoon-cards-' . $first . '-' . $last . '.pdf';
-$pdfRel = 'cards/' . $pdfName;
-$pdfExists = is_file(__DIR__ . '/' . $pdfRel);
+$pdfRel = '../cards/' . $pdfName;
+$pdfExists = is_file(dirname(__DIR__) . '/cards/' . $pdfName);
 ?>
 <!DOCTYPE html>
 <html lang="ar">
@@ -149,7 +149,7 @@ $pdfExists = is_file(__DIR__ . '/' . $pdfRel);
         ?>
         <div class="card">
             <div class="ticket">
-                <img class="ticket-bg" src="cards/yamoon-ticket-blank.jpg" alt="<?php echo htmlspecialchars($coupon, ENT_QUOTES, 'UTF-8'); ?>">
+                <img class="ticket-bg" src="../cards/yamoon-ticket-blank.jpg" alt="<?php echo htmlspecialchars($coupon, ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="qr-box" id="qr-<?php echo $i; ?>" data-url="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8'); ?>"></div>
                 <div class="num-box"><?php echo htmlspecialchars($coupon, ENT_QUOTES, 'UTF-8'); ?></div>
             </div>

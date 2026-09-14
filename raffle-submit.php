@@ -1,7 +1,7 @@
 <?php
-require __DIR__ . '/coupon-token.php';
-require __DIR__ . '/raffle-session.php';
-require __DIR__ . '/raffle-db.php';
+require __DIR__ . '/includes/coupon-token.php';
+require __DIR__ . '/includes/raffle-session.php';
+require __DIR__ . '/includes/raffle-db.php';
 raffle_session_start();
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');

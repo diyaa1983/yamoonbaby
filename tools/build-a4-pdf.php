@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/coupon-token.php';
-$cfg = require __DIR__ . '/cards-secret.php';
+require dirname(__DIR__) . '/includes/coupon-token.php';
+$cfg = require dirname(__DIR__) . '/cards-secret.php';
 
 $start = max(1, min(500000, (int) ($_GET['start'] ?? 1)));
 $cards = [];
@@ -29,7 +29,7 @@ $cardH = $mm(74);
 $originX = 0;
 $originY = 0;
 
-$blankPath = __DIR__ . '/cards/yamoon-ticket-blank.jpg';
+$blankPath = dirname(__DIR__) . '/cards/yamoon-ticket-blank.jpg';
 $blank = imagecreatefromjpeg($blankPath);
 $srcW = imagesx($blank);
 $srcH = imagesy($blank);
@@ -112,7 +112,7 @@ imagedestroy($page);
 $jpg = file_get_contents($jpgPath);
 $jpgLen = strlen($jpg);
 $pdfName = 'yamoon-cards-' . $first . '-' . $last . '.pdf';
-$pdfPath = __DIR__ . '/cards/' . $pdfName;
+$pdfPath = dirname(__DIR__) . '/cards/' . $pdfName;
 $ptW = 274 * 72 / 25.4;
 $ptH = 222 * 72 / 25.4;
 

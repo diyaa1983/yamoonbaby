@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__DIR__) . '/raffle-session.php';
-require_once dirname(__DIR__) . '/raffle-db.php';
+require_once dirname(__DIR__) . '/includes/raffle-session.php';
+require_once dirname(__DIR__) . '/includes/raffle-db.php';
 
 function panel_start() {
     raffle_session_start();

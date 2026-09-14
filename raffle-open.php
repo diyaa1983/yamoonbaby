@@ -1,7 +1,7 @@
 <?php
 header('Cache-Control: no-store, no-cache, must-revalidate');
-require __DIR__ . '/coupon-token.php';
-require __DIR__ . '/raffle-db.php';
+require __DIR__ . '/includes/coupon-token.php';
+require __DIR__ . '/includes/raffle-db.php';
 
 $cfgFile = __DIR__ . '/cards-secret.php';
 if (!is_readable($cfgFile)) {

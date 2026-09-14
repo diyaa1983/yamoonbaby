@@ -62,7 +62,7 @@
             <div class="row" id="root"></div>
             <div class="child-track" id="childTrack">
                 <div class="kid" id="yamoonChild">
-                    <img src="../baby.png" alt="طفل يامون">
+                    <img src="../assets/img/baby.png" alt="طفل يامون">
                 </div>
             </div>
             <div class="actions">

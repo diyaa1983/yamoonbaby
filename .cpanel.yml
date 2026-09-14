@@ -4,41 +4,39 @@ deployment:
     - export DEPLOYPATH=/home5/bawaliiz/public_html/yamoonbaby.com/
     - /bin/cp -f index.html $DEPLOYPATH
     - /bin/cp -f index.php $DEPLOYPATH
+    - /bin/cp -f about.html $DEPLOYPATH
+    - /bin/cp -f contact.html $DEPLOYPATH
+    - /bin/cp -f products.html $DEPLOYPATH
     - /bin/cp -f raffle.html $DEPLOYPATH
-    - mkdir -p $DEPLOYPATH/cards
-    - /bin/cp -f cards/yamoon-ticket.jpg $DEPLOYPATH/cards/
-    - /bin/cp -f cards/yamoon-ticket-blank.jpg $DEPLOYPATH/cards/
     - /bin/cp -f raffle-used.html $DEPLOYPATH
     - /bin/cp -f raffle-open.php $DEPLOYPATH
     - /bin/cp -f raffle-card.php $DEPLOYPATH
-    - /bin/cp -f raffle-db.php $DEPLOYPATH
-    - /bin/cp -f raffle-session.php $DEPLOYPATH
-    - /bin/cp -f coupon-token.php $DEPLOYPATH
-    - /bin/cp -f print-test-cards.php $DEPLOYPATH
-    - /bin/cp -f print-a4-cards.php $DEPLOYPATH
-    - /bin/cp -f jordan-areas.js $DEPLOYPATH
-    - /bin/cp -f styles.css $DEPLOYPATH
-    - /bin/cp -f script.js $DEPLOYPATH
-    - /bin/cp -f products.html $DEPLOYPATH
-    - mkdir -p $DEPLOYPATH/packs
-    - /bin/cp -f packs/1.webp $DEPLOYPATH/packs/
-    - /bin/cp -f packs/2.webp $DEPLOYPATH/packs/
-    - /bin/cp -f packs/3.webp $DEPLOYPATH/packs/
-    - /bin/cp -f packs/4.webp $DEPLOYPATH/packs/
-    - /bin/cp -f packs/5.webp $DEPLOYPATH/packs/
-    - /bin/cp -f packs/6.webp $DEPLOYPATH/packs/
-    - /bin/cp -f packs/7.webp $DEPLOYPATH/packs/
-    - /bin/cp -f packs/8.webp $DEPLOYPATH/packs/
-    - /bin/cp -f packs/9.webp $DEPLOYPATH/packs/
-    - /bin/cp -f packs/10.webp $DEPLOYPATH/packs/
-    - /bin/cp -f packs/11.webp $DEPLOYPATH/packs/
-    - /bin/cp -f packs/12.webp $DEPLOYPATH/packs/
-    - /bin/cp -f packs/13.webp $DEPLOYPATH/packs/
-    - /bin/cp -f packs/14.webp $DEPLOYPATH/packs/
-    - /bin/cp -f .htaccess $DEPLOYPATH
+    - /bin/cp -f raffle-submit.php $DEPLOYPATH
     - /bin/cp -f login.php $DEPLOYPATH
-    - /bin/cp -f baby.png $DEPLOYPATH
-    - mkdir -p $DEPLOYPATH/admin
+    - /bin/cp -f logout.php $DEPLOYPATH
+    - /bin/cp -f .htaccess $DEPLOYPATH
+    - mkdir -p $DEPLOYPATH/assets/css $DEPLOYPATH/assets/js $DEPLOYPATH/assets/img/products $DEPLOYPATH/assets/img/qr $DEPLOYPATH/includes $DEPLOYPATH/tools $DEPLOYPATH/cards $DEPLOYPATH/admin
+    - /bin/cp -f assets/css/styles.css $DEPLOYPATH/assets/css/
+    - /bin/cp -f assets/js/script.js $DEPLOYPATH/assets/js/
+    - /bin/cp -f assets/js/jordan-areas.js $DEPLOYPATH/assets/js/
+    - /bin/cp -f assets/img/logo.png $DEPLOYPATH/assets/img/
+    - /bin/cp -f assets/img/baby.png $DEPLOYPATH/assets/img/
+    - /bin/cp -f assets/img/home.jpg $DEPLOYPATH/assets/img/
+    - /bin/cp -f assets/img/yamoon.jpeg $DEPLOYPATH/assets/img/
+    - /bin/cp -f assets/img/products/*.webp $DEPLOYPATH/assets/img/products/
+    - /bin/cp -f assets/img/qr/facebook-qr-code.png $DEPLOYPATH/assets/img/qr/
+    - /bin/cp -f assets/img/qr/homepage-qr-code.png $DEPLOYPATH/assets/img/qr/
+    - /bin/cp -f includes/coupon-token.php $DEPLOYPATH/includes/
+    - /bin/cp -f includes/raffle-db.php $DEPLOYPATH/includes/
+    - /bin/cp -f includes/raffle-session.php $DEPLOYPATH/includes/
+    - /bin/cp -f includes/db-config.example.php $DEPLOYPATH/includes/
+    - /bin/cp -f includes/cards-secret.example.php $DEPLOYPATH/includes/
+    - /bin/cp -f includes/.htaccess $DEPLOYPATH/includes/
+    - /bin/cp -f tools/print-a4-cards.php $DEPLOYPATH/tools/
+    - /bin/cp -f tools/print-test-cards.php $DEPLOYPATH/tools/
+    - /bin/cp -f tools/build-a4-pdf.php $DEPLOYPATH/tools/
+    - /bin/cp -f cards/yamoon-ticket.jpg $DEPLOYPATH/cards/
+    - /bin/cp -f cards/yamoon-ticket-blank.jpg $DEPLOYPATH/cards/
     - /bin/cp -f admin/index.php $DEPLOYPATH/admin/
     - /bin/cp -f admin/home.php $DEPLOYPATH/admin/
     - /bin/cp -f admin/draw.php $DEPLOYPATH/admin/
@@ -52,6 +50,3 @@ deployment:
     - /bin/cp -f admin/image.php $DEPLOYPATH/admin/
     - /bin/cp -f admin/admin.css $DEPLOYPATH/admin/
     - /bin/cp -f admin/.htaccess $DEPLOYPATH/admin/
-    - /bin/cp -f raffle-submit.php $DEPLOYPATH
-    - /bin/cp -f admin-secret.example.php $DEPLOYPATH
-    - /bin/cp -f db-config.example.php $DEPLOYPATH
