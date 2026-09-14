@@ -113,6 +113,8 @@ $pdfExists = is_file(dirname(__DIR__) . '/cards/' . $pdfName);
             height: 6.16%;
             background: transparent;
             border: 0;
+            outline: 0;
+            box-shadow: none;
             border-radius: 999px;
             display: flex;
             align-items: center;
