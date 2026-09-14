@@ -21,8 +21,20 @@ function raffle_pdo() {
     if ($configFile === '') {
         throw new RuntimeException('missing-config');
     }
-    $config = require $configFile;
+    $raw = (string) file_get_contents($configFile);
+    if (strpos($raw, '<?php') === false || !preg_match('/\]\s*;/', $raw)) {
+        throw new RuntimeException('bad-config');
+    }
+    $config = include $configFile;
+    if (!is_array($config)) {
+        throw new RuntimeException('bad-config');
+    }
     $name = str_replace(['`', "\0"], '', (string) ($config['name'] ?? ''));
+    $user = (string) ($config['user'] ?? '');
+    $pass = (string) ($config['pass'] ?? '');
+    if ($name === '' || $user === '') {
+        throw new RuntimeException('bad-config');
+    }
     $host = (string) ($config['host'] ?? 'localhost');
     $hosts = [$host];
     if ($host === '127.0.0.1') {
@@ -43,7 +55,7 @@ function raffle_pdo() {
                 $config['port'] ?? 3306,
                 $config['charset'] ?? 'utf8mb4'
             );
-            $pdo = new PDO($dsn, $config['user'], $config['pass'], $options);
+            $pdo = new PDO($dsn, $user, $pass, $options);
             $pdo->exec('USE `' . $name . '`');
             return $pdo;
         } catch (PDOException $e) {

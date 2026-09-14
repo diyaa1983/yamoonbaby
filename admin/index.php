@@ -1,4 +1,11 @@
 <?php
+$root = dirname(__DIR__);
+if (!is_readable($root . '/includes/raffle-session.php') || !is_readable($root . '/includes/raffle-db.php')) {
+    http_response_code(500);
+    header('Content-Type: text/html; charset=utf-8');
+    echo 'ملفات النظام ناقصة على السيرفر. من SSH نفّذ: git checkout -- db-config.example.php ثم git pull origin main';
+    exit;
+}
 require __DIR__ . '/auth.php';
 panel_start();
 
@@ -16,10 +23,13 @@ try {
 } catch (Exception $e) {
     $pdo = null;
     $hasUsers = true;
-    if ($e->getMessage() === 'missing-config') {
-        $error = 'ملف db-config.php غير موجود على السيرفر. أنشئه في مجلد الموقع (بجانب index.html) وضع فيه اسم القاعدة والمستخدم وكلمة السر من cPanel. هذا الملف لا يُرفع مع Git.';
+    $code = $e->getMessage();
+    if ($code === 'missing-config') {
+        $error = 'ملف db-config.php غير موجود على السيرفر. أنشئه بجانب index.html. لا تستخدم ملف المثال.';
+    } elseif ($code === 'bad-config') {
+        $error = 'ملف db-config.php ناقص أو فيه خطأ. يجب أن ينتهي بـ ]; بعد charset.';
     } else {
-        $error = 'تعذر الدخول لقاعدة البيانات. استخدم في db-config.php نفس بيانات cPanel → MySQL Databases: غالباً host = localhost، واسم القاعدة والمستخدم يظهران كاملين (يبدآن باسم حساب الاستضافة).';
+        $error = 'تعذر الدخول لقاعدة البيانات. تأكد أن host=localhost وأن اسم القاعدة والمستخدم مطابقان لـ cPanel.';
     }
 }
 
