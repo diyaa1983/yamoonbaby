@@ -29,9 +29,11 @@ function raffle_pdo() {
     if (!is_array($config)) {
         throw new RuntimeException('bad-config');
     }
-    $name = str_replace(['`', "\0"], '', (string) ($config['name'] ?? ''));
-    $user = (string) ($config['user'] ?? '');
+    $name = trim(str_replace(['`', "\0"], '', (string) ($config['name'] ?? '')));
+    $user = trim((string) ($config['user'] ?? ''));
     $pass = (string) ($config['pass'] ?? '');
+    $pass = str_replace("\0", '', $pass);
+    $pass = trim($pass, " \t\n\r\0\x0B\"'");
     if ($name === '' || $user === '') {
         throw new RuntimeException('bad-config');
     }
@@ -41,10 +43,9 @@ function raffle_pdo() {
     ];
     $dsns = [
         'mysql:host=localhost;charset=utf8mb4',
-        'mysql:host=localhost;port=3306;charset=utf8mb4',
         'mysql:unix_socket=/var/lib/mysql/mysql.sock;charset=utf8mb4',
         'mysql:unix_socket=/tmp/mysql.sock;charset=utf8mb4',
-        'mysql:host=127.0.0.1;port=3306;charset=utf8mb4',
+        'mysql:host=localhost;port=3306;charset=utf8mb4',
     ];
     $host = (string) ($config['host'] ?? 'localhost');
     if ($host !== 'localhost' && $host !== '127.0.0.1') {

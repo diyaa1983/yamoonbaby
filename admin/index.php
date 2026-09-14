@@ -31,7 +31,7 @@ try {
     } elseif ($code === 'pdo-1045') {
         $error = 'MySQL رفض المستخدم أو كلمة السر. من cPanel → MySQL Databases أضف المستخدم إلى القاعدة بصلاحيات ALL PRIVILEGES، وتأكد أن كلمة السر مطابقة.';
     } elseif ($code === 'pdo-1049' || $code === 'pdo-1044') {
-        $error = 'اسم القاعدة غير صحيح أو المستخدم بدون صلاحية عليها. انسخ الاسم الكامل من cPanel مثل bawaliiz_yamoon-baby.';
+        $error = 'اسم القاعدة غير صحيح أو المستخدم بدون صلاحية عليها. انسخ الاسم الكامل من cPanel كما هو.';
     } elseif ($code === 'pdo-2002') {
         $error = 'تعذر الوصول لسيرفر MySQL. أبقِ host على localhost بدون تغيير.';
     } elseif ($code === 'pdo-schema') {
