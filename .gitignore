@@ -6,7 +6,6 @@
 !raffle-submit.php
 !raffle-card.php
 !raffle-open.php
-!cards-secret.php
 !includes/
 !includes/*.php
 !includes/.htaccess
@@ -21,6 +20,7 @@
 # Secrets — never commit
 admin-secret.php
 db-config.php
+cards-secret.php
 
 # Prototypes, backups, local tooling
 draw*.html

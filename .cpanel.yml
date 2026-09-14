@@ -10,7 +10,6 @@ deployment:
     - /bin/cp -f raffle.html $DEPLOYPATH
     - /bin/cp -f raffle-used.html $DEPLOYPATH
     - /bin/cp -f raffle-open.php $DEPLOYPATH
-    - /bin/cp -f cards-secret.php $DEPLOYPATH
     - /bin/cp -f raffle-card.php $DEPLOYPATH
     - /bin/cp -f raffle-submit.php $DEPLOYPATH
     - /bin/cp -f login.php $DEPLOYPATH
@@ -30,12 +29,14 @@ deployment:
     - /bin/cp -f includes/coupon-token.php $DEPLOYPATH/includes/
     - /bin/cp -f includes/raffle-db.php $DEPLOYPATH/includes/
     - /bin/cp -f includes/raffle-session.php $DEPLOYPATH/includes/
+    - /bin/cp -f includes/tool-auth.php $DEPLOYPATH/includes/
     - /bin/cp -f includes/db-config.example.php $DEPLOYPATH/includes/
     - /bin/cp -f includes/cards-secret.example.php $DEPLOYPATH/includes/
     - /bin/cp -f includes/.htaccess $DEPLOYPATH/includes/
     - /bin/cp -f tools/print-a4-cards.php $DEPLOYPATH/tools/
     - /bin/cp -f tools/print-test-cards.php $DEPLOYPATH/tools/
     - /bin/cp -f tools/build-a4-pdf.php $DEPLOYPATH/tools/
+    - /bin/cp -f tools/.htaccess $DEPLOYPATH/tools/
     - /bin/cp -f cards/yamoon-ticket.jpg $DEPLOYPATH/cards/
     - /bin/cp -f cards/yamoon-ticket-blank.jpg $DEPLOYPATH/cards/
     - /bin/cp -f admin/index.php $DEPLOYPATH/admin/

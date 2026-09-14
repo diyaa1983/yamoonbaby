@@ -1,4 +1,5 @@
 <?php
+require dirname(__DIR__) . '/includes/tool-auth.php';
 require dirname(__DIR__) . '/includes/coupon-token.php';
 $cfg = coupon_cards_config_or_fail();
 

@@ -420,10 +420,10 @@
                             <span class="hint">10 خانات ويبدأ بـ 079 أو 078 أو 077</span>
                         </div>
                         <div class="form-group">
-                            <label for="couponInput">رقم البطاقة / الكوبون</label>
-                            <input type="tel" id="couponInput" class="latin-digits" lang="en" inputmode="numeric" maxlength="6" autocomplete="off">
-                            <div class="coupon-lock" id="couponDisplay" style="display:none;">------</div>
-                            <span class="hint" id="couponHint">6 أرقام كما هي مطبوعة على البطاقة</span>
+                            <label>رقم البطاقة / الكوبون</label>
+                            <input type="hidden" id="couponInput" value="">
+                            <div class="coupon-lock" id="couponDisplay">------</div>
+                            <span class="hint" id="couponHint">امسح رمز QR من البطاقة الأصلية. لا يمكن إدخال الرقم يدوياً.</span>
                         </div>
                         <div class="form-group full">
                             <label for="governorate">المحافظة</label>
@@ -561,7 +561,20 @@
 
             var cardToken = new URLSearchParams(window.location.search).get('t') || '';
             var cardCoupon = '';
-            if (cardToken) {
+            var formLocked = true;
+            var submitBtn = form.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+
+            function lockForm(message) {
+                formLocked = true;
+                submitBtn.disabled = true;
+                couponHint.textContent = message;
+            }
+
+            if (!cardToken) {
+                lockForm('هذه الصفحة تُفتح فقط بمسح رمز QR من البطاقة الأصلية.');
+                showAlert('امسح رمز QR من بطاقة السحب للدخول إلى النموذج.');
+            } else {
                 fetch('raffle-card.php?t=' + encodeURIComponent(cardToken))
                     .then(function (res) { return res.json(); })
                     .then(function (body) {
@@ -570,17 +583,19 @@
                                 window.location.replace('raffle-used.html');
                                 return;
                             }
-                            showAlert((body && body.error) || 'هذه البطاقة غير صحيحة. أدخل رقم البطاقة يدوياً.');
+                            lockForm((body && body.error) || 'هذه البطاقة غير صحيحة.');
+                            showAlert((body && body.error) || 'هذه البطاقة غير صحيحة. امسح رمز QR من البطاقة الأصلية.');
                             return;
                         }
                         cardCoupon = body.coupon;
                         couponDisplay.textContent = cardCoupon;
-                        couponDisplay.style.display = 'block';
-                        couponInput.style.display = 'none';
                         couponHint.textContent = 'رقم المشاركة مثبت من البطاقة ولا يمكن تغييره';
+                        formLocked = false;
+                        submitBtn.disabled = false;
                     })
                     .catch(function () {
-                        showAlert('تعذر التحقق من البطاقة. يمكنك إدخال رقم البطاقة يدوياً.');
+                        lockForm('تعذر التحقق من البطاقة.');
+                        showAlert('تعذر التحقق من البطاقة. أعد مسح رمز QR.');
                     });
             }
 
@@ -592,7 +607,6 @@
             });
 
             digitsOnly(phone, 10);
-            digitsOnly(couponInput, 6);
 
             uploadBtn.addEventListener('click', function () {
                 couponImage.click();
@@ -624,7 +638,11 @@
                 if (document.getElementById('websiteUrl').value) {
                     return;
                 }
-                var couponValue = cardCoupon || normalizeCoupon(couponInput.value);
+                if (formLocked || !cardToken || !cardCoupon) {
+                    showAlert('هذه الصفحة تُفتح فقط بمسح رمز QR من البطاقة الأصلية.');
+                    return;
+                }
+                var couponValue = cardCoupon;
                 var valid =
                     document.getElementById('fullName').value.trim().length > 0 &&
                     /^(079|078|077)\d{7}$/.test(phone.value) &&
@@ -633,11 +651,10 @@
                     couponImage.files.length > 0;
 
                 if (!valid) {
-                    showAlert('يرجى إدخال الاسم الكامل ورقم الهاتف ورقم البطاقة والمحافظة وصورة الكوبون بشكل صحيح. رقم الهاتف 10 خانات ويبدأ بـ 079 أو 078 أو 077.');
+                    showAlert('يرجى إدخال الاسم الكامل ورقم الهاتف والمحافظة وصورة الكوبون بشكل صحيح. رقم الهاتف 10 خانات ويبدأ بـ 079 أو 078 أو 077.');
                     return;
                 }
 
-                var submitBtn = form.querySelector('.submit-btn');
                 submitBtn.disabled = true;
                 var payload = new FormData();
                 payload.append('full_name', document.getElementById('fullName').value.trim());

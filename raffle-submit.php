@@ -13,12 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$host = $_SERVER['HTTP_HOST'] ?? '';
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$referer = $_SERVER['HTTP_REFERER'] ?? '';
-$sameOrigin = ($origin !== '' && strpos($origin, $host) !== false)
-    || ($referer !== '' && strpos($referer, $host) !== false);
-if ($host !== '' && !$sameOrigin) {
+$host = strtolower(preg_replace('/^www\./', '', preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? '')));
+$originHost = strtolower(preg_replace('/^www\./', '', (string) parse_url($_SERVER['HTTP_ORIGIN'] ?? '', PHP_URL_HOST)));
+$refererHost = strtolower(preg_replace('/^www\./', '', (string) parse_url($_SERVER['HTTP_REFERER'] ?? '', PHP_URL_HOST)));
+$sameOrigin = ($originHost !== '' && hash_equals($host, $originHost))
+    || ($originHost === '' && $refererHost !== '' && hash_equals($host, $refererHost));
+if ($host === '' || !$sameOrigin) {
     http_response_code(403);
     echo json_encode(['ok' => false, 'error' => 'الطلب مرفوض.'], JSON_UNESCAPED_UNICODE);
     exit;
@@ -79,28 +79,21 @@ $sessionCoupon = (string) ($_SESSION['raffle_coupon'] ?? '');
 $sessionToken = (string) ($_SESSION['raffle_token'] ?? '');
 $postedToken = (string) ($data['card_token'] ?? '');
 $coupon = '';
-if ($sessionToken !== '' && $sessionCoupon !== '') {
+if (
+    $sessionToken !== ''
+    && $sessionCoupon !== ''
+    && $postedToken !== ''
+    && hash_equals($sessionToken, $postedToken)
+) {
     $fromToken = coupon_from_token($sessionToken, $cardCfg['secret']);
-    if (
-        $fromToken !== ''
-        && hash_equals($sessionCoupon, $fromToken)
-        && ($postedToken === '' || hash_equals($sessionToken, $postedToken))
-    ) {
+    if ($fromToken !== '' && hash_equals($sessionCoupon, $fromToken)) {
         $coupon = $fromToken;
-    }
-}
-if ($coupon === '') {
-    $postedCoupon = preg_replace('/\D/', '', english_digits($data['coupon'] ?? ''));
-    $postedCoupon = str_pad(substr($postedCoupon, 0, 6), 6, '0', STR_PAD_LEFT);
-    $couponNumber = (int) $postedCoupon;
-    if (preg_match('/^\d{6}$/', $postedCoupon) && $couponNumber >= 1 && $couponNumber <= 500000) {
-        $coupon = $postedCoupon;
     }
 }
 
 if ($coupon === '') {
-    http_response_code(422);
-    echo json_encode(['ok' => false, 'error' => 'يرجى إدخال رقم البطاقة المكون من 6 أرقام.'], JSON_UNESCAPED_UNICODE);
+    http_response_code(403);
+    echo json_encode(['ok' => false, 'error' => 'هذه البطاقة غير صحيحة. امسح رمز QR من البطاقة الأصلية.'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
