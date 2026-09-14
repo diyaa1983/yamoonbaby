@@ -96,7 +96,7 @@
     <div class="wrap">
         <a class="back" href="draw.php">كل النماذج</a>
         <div class="ticket">
-            <img class="hero" src="../cards/yamoon-ticket.jpg" alt="">
+            <img class="hero" src="../cards/yamoon-ticket.jpg?v=20260525" alt="">
             <div class="ribbon">مستقبلك يبدأ من هنا • اربح شقة في طبربور</div>
             <div class="board-wrap">
                 <div class="board-label">رقم المشاركة</div>

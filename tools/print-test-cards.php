@@ -147,7 +147,7 @@ $cards = [
         ?>
         <div class="ticket-wrap">
             <div class="ticket">
-                <img class="ticket-bg" src="../cards/yamoon-ticket-blank.jpg" alt="بطاقة سحب <?php echo htmlspecialchars($display, ENT_QUOTES, 'UTF-8'); ?>">
+                <img class="ticket-bg" src="../cards/yamoon-ticket-blank.jpg?v=20260525" alt="بطاقة سحب <?php echo htmlspecialchars($display, ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="qr-box" id="qr-<?php echo $i; ?>" data-url="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8'); ?>"></div>
                 <div class="num-box"><?php echo htmlspecialchars($display, ENT_QUOTES, 'UTF-8'); ?></div>
             </div>
