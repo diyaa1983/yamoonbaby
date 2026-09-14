@@ -41,14 +41,14 @@ $black = imagecolorallocate($page, 0, 0, 0);
 $navy = imagecolorallocate($page, 26, 39, 68);
 imagefilledrectangle($page, 0, 0, $pageW, $pageH, $white);
 
-$qrX = (int) round($cardW * 0.76855);
-$qrY = (int) round($cardH * 0.28090);
-$qrW = (int) round($cardW * 0.16797);
-$qrH = (int) round($cardH * 0.30150);
-$numX = (int) round($cardW * 0.76758);
-$numY = (int) round($cardH * 0.65543);
-$numW = (int) round($cardW * 0.17773);
-$numH = (int) round($cardH * 0.05993);
+$qrX = (int) round($cardW * 0.7676);
+$qrY = (int) round($cardH * 0.2817);
+$qrW = (int) round($cardW * 0.1689);
+$qrH = (int) round($cardH * 0.3022);
+$numX = (int) round($cardW * 0.7588);
+$numY = (int) round($cardH * 0.6549);
+$numW = (int) round($cardW * 0.1934);
+$numH = (int) round($cardH * 0.0616);
 $fontFile = 'C:\\Windows\\Fonts\\arialbd.ttf';
 
 foreach ($cards as $i => $card) {

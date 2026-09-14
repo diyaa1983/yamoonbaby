@@ -71,7 +71,7 @@
                 <button type="button" id="resetAll">تصفير</button>
             </div>
             <div class="info" id="info" data-idle=""></div>
-            <div class="date">موعد السحب: 30/06/2027</div>
+            <div class="date">موعد السحب: 25/05/2027</div>
         </div>
     </div>
     <script src="draw-engine.js"></script>
