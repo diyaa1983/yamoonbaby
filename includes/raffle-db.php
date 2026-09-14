@@ -35,26 +35,24 @@ function raffle_pdo() {
     if ($name === '' || $user === '') {
         throw new RuntimeException('bad-config');
     }
-    $host = (string) ($config['host'] ?? 'localhost');
-    $hosts = [$host];
-    if ($host === '127.0.0.1') {
-        $hosts[] = 'localhost';
-    } elseif ($host === 'localhost') {
-        $hosts[] = '127.0.0.1';
-    }
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ];
+    $dsns = [
+        'mysql:host=localhost;charset=utf8mb4',
+        'mysql:host=localhost;port=3306;charset=utf8mb4',
+        'mysql:unix_socket=/var/lib/mysql/mysql.sock;charset=utf8mb4',
+        'mysql:unix_socket=/tmp/mysql.sock;charset=utf8mb4',
+        'mysql:host=127.0.0.1;port=3306;charset=utf8mb4',
+    ];
+    $host = (string) ($config['host'] ?? 'localhost');
+    if ($host !== 'localhost' && $host !== '127.0.0.1') {
+        array_unshift($dsns, 'mysql:host=' . $host . ';charset=utf8mb4');
+    }
     $last = null;
-    foreach (array_unique($hosts) as $tryHost) {
+    foreach (array_unique($dsns) as $dsn) {
         try {
-            $dsn = sprintf(
-                'mysql:host=%s;port=%s;charset=%s',
-                $tryHost,
-                $config['port'] ?? 3306,
-                $config['charset'] ?? 'utf8mb4'
-            );
             $pdo = new PDO($dsn, $user, $pass, $options);
             $pdo->exec('USE `' . $name . '`');
             return $pdo;
@@ -62,7 +60,8 @@ function raffle_pdo() {
             $last = $e;
         }
     }
-    throw $last ?: new RuntimeException('db-connect');
+    $driver = (int) ($last && isset($last->errorInfo[1]) ? $last->errorInfo[1] : 0);
+    throw new RuntimeException('pdo-' . $driver, 0, $last);
 }
 
 function raffle_coupon_used(PDO $pdo, $coupon) {

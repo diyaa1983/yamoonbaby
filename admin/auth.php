@@ -12,7 +12,15 @@ function panel_pdo() {
         return $pdo;
     }
     $pdo = raffle_pdo();
-    panel_ensure_schema($pdo);
+    try {
+        panel_ensure_schema($pdo);
+    } catch (Exception $e) {
+        try {
+            $pdo->query('SELECT 1 FROM panel_users LIMIT 1');
+        } catch (Exception $e2) {
+            throw new RuntimeException('pdo-schema');
+        }
+    }
     return $pdo;
 }
 

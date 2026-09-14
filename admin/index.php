@@ -28,8 +28,16 @@ try {
         $error = 'ملف db-config.php غير موجود على السيرفر. أنشئه بجانب index.html. لا تستخدم ملف المثال.';
     } elseif ($code === 'bad-config') {
         $error = 'ملف db-config.php ناقص أو فيه خطأ. يجب أن ينتهي بـ ]; بعد charset.';
+    } elseif ($code === 'pdo-1045') {
+        $error = 'MySQL رفض المستخدم أو كلمة السر. من cPanel → MySQL Databases أضف المستخدم إلى القاعدة بصلاحيات ALL PRIVILEGES، وتأكد أن كلمة السر مطابقة.';
+    } elseif ($code === 'pdo-1049' || $code === 'pdo-1044') {
+        $error = 'اسم القاعدة غير صحيح أو المستخدم بدون صلاحية عليها. انسخ الاسم الكامل من cPanel مثل bawaliiz_yamoon-baby.';
+    } elseif ($code === 'pdo-2002') {
+        $error = 'تعذر الوصول لسيرفر MySQL. أبقِ host على localhost بدون تغيير.';
+    } elseif ($code === 'pdo-schema') {
+        $error = 'تم الاتصال لكن لا توجد صلاحية إنشاء الجداول. أضف المستخدم للقاعدة بـ ALL PRIVILEGES ثم استورد database/yamoonbaby-data.sql من phpMyAdmin.';
     } else {
-        $error = 'تعذر الدخول لقاعدة البيانات. تأكد أن host=localhost وأن اسم القاعدة والمستخدم مطابقان لـ cPanel.';
+        $error = 'تعذر الدخول لقاعدة البيانات (' . $code . '). تأكد من host=localhost واسم القاعدة والمستخدم في cPanel.';
     }
 }
 
