@@ -567,8 +567,39 @@
             var cardToken = new URLSearchParams(window.location.search).get('t') || '';
             var cardCoupon = '';
             var formLocked = true;
+            var compressedCoupon = null;
             var submitBtn = form.querySelector('.submit-btn');
             submitBtn.disabled = true;
+
+            function compressCouponImage(file) {
+                return new Promise(function (resolve) {
+                    var img = new Image();
+                    var url = URL.createObjectURL(file);
+                    img.onload = function () {
+                        URL.revokeObjectURL(url);
+                        var max = 1200;
+                        var w = img.width;
+                        var h = img.height;
+                        if (w > max || h > max) {
+                            var scale = Math.min(max / w, max / h);
+                            w = Math.round(w * scale);
+                            h = Math.round(h * scale);
+                        }
+                        var canvas = document.createElement('canvas');
+                        canvas.width = w;
+                        canvas.height = h;
+                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        canvas.toBlob(function (blob) {
+                            resolve(blob ? new File([blob], 'coupon.jpg', { type: 'image/jpeg' }) : file);
+                        }, 'image/jpeg', 0.72);
+                    };
+                    img.onerror = function () {
+                        URL.revokeObjectURL(url);
+                        resolve(file);
+                    };
+                    img.src = url;
+                });
+            }
 
             function lockForm(message) {
                 formLocked = true;
@@ -623,23 +654,23 @@
 
             couponImage.addEventListener('change', function () {
                 var file = this.files && this.files[0];
+                compressedCoupon = null;
                 if (!file) {
                     preview.style.display = 'none';
                     return;
                 }
-                if (!file.type.match(/^image\//) || file.size > 5 * 1024 * 1024) {
+                if (!file.type.match(/^image\//) || file.size > 8 * 1024 * 1024) {
                     this.value = '';
                     preview.style.display = 'none';
-                    showAlert('يرجى اختيار صورة فقط بحجم أقصى 5 ميغابايت.');
+                    showAlert('يرجى اختيار صورة فقط بحجم أقصى 8 ميغابايت.');
                     return;
                 }
                 formError.style.display = 'none';
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    previewImg.src = e.target.result;
+                compressCouponImage(file).then(function (ready) {
+                    compressedCoupon = ready;
+                    previewImg.src = URL.createObjectURL(ready);
                     preview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
+                });
             });
 
             form.addEventListener('submit', function (e) {
@@ -665,44 +696,54 @@
                 }
 
                 submitBtn.disabled = true;
-                var payload = new FormData();
-                payload.append('full_name', document.getElementById('fullName').value.trim());
-                payload.append('phone', phone.value);
-                payload.append('card_token', cardToken);
-                payload.append('coupon', couponValue);
-                payload.append('governorate', governorate.value);
-                payload.append('website_url', document.getElementById('websiteUrl').value);
-                payload.append('coupon_image', couponImage.files[0]);
+                var originalLabel = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التسجيل...';
+                var startSend = function (imageFile) {
+                    var payload = new FormData();
+                    payload.append('full_name', document.getElementById('fullName').value.trim());
+                    payload.append('phone', phone.value);
+                    payload.append('card_token', cardToken);
+                    payload.append('coupon', couponValue);
+                    payload.append('governorate', governorate.value);
+                    payload.append('website_url', document.getElementById('websiteUrl').value);
+                    payload.append('coupon_image', imageFile, 'coupon.jpg');
 
-                fetch('raffle-submit.php', {
-                    method: 'POST',
-                    body: payload
-                }).then(function (res) {
-                    return res.json().then(function (body) {
-                        return { status: res.status, body: body };
-                    });
-                }).then(function (result) {
-                    if (!result.body || !result.body.ok) {
-                        if (result.body && result.body.closed) {
-                            window.location.replace('raffle-closed.html');
+                    fetch('raffle-submit.php', {
+                        method: 'POST',
+                        body: payload
+                    }).then(function (res) {
+                        return res.json().then(function (body) {
+                            return { status: res.status, body: body };
+                        });
+                    }).then(function (result) {
+                        if (!result.body || !result.body.ok) {
+                            if (result.body && result.body.closed) {
+                                window.location.replace('raffle-closed.html');
+                                return;
+                            }
+                            if (result.body && result.body.error === 'البطاقة مستخدمة.') {
+                                window.location.replace('raffle-used.html');
+                                return;
+                            }
+                            showAlert((result.body && result.body.error) || 'تعذر حفظ المشاركة.');
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalLabel;
                             return;
                         }
-                        if (result.body && result.body.error === 'البطاقة مستخدمة.') {
-                            window.location.replace('raffle-used.html');
-                            return;
-                        }
-                        showAlert((result.body && result.body.error) || 'تعذر حفظ المشاركة.');
+                        form.style.display = 'none';
+                        successBox.style.display = 'block';
+                        showAlert('تم تسجيلك في السحب بنجاح.');
+                    }).catch(function () {
+                        showAlert('تعذر الاتصال بالخادم. تأكد أن Apache وMySQL يعملان.');
                         submitBtn.disabled = false;
-                        return;
-                    }
-                    form.style.display = 'none';
-                    successBox.style.display = 'block';
-                    showAlert('تم تسجيلك في السحب بنجاح.');
-                }).catch(function () {
-                    showAlert('تعذر الاتصال بالخادم. تأكد أن Apache وMySQL يعملان.');
-                    submitBtn.disabled = false;
-                });
-            });
+                        submitBtn.innerHTML = originalLabel;
+                    });
+                };
+                if (compressedCoupon) {
+                    startSend(compressedCoupon);
+                } else {
+                    compressCouponImage(couponImage.files[0]).then(startSend);
+                }
         });
     </script>
 </body>

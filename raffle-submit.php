@@ -69,8 +69,55 @@ $allowedGovernorates = [
 $fullName = trim((string) ($data['full_name'] ?? ''));
 $phone = preg_replace('/\D/', '', english_digits($data['phone'] ?? ''));
 $governorate = trim((string) ($data['governorate'] ?? ''));
+function raffle_save_small_jpeg($tmpPath, $destPath) {
+    $info = @getimagesize($tmpPath);
+    if (!$info) {
+        return false;
+    }
+    $mime = (string) ($info['mime'] ?? '');
+    if ($mime === 'image/jpeg') {
+        $src = @imagecreatefromjpeg($tmpPath);
+    } elseif ($mime === 'image/png') {
+        $src = @imagecreatefrompng($tmpPath);
+    } elseif ($mime === 'image/webp' && function_exists('imagecreatefromwebp')) {
+        $src = @imagecreatefromwebp($tmpPath);
+    } else {
+        return false;
+    }
+    if (!$src) {
+        return false;
+    }
+    if ($mime === 'image/jpeg' && function_exists('exif_read_data')) {
+        $exif = @exif_read_data($tmpPath);
+        $orientation = (int) ($exif['Orientation'] ?? 1);
+        if ($orientation === 3) {
+            $src = imagerotate($src, 180, 0);
+        } elseif ($orientation === 6) {
+            $src = imagerotate($src, -90, 0);
+        } elseif ($orientation === 8) {
+            $src = imagerotate($src, 90, 0);
+        }
+    }
+    $w = imagesx($src);
+    $h = imagesy($src);
+    $max = 1200;
+    if ($w > $max || $h > $max) {
+        $scale = min($max / $w, $max / $h);
+        $nw = max(1, (int) round($w * $scale));
+        $nh = max(1, (int) round($h * $scale));
+        $dst = imagecreatetruecolor($nw, $nh);
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $nw, $nh, $w, $h);
+        imagedestroy($src);
+        $src = $dst;
+    }
+    $ok = imagejpeg($src, $destPath, 72);
+    imagedestroy($src);
+    return $ok;
+}
+
 try {
-    if (!raffle_registration_open(raffle_pdo())) {
+    $pdo = raffle_pdo();
+    if (!raffle_registration_open($pdo)) {
         http_response_code(403);
         echo json_encode(['ok' => false, 'closed' => true, 'error' => 'التسجيل غير مفعّل حالياً. سيتم فتحه لاحقاً.'], JSON_UNESCAPED_UNICODE);
         exit;
@@ -151,17 +198,21 @@ if (!is_dir($archiveDir) && !mkdir($archiveDir, 0755, true)) {
     exit;
 }
 
-$imageName = $coupon . '_' . $phone . '.' . $extensions[$mime];
+$imageName = $coupon . '_' . $phone . '.jpg';
 $imagePath = $archiveDir . DIRECTORY_SEPARATOR . $imageName;
 
 try {
-    $pdo = raffle_pdo();
     $stmt = $pdo->prepare(
         'INSERT INTO raffle_entries (full_name, phone, governorate, coupon) VALUES (?, ?, ?, ?)'
     );
     $stmt->execute([$fullName, $phone, $governorate, $coupon]);
     $entryId = (int) $pdo->lastInsertId();
-    if (!move_uploaded_file($upload['tmp_name'], $imagePath)) {
+    foreach (glob($archiveDir . DIRECTORY_SEPARATOR . $coupon . '_' . $phone . '.*') ?: [] as $old) {
+        if (is_file($old)) {
+            @unlink($old);
+        }
+    }
+    if (!raffle_save_small_jpeg($upload['tmp_name'], $imagePath)) {
         $pdo->prepare('DELETE FROM raffle_entries WHERE coupon = ?')->execute([$coupon]);
         http_response_code(500);
         echo json_encode(['ok' => false, 'error' => 'تم رفض حفظ صورة الكوبون.'], JSON_UNESCAPED_UNICODE);
