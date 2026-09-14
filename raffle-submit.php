@@ -69,13 +69,12 @@ $allowedGovernorates = [
 $fullName = trim((string) ($data['full_name'] ?? ''));
 $phone = preg_replace('/\D/', '', english_digits($data['phone'] ?? ''));
 $governorate = trim((string) ($data['governorate'] ?? ''));
-$cardCfgFile = __DIR__ . '/cards-secret.php';
-if (!is_readable($cardCfgFile)) {
+$cardCfg = coupon_cards_config();
+if (!$cardCfg) {
     http_response_code(500);
     echo json_encode(['ok' => false, 'error' => 'نظام البطاقات غير جاهز.'], JSON_UNESCAPED_UNICODE);
     exit;
 }
-$cardCfg = require $cardCfgFile;
 $sessionCoupon = (string) ($_SESSION['raffle_coupon'] ?? '');
 $sessionToken = (string) ($_SESSION['raffle_token'] ?? '');
 $postedToken = (string) ($data['card_token'] ?? '');

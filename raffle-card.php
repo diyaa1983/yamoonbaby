@@ -8,13 +8,12 @@ header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('Cache-Control: no-store, no-cache, must-revalidate');
 
-$cfgFile = __DIR__ . '/cards-secret.php';
-if (!is_readable($cfgFile)) {
+$cfg = coupon_cards_config();
+if (!$cfg) {
     http_response_code(500);
     echo json_encode(['ok' => false, 'error' => 'نظام البطاقات غير جاهز.'], JSON_UNESCAPED_UNICODE);
     exit;
 }
-$cfg = require $cfgFile;
 $token = (string) ($_GET['t'] ?? '');
 $coupon = coupon_from_token($token, $cfg['secret']);
 if ($coupon === '') {

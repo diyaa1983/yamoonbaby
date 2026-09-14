@@ -3,12 +3,11 @@ header('Cache-Control: no-store, no-cache, must-revalidate');
 require __DIR__ . '/includes/coupon-token.php';
 require __DIR__ . '/includes/raffle-db.php';
 
-$cfgFile = __DIR__ . '/cards-secret.php';
-if (!is_readable($cfgFile)) {
-    header('Location: raffle-used.html');
+$cfg = coupon_cards_config();
+if (!$cfg) {
+    header('Location: raffle.html');
     exit;
 }
-$cfg = require $cfgFile;
 $token = (string) ($_GET['t'] ?? '');
 $coupon = coupon_from_token($token, $cfg['secret']);
 if ($coupon === '') {

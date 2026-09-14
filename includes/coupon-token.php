@@ -41,3 +41,40 @@ function coupon_from_token($token, $secret) {
     }
     return $coupon;
 }
+
+function coupon_cards_config() {
+    $root = dirname(__DIR__);
+    foreach ([
+        $root . '/cards-secret.php',
+        $root . '/includes/cards-secret.php',
+    ] as $file) {
+        if (!is_readable($file)) {
+            continue;
+        }
+        $cfg = require $file;
+        if (is_array($cfg) && !empty($cfg['secret']) && !empty($cfg['base_url'])) {
+            return $cfg;
+        }
+    }
+    return null;
+}
+
+function coupon_cards_config_or_fail() {
+    $cfg = coupon_cards_config();
+    if ($cfg) {
+        return $cfg;
+    }
+    http_response_code(503);
+    header('Content-Type: text/html; charset=utf-8');
+    echo '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>إعداد البطاقات</title>';
+    echo '<style>body{font-family:Tahoma,Arial,sans-serif;max-width:720px;margin:40px auto;padding:0 20px;line-height:1.7}pre{background:#111;color:#f5f5f5;padding:16px;overflow:auto;border-radius:12px}</style></head><body>';
+    echo '<h1>ملف البطاقات غير موجود</h1>';
+    echo '<p>أنشئ الملف <strong>cards-secret.php</strong> بجانب <strong>index.html</strong> (نفس مكان db-config.php) بهذا المحتوى:</p>';
+    echo '<pre>&lt;?php
+return [
+    \'secret\' =&gt; \'مفتاح-طويل-وسري-لا-تغيره-بعد-الطباعة\',
+    \'base_url\' =&gt; \'https://www.yamoonbaby.com/raffle-open.php\',
+];</pre>';
+    echo '<p>بعد الحفظ حدّث هذه الصفحة.</p></body></html>';
+    exit;
+}

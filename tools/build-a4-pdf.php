@@ -1,6 +1,6 @@
 <?php
 require dirname(__DIR__) . '/includes/coupon-token.php';
-$cfg = require dirname(__DIR__) . '/cards-secret.php';
+$cfg = coupon_cards_config_or_fail();
 
 $start = max(1, min(500000, (int) ($_GET['start'] ?? 1)));
 $cards = [];
