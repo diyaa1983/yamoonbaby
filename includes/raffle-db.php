@@ -22,18 +22,35 @@ function raffle_pdo() {
         throw new RuntimeException('missing-config');
     }
     $config = require $configFile;
-    $name = str_replace('`', '', (string) ($config['name'] ?? ''));
-    $dsn = sprintf(
-        'mysql:host=%s;port=%s;dbname=%s;charset=%s',
-        $config['host'],
-        $config['port'] ?? 3306,
-        $name,
-        $config['charset'] ?? 'utf8mb4'
-    );
-    return new PDO($dsn, $config['user'], $config['pass'], [
+    $name = str_replace(['`', "\0"], '', (string) ($config['name'] ?? ''));
+    $host = (string) ($config['host'] ?? 'localhost');
+    $hosts = [$host];
+    if ($host === '127.0.0.1') {
+        $hosts[] = 'localhost';
+    } elseif ($host === 'localhost') {
+        $hosts[] = '127.0.0.1';
+    }
+    $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
+    ];
+    $last = null;
+    foreach (array_unique($hosts) as $tryHost) {
+        try {
+            $dsn = sprintf(
+                'mysql:host=%s;port=%s;charset=%s',
+                $tryHost,
+                $config['port'] ?? 3306,
+                $config['charset'] ?? 'utf8mb4'
+            );
+            $pdo = new PDO($dsn, $config['user'], $config['pass'], $options);
+            $pdo->exec('USE `' . $name . '`');
+            return $pdo;
+        } catch (PDOException $e) {
+            $last = $e;
+        }
+    }
+    throw $last ?: new RuntimeException('db-connect');
 }
 
 function raffle_coupon_used(PDO $pdo, $coupon) {
