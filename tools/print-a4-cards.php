@@ -111,17 +111,17 @@ $pdfExists = is_file(dirname(__DIR__) . '/cards/' . $pdfName);
             top: 65.49%;
             width: 19.34%;
             height: 6.16%;
-            background: #fff;
-            border: 0.35mm solid #1a2744;
+            background: transparent;
+            border: 0;
             border-radius: 999px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: Arial, Helvetica, sans-serif;
-            font-weight: 800;
+            font-weight: 900;
             font-size: 3.2mm;
             letter-spacing: 0.08mm;
-            color: #111;
+            color: #000;
         }
         @page { size: 274mm 222mm; margin: 0; }
         @media print {

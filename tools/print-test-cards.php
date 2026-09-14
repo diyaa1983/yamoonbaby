@@ -99,17 +99,17 @@ $cards = [
             top: 65.49%;
             width: 19.34%;
             height: 6.16%;
-            background: #fff;
-            border: 2px solid #1a2744;
+            background: transparent;
+            border: 0;
             border-radius: 999px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: Arial, Helvetica, sans-serif;
-            font-weight: 800;
+            font-weight: 900;
             font-size: clamp(13px, 1.55vw, 17px);
             letter-spacing: 0.2px;
-            color: #111;
+            color: #000;
             box-sizing: border-box;
         }
         .open-link {

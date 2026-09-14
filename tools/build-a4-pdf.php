@@ -70,8 +70,7 @@ foreach ($cards as $i => $card) {
         }
     }
 
-    imagefilledrectangle($page, $x + $numX, $y + $numY, $x + $numX + $numW, $y + $numY + $numH, $white);
-    imagerectangle($page, $x + $numX, $y + $numY, $x + $numX + $numW, $y + $numY + $numH, $navy);
+    imagefilledrectangle($page, $x + $numX + 3, $y + $numY + 3, $x + $numX + $numW - 3, $y + $numY + $numH - 3, $white);
 
     $label = coupon_public_label($card['coupon']);
     if (is_file($fontFile)) {
