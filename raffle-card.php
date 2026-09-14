@@ -24,7 +24,14 @@ if ($coupon === '') {
 }
 
 try {
-    if (raffle_coupon_used(raffle_pdo(), $coupon)) {
+    $pdo = raffle_pdo();
+    if (!raffle_registration_open($pdo)) {
+        unset($_SESSION['raffle_coupon'], $_SESSION['raffle_token']);
+        http_response_code(403);
+        echo json_encode(['ok' => false, 'closed' => true, 'error' => 'التسجيل غير مفعّل حالياً. سيتم فتحه لاحقاً.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    if (raffle_coupon_used($pdo, $coupon)) {
         unset($_SESSION['raffle_coupon'], $_SESSION['raffle_token']);
         http_response_code(409);
         echo json_encode(['ok' => false, 'used' => true, 'error' => 'البطاقة مستخدمة.'], JSON_UNESCAPED_UNICODE);

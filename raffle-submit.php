@@ -69,6 +69,18 @@ $allowedGovernorates = [
 $fullName = trim((string) ($data['full_name'] ?? ''));
 $phone = preg_replace('/\D/', '', english_digits($data['phone'] ?? ''));
 $governorate = trim((string) ($data['governorate'] ?? ''));
+try {
+    if (!raffle_registration_open(raffle_pdo())) {
+        http_response_code(403);
+        echo json_encode(['ok' => false, 'closed' => true, 'error' => 'التسجيل غير مفعّل حالياً. سيتم فتحه لاحقاً.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['ok' => false, 'error' => 'تعذر التحقق من حالة التسجيل.'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 $cardCfg = coupon_cards_config();
 if (!$cardCfg) {
     http_response_code(500);

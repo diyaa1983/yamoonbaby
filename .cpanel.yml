@@ -9,6 +9,7 @@ deployment:
     - /bin/cp -f products.html $DEPLOYPATH
     - /bin/cp -f raffle.html $DEPLOYPATH
     - /bin/cp -f raffle-used.html $DEPLOYPATH
+    - /bin/cp -f raffle-closed.html $DEPLOYPATH
     - /bin/cp -f raffle-open.php $DEPLOYPATH
     - /bin/cp -f raffle-card.php $DEPLOYPATH
     - /bin/cp -f raffle-submit.php $DEPLOYPATH

@@ -34,6 +34,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $error = 'اختر عدد الأسطر 20 أو 30 أو 50.';
         }
+    } elseif ((string) ($_POST['action'] ?? '') === 'save_registration') {
+        $tab = 'settings';
+        if (!$isAdmin) {
+            $error = 'هذه العملية للمدير فقط.';
+        } else {
+            $open = isset($_POST['registration_open']) ? '1' : '0';
+            raffle_set_setting($pdo, 'registration_open', $open);
+            panel_audit($pdo, $user['username'], 'registration_toggled', null, null, $open === '1' ? 'open' : 'closed');
+            $message = $open === '1' ? 'تم تفعيل التسجيل عبر QR.' : 'تم إيقاف التسجيل عبر QR.';
+        }
     } elseif (!$isAdmin) {
         $error = 'هذه العملية للمدير فقط.';
     } else {
@@ -338,7 +348,35 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
     </div>
     <?php endif; ?>
 
+    <?php
+        $registrationOpen = false;
+        if ($isAdmin && $tab === 'settings') {
+            try {
+                $registrationOpen = raffle_registration_open($pdo);
+            } catch (Exception $e) {
+                $registrationOpen = false;
+            }
+        }
+    ?>
     <?php if ($tab === 'settings'): ?>
+    <?php if ($isAdmin): ?>
+    <div class="card">
+        <h3>تسجيل الكوبونات عبر QR</h3>
+        <p class="muted">عند الإيقاف لا تعمل بطاقات QR ولا يمكن التسجيل. فعّلها عند بدء المسابقة.</p>
+        <p class="reg-status <?php echo $registrationOpen ? 'on' : 'off'; ?>">
+            الحالة الآن: <?php echo $registrationOpen ? 'مفعّل' : 'متوقف'; ?>
+        </p>
+        <form method="post" class="settings-form">
+            <input type="hidden" name="csrf" value="<?php echo panel_h($csrf); ?>">
+            <input type="hidden" name="action" value="save_registration">
+            <label class="toggle-row">
+                <input type="checkbox" name="registration_open" value="1" <?php echo $registrationOpen ? 'checked' : ''; ?>>
+                تفعيل التسجيل
+            </label>
+            <button class="btn btn-gold" type="submit">حفظ حالة التسجيل</button>
+        </form>
+    </div>
+    <?php endif; ?>
     <div class="card">
         <h3>إعدادات العرض</h3>
         <form method="post" class="settings-form">

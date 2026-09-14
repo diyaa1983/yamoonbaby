@@ -579,6 +579,10 @@
                     .then(function (res) { return res.json(); })
                     .then(function (body) {
                         if (!body || !body.ok) {
+                            if (body && body.closed) {
+                                window.location.replace('raffle-closed.html');
+                                return;
+                            }
                             if (body && body.used) {
                                 window.location.replace('raffle-used.html');
                                 return;
@@ -674,6 +678,10 @@
                     });
                 }).then(function (result) {
                     if (!result.body || !result.body.ok) {
+                        if (result.body && result.body.closed) {
+                            window.location.replace('raffle-closed.html');
+                            return;
+                        }
                         if (result.body && result.body.error === 'البطاقة مستخدمة.') {
                             window.location.replace('raffle-used.html');
                             return;

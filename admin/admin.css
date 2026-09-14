@@ -281,6 +281,22 @@ table.data-table {
     display: grid;
     gap: 12px;
 }
+.toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+}
+.toggle-row input {
+    width: 20px;
+    height: 20px;
+}
+.reg-status {
+    font-weight: 900;
+    margin: 8px 0 16px;
+}
+.reg-status.on { color: #047857; }
+.reg-status.off { color: #b45309; }
 .pager {
     display: flex;
     align-items: center;

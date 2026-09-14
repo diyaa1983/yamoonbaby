@@ -17,6 +17,10 @@ if ($coupon === '') {
 
 try {
     $pdo = raffle_pdo();
+    if (!raffle_registration_open($pdo)) {
+        header('Location: raffle-closed.html');
+        exit;
+    }
     if (raffle_coupon_used($pdo, $coupon)) {
         header('Location: raffle-used.html');
         exit;

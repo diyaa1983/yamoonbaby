@@ -71,6 +71,38 @@ function raffle_coupon_used(PDO $pdo, $coupon) {
     return (bool) $stmt->fetchColumn();
 }
 
+function raffle_ensure_settings(PDO $pdo) {
+    $pdo->exec(
+        'CREATE TABLE IF NOT EXISTS panel_settings (
+            setting_key VARCHAR(64) NOT NULL,
+            setting_value VARCHAR(255) NOT NULL,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (setting_key)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
+    );
+}
+
+function raffle_setting(PDO $pdo, $key, $default = '') {
+    raffle_ensure_settings($pdo);
+    $stmt = $pdo->prepare('SELECT setting_value FROM panel_settings WHERE setting_key = ? LIMIT 1');
+    $stmt->execute([(string) $key]);
+    $value = $stmt->fetchColumn();
+    return $value === false ? $default : (string) $value;
+}
+
+function raffle_set_setting(PDO $pdo, $key, $value) {
+    raffle_ensure_settings($pdo);
+    $stmt = $pdo->prepare(
+        'INSERT INTO panel_settings (setting_key, setting_value) VALUES (?, ?)
+         ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)'
+    );
+    $stmt->execute([(string) $key, (string) $value]);
+}
+
+function raffle_registration_open(PDO $pdo) {
+    return raffle_setting($pdo, 'registration_open', '0') === '1';
+}
+
 function panel_ensure_schema(PDO $pdo) {
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS panel_users (
@@ -96,6 +128,7 @@ function panel_ensure_schema(PDO $pdo) {
             KEY idx_audit_created (created_at)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
     );
+    raffle_ensure_settings($pdo);
 }
 
 function panel_audit(PDO $pdo, $actor, $action, $coupon = null, $entryId = null, $details = '') {
