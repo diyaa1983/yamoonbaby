@@ -150,7 +150,7 @@ $pdfExists = is_file(dirname(__DIR__) . '/cards/' . $pdfName);
         ?>
         <div class="card">
             <div class="ticket">
-                <img class="ticket-bg" src="../cards/yamoon-ticket-blank.jpg?v=20260525" alt="<?php echo htmlspecialchars($coupon, ENT_QUOTES, 'UTF-8'); ?>">
+                <img class="ticket-bg" src="<?php echo htmlspecialchars(coupon_ticket_src('yamoon-ticket-blank.jpg'), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($coupon, ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="qr-box" id="qr-<?php echo $i; ?>" data-url="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8'); ?>"></div>
                 <div class="num-box"><?php echo htmlspecialchars($coupon, ENT_QUOTES, 'UTF-8'); ?></div>
             </div>

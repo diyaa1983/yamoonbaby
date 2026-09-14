@@ -42,6 +42,16 @@ function coupon_from_token($token, $secret) {
     return $coupon;
 }
 
+function coupon_ticket_src($file) {
+    $name = basename((string) $file);
+    $qs = 'v=20260525';
+    $host = (string) ($_SERVER['HTTP_HOST'] ?? '');
+    if ($host !== '' && stripos($host, 'localhost') === false && $host !== '127.0.0.1') {
+        return 'https://yamoonbaby.com/cards/' . rawurlencode($name) . '?' . $qs;
+    }
+    return '../cards/' . rawurlencode($name) . '?' . $qs;
+}
+
 function coupon_cards_config() {
     $root = dirname(__DIR__);
     foreach ([
