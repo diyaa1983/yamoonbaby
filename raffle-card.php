@@ -47,4 +47,8 @@ session_regenerate_id(true);
 $_SESSION['raffle_coupon'] = $coupon;
 $_SESSION['raffle_token'] = $token;
 
-echo json_encode(['ok' => true, 'coupon' => $coupon], JSON_UNESCAPED_UNICODE);
+echo json_encode([
+    'ok' => true,
+    'coupon' => $coupon,
+    'label' => coupon_public_label($coupon),
+], JSON_UNESCAPED_UNICODE);
