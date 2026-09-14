@@ -1,4 +1,5 @@
 Options -Indexes
+AddType image/webp .webp
 
 <IfModule mod_authz_core.c>
     <FilesMatch "(\.git|\.env|\.bak|\.backup|admin-secret\.php|db-config\.php|cards-secret\.php|coupon-token\.php|raffle-session\.php|raffle-db\.php|\.sql|\.log|\.ppk)$">

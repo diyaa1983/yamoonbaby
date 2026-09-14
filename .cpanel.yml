@@ -18,22 +18,23 @@ deployment:
     - /bin/cp -f print-a4-cards.php $DEPLOYPATH
     - /bin/cp -f jordan-areas.js $DEPLOYPATH
     - /bin/cp -f styles.css $DEPLOYPATH
+    - /bin/cp -f script.js $DEPLOYPATH
     - /bin/cp -f products.html $DEPLOYPATH
-    - mkdir -p $DEPLOYPATH/Products/New
-    - /bin/cp -f Products/New/1.png $DEPLOYPATH/Products/New/
-    - /bin/cp -f Products/New/2.png $DEPLOYPATH/Products/New/
-    - /bin/cp -f Products/New/3.png $DEPLOYPATH/Products/New/
-    - /bin/cp -f Products/New/4.png $DEPLOYPATH/Products/New/
-    - /bin/cp -f Products/New/5.png $DEPLOYPATH/Products/New/
-    - /bin/cp -f Products/New/6.png $DEPLOYPATH/Products/New/
-    - /bin/cp -f Products/New/7.png $DEPLOYPATH/Products/New/
-    - /bin/cp -f Products/New/8.png $DEPLOYPATH/Products/New/
-    - /bin/cp -f Products/New/9.png $DEPLOYPATH/Products/New/
-    - /bin/cp -f Products/New/10.png $DEPLOYPATH/Products/New/
-    - /bin/cp -f Products/New/11.png $DEPLOYPATH/Products/New/
-    - /bin/cp -f Products/New/12.png $DEPLOYPATH/Products/New/
-    - /bin/cp -f Products/New/13.png $DEPLOYPATH/Products/New/
-    - /bin/cp -f Products/New/14.png $DEPLOYPATH/Products/New/
+    - mkdir -p $DEPLOYPATH/packs
+    - /bin/cp -f packs/1.webp $DEPLOYPATH/packs/
+    - /bin/cp -f packs/2.webp $DEPLOYPATH/packs/
+    - /bin/cp -f packs/3.webp $DEPLOYPATH/packs/
+    - /bin/cp -f packs/4.webp $DEPLOYPATH/packs/
+    - /bin/cp -f packs/5.webp $DEPLOYPATH/packs/
+    - /bin/cp -f packs/6.webp $DEPLOYPATH/packs/
+    - /bin/cp -f packs/7.webp $DEPLOYPATH/packs/
+    - /bin/cp -f packs/8.webp $DEPLOYPATH/packs/
+    - /bin/cp -f packs/9.webp $DEPLOYPATH/packs/
+    - /bin/cp -f packs/10.webp $DEPLOYPATH/packs/
+    - /bin/cp -f packs/11.webp $DEPLOYPATH/packs/
+    - /bin/cp -f packs/12.webp $DEPLOYPATH/packs/
+    - /bin/cp -f packs/13.webp $DEPLOYPATH/packs/
+    - /bin/cp -f packs/14.webp $DEPLOYPATH/packs/
     - /bin/cp -f .htaccess $DEPLOYPATH
     - /bin/cp -f login.php $DEPLOYPATH
     - /bin/cp -f baby.png $DEPLOYPATH
