@@ -16,7 +16,11 @@ try {
 } catch (Exception $e) {
     $pdo = null;
     $hasUsers = true;
-    $error = 'تعذر الاتصال بقاعدة البيانات. تأكد أن MySQL يعمل وأن db-config.php صحيح.';
+    if ($e->getMessage() === 'missing-config') {
+        $error = 'ملف db-config.php غير موجود على السيرفر. أنشئه في مجلد الموقع (بجانب index.html) وضع فيه اسم القاعدة والمستخدم وكلمة السر من cPanel. هذا الملف لا يُرفع مع Git.';
+    } else {
+        $error = 'تعذر الدخول لقاعدة البيانات. استخدم في db-config.php نفس بيانات cPanel → MySQL Databases: غالباً host = localhost، واسم القاعدة والمستخدم يظهران كاملين (يبدآن باسم حساب الاستضافة).';
+    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {

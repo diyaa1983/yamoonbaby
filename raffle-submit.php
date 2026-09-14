@@ -150,26 +150,8 @@ if (!is_dir($archiveDir) && !mkdir($archiveDir, 0755, true)) {
 $imageName = $coupon . '_' . $phone . '.' . $extensions[$mime];
 $imagePath = $archiveDir . DIRECTORY_SEPARATOR . $imageName;
 
-$configFile = __DIR__ . '/db-config.php';
-if (!is_readable($configFile)) {
-    http_response_code(500);
-    echo json_encode(['ok' => false, 'error' => 'إعداد قاعدة البيانات غير جاهز.'], JSON_UNESCAPED_UNICODE);
-    exit;
-}
-$config = require $configFile;
-
 try {
-    $dsn = sprintf(
-        'mysql:host=%s;port=%s;charset=%s',
-        $config['host'],
-        $config['port'] ?? 3306,
-        $config['charset'] ?? 'utf8mb4'
-    );
-    $pdo = new PDO($dsn, $config['user'], $config['pass'], [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
-    $pdo->exec('USE `' . str_replace('`', '', $config['name']) . '`');
+    $pdo = raffle_pdo();
     $stmt = $pdo->prepare(
         'INSERT INTO raffle_entries (full_name, phone, governorate, coupon) VALUES (?, ?, ?, ?)'
     );
@@ -181,6 +163,13 @@ try {
         echo json_encode(['ok' => false, 'error' => 'تم رفض حفظ صورة الكوبون.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
+} catch (RuntimeException $e) {
+    http_response_code(500);
+    $message = $e->getMessage() === 'missing-config'
+        ? 'إعداد قاعدة البيانات غير جاهز على السيرفر.'
+        : 'تعذر حفظ المشاركة الآن.';
+    echo json_encode(['ok' => false, 'error' => $message], JSON_UNESCAPED_UNICODE);
+    exit;
 } catch (PDOException $e) {
     $sqlState = (string) $e->getCode();
     $driverCode = (int) ($e->errorInfo[1] ?? 0);

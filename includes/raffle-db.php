@@ -1,22 +1,39 @@
 <?php
+function raffle_root() {
+    return dirname(__DIR__);
+}
+
+function raffle_config_file() {
+    $root = raffle_root();
+    foreach ([
+        $root . '/db-config.php',
+        $root . '/includes/db-config.php',
+    ] as $file) {
+        if (is_readable($file)) {
+            return $file;
+        }
+    }
+    return '';
+}
+
 function raffle_pdo() {
-    $configFile = dirname(__DIR__) . '/db-config.php';
-    if (!is_readable($configFile)) {
-        throw new RuntimeException('db-config');
+    $configFile = raffle_config_file();
+    if ($configFile === '') {
+        throw new RuntimeException('missing-config');
     }
     $config = require $configFile;
+    $name = str_replace('`', '', (string) ($config['name'] ?? ''));
     $dsn = sprintf(
-        'mysql:host=%s;port=%s;charset=%s',
+        'mysql:host=%s;port=%s;dbname=%s;charset=%s',
         $config['host'],
         $config['port'] ?? 3306,
+        $name,
         $config['charset'] ?? 'utf8mb4'
     );
-    $pdo = new PDO($dsn, $config['user'], $config['pass'], [
+    return new PDO($dsn, $config['user'], $config['pass'], [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
-    $pdo->exec('USE `' . str_replace('`', '', $config['name']) . '`');
-    return $pdo;
 }
 
 function raffle_coupon_used(PDO $pdo, $coupon) {
@@ -60,7 +77,7 @@ function panel_audit(PDO $pdo, $actor, $action, $coupon = null, $entryId = null,
 }
 
 function raffle_entry_image($coupon, $phone) {
-    $pattern = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Archive' . DIRECTORY_SEPARATOR . $coupon . '_' . $phone . '.*';
+    $pattern = raffle_root() . DIRECTORY_SEPARATOR . 'Archive' . DIRECTORY_SEPARATOR . $coupon . '_' . $phone . '.*';
     $files = glob($pattern) ?: [];
     foreach ($files as $file) {
         if (is_file($file)) {
