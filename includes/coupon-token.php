@@ -48,7 +48,7 @@ function coupon_ticket_src($file) {
         return 'ticket-blank.jpg?v=20260915c';
     }
     if ($name === 'yamoon-ticket-back.jpg') {
-        return 'ticket-back.jpg?v=20260915c';
+        return 'ticket-back.jpg?v=20260915d';
     }
     return '../cards/' . rawurlencode($name) . '?v=20260915c';
 }
