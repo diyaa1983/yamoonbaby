@@ -79,10 +79,10 @@ $cards = [
         }
         .qr-box {
             position: absolute;
-            left: 77.246%;
-            top: 34.457%;
-            width: 16.309%;
-            height: 23.314%;
+            left: 76.855%;
+            top: 28.09%;
+            width: 16.797%;
+            height: 30.15%;
             background: #fff;
             overflow: hidden;
         }
@@ -95,10 +95,10 @@ $cards = [
         }
         .num-box {
             position: absolute;
-            left: 75.5%;
-            top: 63.1%;
-            width: 20.1%;
-            height: 6.8%;
+            left: 76.758%;
+            top: 65.543%;
+            width: 17.773%;
+            height: 5.993%;
             background: #fff;
             border: 2.5px solid #1a2744;
             border-radius: 999px;
