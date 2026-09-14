@@ -3,97 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Cache-Control" content="no-store">
     <title>السحب على الجائزة الكبرى - يامون بيبي</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .raffle-hero {
-            background: linear-gradient(135deg, #ff6b9d 0%, #7b5cff 40%, #ffd166 100%);
-            color: white;
-            padding: 140px 20px 70px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+        body.raffle-page {
+            background:
+                radial-gradient(circle at 12% 18%, rgba(255, 215, 0, 0.18), transparent 28%),
+                radial-gradient(circle at 88% 12%, rgba(30, 144, 255, 0.16), transparent 26%),
+                linear-gradient(180deg, #f7fbff 0%, #d8efff 42%, #fff 100%);
         }
 
-        .raffle-hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.18), transparent 40%),
-                        radial-gradient(circle at 80% 70%, rgba(255,230,109,0.25), transparent 35%);
+        .raffle-hero {
+            padding: 120px 16px 28px;
+            text-align: center;
         }
 
         .raffle-hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 820px;
+            max-width: 980px;
             margin: 0 auto;
         }
 
-        .raffle-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255,255,255,0.18);
-            border: 1px solid rgba(255,255,255,0.35);
-            padding: 8px 18px;
-            border-radius: 999px;
-            margin-bottom: 1.2rem;
-            font-weight: 700;
+        .ticket-banner {
+            width: 100%;
+            display: block;
+            border-radius: 18px;
+            box-shadow: 0 18px 40px rgba(11, 79, 134, 0.18);
+            background: #fff;
         }
 
-        .raffle-hero h1 {
-            font-size: clamp(2rem, 5vw, 3.6rem);
-            font-weight: 900;
-            margin-bottom: 0.8rem;
-            text-shadow: 0 6px 20px rgba(0,0,0,0.25);
-        }
-
-        .raffle-prize {
-            font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+        .raffle-kicker {
+            margin: 22px 0 0;
+            color: #0b4f86;
             font-weight: 800;
-            color: #fff4c2;
-            margin-bottom: 0.8rem;
+            font-size: 1.15rem;
         }
 
         .raffle-date {
-            display: inline-block;
-            margin: 0.4rem 0 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
             padding: 8px 18px;
             border-radius: 999px;
-            background: rgba(255,255,255,0.16);
-            border: 1px solid rgba(255,255,255,0.35);
+            background: #fff;
+            color: #0b4f86;
             font-weight: 800;
-            letter-spacing: 0.5px;
-        }
-
-        .raffle-hero p {
-            font-size: 1.1rem;
-            max-width: 620px;
-            margin: 0 auto;
-            line-height: 1.8;
-            opacity: 0.95;
+            box-shadow: 0 6px 16px rgba(11, 79, 134, 0.12);
         }
 
         .raffle-section {
-            padding: 60px 0 80px;
-            background: #f7f4fb;
+            padding: 20px 0 80px;
         }
 
         .raffle-card {
             max-width: 920px;
             margin: 0 auto;
-            background: white;
+            background: #fff;
             border-radius: 28px;
-            box-shadow: 0 25px 60px rgba(80, 40, 90, 0.12);
+            box-shadow: 0 18px 40px rgba(11, 79, 134, 0.12);
             overflow: hidden;
-            border: 1px solid rgba(255, 107, 157, 0.12);
+            border: 1px solid rgba(30, 136, 229, 0.16);
         }
 
         .raffle-card-top {
-            background: linear-gradient(135deg, #2c1b47 0%, #7b5cff 100%);
+            background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
             color: white;
             padding: 28px 32px;
         }
@@ -105,7 +83,7 @@
 
         .raffle-card-top p {
             margin: 0;
-            opacity: 0.9;
+            opacity: 0.95;
         }
 
         .raffle-form {
@@ -130,39 +108,39 @@
 
         .form-group label {
             font-weight: 700;
-            color: #2c3e50;
+            color: #0b4f86;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
             padding: 14px 16px;
-            border: 1.5px solid #eadff0;
+            border: 1.5px solid #b7dcff;
             border-radius: 14px;
             font-family: inherit;
             font-size: 1rem;
-            background: #fcfaff;
+            background: #f7fbff;
             outline: none;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .form-group input:focus,
         .form-group select:focus {
-            border-color: #ff6b9d;
-            box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.12);
+            border-color: #1e88e5;
+            box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.14);
         }
 
         .hint {
             font-size: 0.82rem;
-            color: #888;
+            color: #6b7c8d;
         }
 
         .upload-box {
-            border: 2px dashed #d7b6e4;
+            border: 2px dashed #8ec8ff;
             border-radius: 18px;
             padding: 24px;
             text-align: center;
-            background: #fff8fc;
+            background: #f3f9ff;
         }
 
         .upload-box input {
@@ -173,7 +151,7 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            background: linear-gradient(135deg, #ff6b9d, #7b5cff);
+            background: linear-gradient(135deg, #1e88e5, #42a5f5);
             color: white;
             border: none;
             border-radius: 999px;
@@ -196,10 +174,68 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
 
+        .coupon-lock {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 999px;
+            border: 3px solid #1a2744;
+            background: #fff;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #111;
+            text-align: center;
+            user-select: none;
+            pointer-events: none;
+        }
+
         .form-error {
             color: #c0392b;
             font-size: 0.85rem;
             display: none;
+        }
+
+        .alert-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 79, 134, 0.55);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .alert-overlay.show {
+            display: flex;
+        }
+
+        .alert-box {
+            width: min(440px, 92vw);
+            background: #fff;
+            border-radius: 22px;
+            padding: 28px 24px 22px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.28);
+        }
+
+        .alert-box p {
+            margin: 0 0 18px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            line-height: 1.8;
+            color: #2b2b2b;
+        }
+
+        .alert-box button {
+            border: none;
+            border-radius: 999px;
+            padding: 12px 28px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 1rem;
+            background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+            color: #1a1a1a;
+            cursor: pointer;
         }
 
         .submit-btn {
@@ -210,10 +246,34 @@
             font-size: 1.15rem;
             font-weight: 800;
             font-family: inherit;
-            color: #3b2a00;
-            background: linear-gradient(135deg, #ffe66d 0%, #ffd166 45%, #ffb703 100%);
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #ffe66d 0%, #ffc107 45%, #ffb300 100%);
             cursor: pointer;
             box-shadow: 0 10px 24px rgba(255, 183, 3, 0.35);
+        }
+
+        .scan-notice {
+            display: none;
+            text-align: center;
+            padding: 36px 24px 40px;
+        }
+
+        .scan-notice i {
+            font-size: 2.4rem;
+            color: #1e88e5;
+            margin-bottom: 12px;
+        }
+
+        .scan-notice h3 {
+            margin: 0 0 10px;
+            color: #0b4f86;
+        }
+
+        .scan-notice p {
+            margin: 0;
+            color: #5a6d80;
+            line-height: 1.8;
+            font-weight: 700;
         }
 
         .success-box {
@@ -247,14 +307,14 @@
             margin: 28px auto 0;
             background: white;
             border-radius: 28px;
-            box-shadow: 0 18px 40px rgba(80, 40, 90, 0.08);
+            box-shadow: 0 18px 40px rgba(11, 79, 134, 0.08);
             padding: 28px 32px;
-            border: 1px solid rgba(255, 107, 157, 0.12);
+            border: 1px solid rgba(30, 136, 229, 0.12);
         }
 
         .guidelines h3 {
             margin: 0 0 18px;
-            color: #2c1b47;
+            color: #0b4f86;
             font-size: 1.4rem;
         }
 
@@ -271,7 +331,7 @@
 
         @media (max-width: 768px) {
             .raffle-hero {
-                padding: 110px 16px 48px;
+                padding: 104px 12px 18px;
             }
 
             .raffle-form,
@@ -290,7 +350,13 @@
         }
     </style>
 </head>
-<body>
+<body class="raffle-page">
+    <div class="alert-overlay" id="alertOverlay">
+        <div class="alert-box">
+            <p id="alertText"></p>
+            <button type="button" id="alertOk">حسناً</button>
+        </div>
+    </div>
     <header class="header">
         <nav class="navbar">
             <div class="nav-container">
@@ -325,11 +391,9 @@
 
     <section class="raffle-hero">
         <div class="raffle-hero-content">
-            <div class="raffle-badge"><i class="fas fa-crown"></i> اربح الجائزة الكبرى</div>
-            <h1>اربح الجائزة الكبرى</h1>
-            <div class="raffle-prize">شقة بقيمة 65,000 دينار</div>
-            <div class="raffle-date">موعد السحب: 30-06-2027</div>
-            <p>اشترِ من منتجات يامون بيبي، أدخل بياناتك ورقم الكوبون، وصوّر الكوبون لتدخل السحب على شقة الأحلام.</p>
+            <img class="ticket-banner" src="cards/yamoon-ticket.jpg" alt="جرّب حظك - سحب يامون بيبي على شقة فيفيبور">
+            <p class="raffle-kicker">امسح رمز البطاقة وأدخل بياناتك للدخول على الجائزة الكبرى</p>
+            <div class="raffle-date"><i class="far fa-calendar-alt"></i> موعد السحب: 30/06/2027</div>
         </div>
     </section>
 
@@ -337,11 +401,15 @@
         <div class="container">
             <div class="raffle-card">
                 <div class="raffle-card-top">
-                    <h2>نموذج الدخول إلى السحب</h2>
-                    <p>الحقول التالية مطلوبة للمشتركين الذين اشتروا المنتج ويحملون كوبون السحب.</p>
+                    <h2>الدخول إلى السحب</h2>
+                    <p>أدخل بياناتك ورقم المشاركة الموجود على البطاقة، أو امسح رمز QR لتعبئة الرقم تلقائياً.</p>
                 </div>
-                <form class="raffle-form" id="raffleForm">
+                <form class="raffle-form" id="raffleForm" autocomplete="off">
                     <div class="form-grid">
+                        <div class="form-group full" style="position:absolute;left:-9999px;height:0;overflow:hidden;" aria-hidden="true">
+                            <label for="websiteUrl">الموقع</label>
+                            <input type="text" id="websiteUrl" name="website_url" tabindex="-1" autocomplete="off">
+                        </div>
                         <div class="form-group full">
                             <label for="fullName">الاسم الكامل</label>
                             <input type="text" id="fullName" name="full_name" required maxlength="80" autocomplete="name">
@@ -352,9 +420,10 @@
                             <span class="hint">10 خانات ويبدأ بـ 079 أو 078 أو 077</span>
                         </div>
                         <div class="form-group">
-                            <label for="coupon">رقم الكوبون</label>
-                            <input type="text" id="coupon" name="coupon" class="latin-digits" lang="en" inputmode="numeric" maxlength="6" required>
-                            <span class="hint">6 خانات أرقام فقط</span>
+                            <label for="couponInput">رقم البطاقة / الكوبون</label>
+                            <input type="tel" id="couponInput" class="latin-digits" lang="en" inputmode="numeric" maxlength="6" autocomplete="off">
+                            <div class="coupon-lock" id="couponDisplay" style="display:none;">------</div>
+                            <span class="hint" id="couponHint">6 أرقام كما هي مطبوعة على البطاقة</span>
                         </div>
                         <div class="form-group full">
                             <label for="governorate">المحافظة</label>
@@ -383,13 +452,13 @@
                             <i class="fas fa-gift"></i>
                             سجّل في السحب
                         </button>
-                        <p class="terms">بالتسجيل فإنك تؤكد أنك اشتريت المنتج وأن بيانات الكوبون صحيحة. سيتم حفظ المشاركات لاحقاً بعد اعتماد آلية الربط.</p>
+                        <p class="terms">بالتسجيل فإنك تؤكد أنك اشتريت المنتج وأن بيانات الكوبون صحيحة.</p>
                     </div>
                 </form>
                 <div class="success-box" id="successBox">
                     <i class="fas fa-check-circle"></i>
-                    <h3>تم استلام بياناتك مبدئياً</h3>
-                    <p>هذه نسخة تجريبية للشكل. لم يتم الحفظ في قاعدة بيانات بعد.</p>
+                    <h3>تم تسجيلك في السحب</h3>
+                    <p>تم حفظ اسمك ورقم هاتفك ومحافظتك ورقم الكوبون في سجل السحب.</p>
                 </div>
             </div>
             <div class="guidelines">
@@ -440,7 +509,9 @@
         document.addEventListener('DOMContentLoaded', function () {
             var governorate = document.getElementById('governorate');
             var phone = document.getElementById('phone');
-            var coupon = document.getElementById('coupon');
+            var couponDisplay = document.getElementById('couponDisplay');
+            var couponInput = document.getElementById('couponInput');
+            var couponHint = document.getElementById('couponHint');
             var uploadBtn = document.getElementById('uploadBtn');
             var couponImage = document.getElementById('couponImage');
             var preview = document.getElementById('couponPreview');
@@ -448,12 +519,16 @@
             var form = document.getElementById('raffleForm');
             var formError = document.getElementById('formError');
             var successBox = document.getElementById('successBox');
+            var alertOverlay = document.getElementById('alertOverlay');
+            var alertText = document.getElementById('alertText');
 
-            Object.keys(JORDAN_AREAS).forEach(function (name) {
-                var option = document.createElement('option');
-                option.value = name;
-                option.textContent = name;
-                governorate.appendChild(option);
+            function showAlert(message) {
+                alertText.textContent = message;
+                alertOverlay.classList.add('show');
+            }
+
+            document.getElementById('alertOk').addEventListener('click', function () {
+                alertOverlay.classList.remove('show');
             });
 
             function toEnglishDigits(value) {
@@ -471,8 +546,53 @@
                     this.value = toEnglishDigits(this.value).replace(/\D/g, '').slice(0, max);
                 });
             }
+
+            function normalizeCoupon(value) {
+                var digits = String(value || '').replace(/\D/g, '').slice(0, 6);
+                if (!digits) return '';
+                return digits.padStart(6, '0');
+            }
+
+            function isAllowedCoupon(value) {
+                var normalized = normalizeCoupon(value);
+                var number = parseInt(normalized, 10);
+                return /^\d{6}$/.test(normalized) && number >= 1 && number <= 500000;
+            }
+
+            var cardToken = new URLSearchParams(window.location.search).get('t') || '';
+            var cardCoupon = '';
+            if (cardToken) {
+                fetch('raffle-card.php?t=' + encodeURIComponent(cardToken))
+                    .then(function (res) { return res.json(); })
+                    .then(function (body) {
+                        if (!body || !body.ok) {
+                            if (body && body.used) {
+                                window.location.replace('raffle-used.html');
+                                return;
+                            }
+                            showAlert((body && body.error) || 'هذه البطاقة غير صحيحة. أدخل رقم البطاقة يدوياً.');
+                            return;
+                        }
+                        cardCoupon = body.coupon;
+                        couponDisplay.textContent = cardCoupon;
+                        couponDisplay.style.display = 'block';
+                        couponInput.style.display = 'none';
+                        couponHint.textContent = 'رقم المشاركة مثبت من البطاقة ولا يمكن تغييره';
+                    })
+                    .catch(function () {
+                        showAlert('تعذر التحقق من البطاقة. يمكنك إدخال رقم البطاقة يدوياً.');
+                    });
+            }
+
+            Object.keys(JORDAN_AREAS).forEach(function (name) {
+                var option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                governorate.appendChild(option);
+            });
+
             digitsOnly(phone, 10);
-            digitsOnly(coupon, 6);
+            digitsOnly(couponInput, 6);
 
             uploadBtn.addEventListener('click', function () {
                 couponImage.click();
@@ -484,11 +604,10 @@
                     preview.style.display = 'none';
                     return;
                 }
-                if (!file.type.match(/^image\//)) {
+                if (!file.type.match(/^image\//) || file.size > 5 * 1024 * 1024) {
                     this.value = '';
                     preview.style.display = 'none';
-                    formError.textContent = 'يرجى اختيار صورة فقط للكوبون.';
-                    formError.style.display = 'block';
+                    showAlert('يرجى اختيار صورة فقط بحجم أقصى 5 ميغابايت.');
                     return;
                 }
                 formError.style.display = 'none';
@@ -502,21 +621,57 @@
 
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
+                if (document.getElementById('websiteUrl').value) {
+                    return;
+                }
+                var couponValue = cardCoupon || normalizeCoupon(couponInput.value);
                 var valid =
                     document.getElementById('fullName').value.trim().length > 0 &&
                     /^(079|078|077)\d{7}$/.test(phone.value) &&
-                    /^\d{6}$/.test(coupon.value) &&
+                    isAllowedCoupon(couponValue) &&
                     governorate.value &&
                     couponImage.files.length > 0;
 
                 if (!valid) {
-                    formError.textContent = 'يرجى تعبئة جميع الحقول بشكل صحيح. رقم الهاتف يجب أن يبدأ بـ 079 أو 078 أو 077 ويتكون من 10 خانات، ورقم الكوبون 6 خانات فقط.';
-                    formError.style.display = 'block';
+                    showAlert('يرجى إدخال الاسم الكامل ورقم الهاتف ورقم البطاقة والمحافظة وصورة الكوبون بشكل صحيح. رقم الهاتف 10 خانات ويبدأ بـ 079 أو 078 أو 077.');
                     return;
                 }
 
-                form.style.display = 'none';
-                successBox.style.display = 'block';
+                var submitBtn = form.querySelector('.submit-btn');
+                submitBtn.disabled = true;
+                var payload = new FormData();
+                payload.append('full_name', document.getElementById('fullName').value.trim());
+                payload.append('phone', phone.value);
+                payload.append('card_token', cardToken);
+                payload.append('coupon', couponValue);
+                payload.append('governorate', governorate.value);
+                payload.append('website_url', document.getElementById('websiteUrl').value);
+                payload.append('coupon_image', couponImage.files[0]);
+
+                fetch('raffle-submit.php', {
+                    method: 'POST',
+                    body: payload
+                }).then(function (res) {
+                    return res.json().then(function (body) {
+                        return { status: res.status, body: body };
+                    });
+                }).then(function (result) {
+                    if (!result.body || !result.body.ok) {
+                        if (result.body && result.body.error === 'البطاقة مستخدمة.') {
+                            window.location.replace('raffle-used.html');
+                            return;
+                        }
+                        showAlert((result.body && result.body.error) || 'تعذر حفظ المشاركة.');
+                        submitBtn.disabled = false;
+                        return;
+                    }
+                    form.style.display = 'none';
+                    successBox.style.display = 'block';
+                    showAlert('تم تسجيلك في السحب بنجاح.');
+                }).catch(function () {
+                    showAlert('تعذر الاتصال بالخادم. تأكد أن Apache وMySQL يعملان.');
+                    submitBtn.disabled = false;
+                });
             });
         });
     </script>

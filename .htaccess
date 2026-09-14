@@ -1,0 +1,28 @@
+Options -Indexes
+
+<IfModule mod_authz_core.c>
+    <FilesMatch "(\.git|\.env|\.bak|\.backup|admin-secret\.php|db-config\.php|cards-secret\.php|coupon-token\.php|raffle-session\.php|raffle-db\.php|\.sql|\.log|\.ppk)$">
+        Require all denied
+    </FilesMatch>
+    <FilesMatch "^(draw.*\.html|info\.php|test\.php|status\.php)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule (^|/)\.git - [F,L]
+    RewriteCond %{HTTP_HOST} !^localhost [NC]
+    RewriteCond %{HTTP_HOST} !^127\.0\.0\.1
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "DENY"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    Header always set X-XSS-Protection "0"
+</IfModule>

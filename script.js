@@ -3,11 +3,11 @@ const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
 if (hamburger && navMenu) {
-    hamburger.addEventListener('click', () => {
+    hamburger.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         hamburger.classList.toggle('active');
         navMenu.classList.toggle('active');
-        
-        // Prevent body scroll when menu is open
         if (navMenu.classList.contains('active')) {
             document.body.style.overflow = 'hidden';
         } else {
@@ -24,7 +24,7 @@ if (hamburger && navMenu) {
 
     // Close mobile menu when clicking outside
     document.addEventListener('click', (e) => {
-        if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+        if (!hamburger.contains(e.target) && !navMenu.contains(e.target) && navMenu.classList.contains('active')) {
             hamburger.classList.remove('active');
             navMenu.classList.remove('active');
             document.body.style.overflow = 'auto';
@@ -188,10 +188,52 @@ function initVideoControls() {
     progressBar.style.width = '0%';
 }
 
+function initProductZoom() {
+    var images = document.querySelectorAll('.product-img');
+    if (!images.length) return;
+
+    var box = document.createElement('div');
+    box.className = 'product-zoom';
+    box.innerHTML = '<button type="button" class="product-zoom-close" aria-label="إغلاق">&times;</button><img alt="">';
+    document.body.appendChild(box);
+    var big = box.querySelector('img');
+
+    function closeZoom() {
+        box.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    function openZoom(el) {
+        big.src = el.currentSrc || el.src;
+        big.alt = el.alt || '';
+        box.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    images.forEach(function (el) {
+        el.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            openZoom(el);
+        });
+    });
+
+    box.addEventListener('click', function (e) {
+        if (e.target === box || e.target.classList.contains('product-zoom-close')) {
+            closeZoom();
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeZoom();
+    });
+}
+
 // Initialize products slider when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initProductsSlider();
     initVideoControls();
+    initProductZoom();
     
     // Enhanced video initialization
     const heroVideo = document.getElementById('heroVideo');

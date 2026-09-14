@@ -111,15 +111,12 @@
         }
         
         .product-card {
-            background: linear-gradient(145deg, #ffffff, #f0f0f0);
-            border-radius: 25px;
-            overflow: hidden;
-            box-shadow: 
-                0 8px 32px rgba(0,0,0,0.1),
-                inset 0 1px 0 rgba(255,255,255,0.6);
+            background: transparent;
+            border-radius: 0;
+            overflow: visible;
+            box-shadow: none;
             position: relative;
-            border: 2px solid transparent;
-            background-clip: padding-box;
+            border: 0;
             opacity: 1;
         }
         
@@ -127,18 +124,25 @@
         
         .product-image {
             position: relative;
-            overflow: hidden;
-            border-radius: 20px;
-            margin: 8px;
+            overflow: visible;
+            border-radius: 0;
+            margin: 0;
+            background: transparent;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
         }
         
         .product-img {
             width: 100%;
-            height: 280px;
-            object-fit: cover;
-            object-position: right top;
-            border-radius: 15px;
-            filter: brightness(1.1) contrast(1.05);
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            border-radius: 0;
+            cursor: zoom-in;
+            filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.16));
         }
         
         
@@ -407,15 +411,15 @@
         .image-slider {
             width: 100%;
             max-width: 800px;
-            height: 400px;
+            aspect-ratio: 4 / 3;
+            height: auto;
             margin: 0 auto 2rem;
             position: relative;
-            border-radius: 20px;
+            border-radius: 0;
             overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: none;
+            background: transparent;
+            border: 0;
         }
         
         .slider-container {
@@ -423,17 +427,20 @@
             height: 100%;
             position: relative;
             overflow: hidden;
+            background: transparent;
         }
         
         .slider-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            object-position: center;
             position: absolute;
             top: 0;
             left: 0;
             opacity: 0;
-            border-radius: 18px;
+            background: transparent;
+            filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.28));
         }
         
         .slider-image.active {
@@ -494,7 +501,8 @@
         @media (max-width: 768px) {
             .image-slider {
                 max-width: 600px;
-                height: 300px;
+                aspect-ratio: 4 / 3;
+                height: auto;
                 margin-bottom: 1.5rem;
             }
             
@@ -575,9 +583,9 @@
             <div class="products-hero-content">
                 <div class="image-slider">
                     <div class="slider-container">
-                        <img src="Products/all product 3.png" alt="منتجات يامون بيبي" class="slider-image active">
-                        <img src="Products/all product.png" alt="منتجات يامون بيبي" class="slider-image">
-                        <img src="Products/all product 2.png" alt="منتجات يامون بيبي" class="slider-image">
+                        <img src="Products/New/5.png" alt="منتجات يامون بيبي" class="slider-image active">
+                        <img src="Products/New/3.png" alt="منتجات يامون بيبي" class="slider-image">
+                        <img src="Products/New/1.png" alt="منتجات يامون بيبي" class="slider-image">
                         
                         <button class="slider-nav prev" onclick="changeSlide(-1)">
                             <i class="fas fa-chevron-left"></i>
@@ -619,92 +627,76 @@
             <div class="products-grid">
                 <div class="product-card" data-category="newborn">
                     <div class="product-image">
-                        <img src="Products/1.jpg" alt="حفاظات حجم 3" class="product-img">
+                        <img src="Products/New/5.png" alt="حفاظات حجم 1 حديث الولادة 56 قطعة" class="product-img">
                     </div>
                 </div>
-
-                <div class="product-card" data-category="small">
-                    <div class="product-image">
-                        <img src="Products/2.jpg" alt="حفاظات حجم 4" class="product-img">
-                    </div>
-                </div>
-
-                <div class="product-card" data-category="small">
-                    <div class="product-image">
-                        <img src="Products/3.jpg" alt="حفاظات حجم 5" class="product-img">
-                    </div>
-                </div>
-
-                <div class="product-card" data-category="medium">
-                    <div class="product-image">
-                        <img src="Products/4.jpg" alt="حفاطات حجم 6" class="product-img">
-                    </div>
-                </div>
-
-                <div class="product-card" data-category="medium">
-                    <div class="product-image">
-                        <img src="Products/5.jpg" alt="حفاظات حجم 7" class="product-img">
-                    </div>
-                </div>
-
-                
-
-                <div class="product-card" data-category="large">
-                    <div class="product-image">
-                        <img src="Products/7.jpg" alt="حفاظات حجم 1" class="product-img">
-                    </div>
-                </div>
-
-                <div class="product-card" data-category="large">
-                    <div class="product-image">
-                        <img src="Products/8.jpg" alt="حفاظات حج م 2" class="product-img">
-                    </div>
-                </div>
-
-                <!-- New Products from New products folder -->
                 <div class="product-card" data-category="newborn">
                     <div class="product-image">
-                        <img src="New products/1.jpg" alt="منتج جديد 1" class="product-img">
+                        <img src="Products/New/11.png" alt="حفاظات حجم 1 حديث الولادة 44 قطعة" class="product-img">
                     </div>
                 </div>
-
                 <div class="product-card" data-category="small">
                     <div class="product-image">
-                        <img src="New products/2.jpg" alt="منتج جديد 2" class="product-img">
+                        <img src="Products/New/4.png" alt="حفاظات حجم 2 صغير 56 قطعة" class="product-img">
                     </div>
                 </div>
-
+                <div class="product-card" data-category="small">
+                    <div class="product-image">
+                        <img src="Products/New/8.png" alt="حفاظات حجم 2 صغير 40 قطعة" class="product-img">
+                    </div>
+                </div>
                 <div class="product-card" data-category="medium">
                     <div class="product-image">
-                        <img src="New products/3.jpg" alt="منتج جديد 3" class="product-img">
+                        <img src="Products/New/3.png" alt="حفاظات حجم 3 وسط 48 قطعة" class="product-img">
                     </div>
                 </div>
-
+                <div class="product-card" data-category="medium">
+                    <div class="product-image">
+                        <img src="Products/New/9.png" alt="حفاظات حجم 3 وسط 36 قطعة" class="product-img">
+                    </div>
+                </div>
                 <div class="product-card" data-category="large">
                     <div class="product-image">
-                        <img src="New products/4.jpg" alt="منتج جديد 4" class="product-img">
+                        <img src="Products/New/2.png" alt="حفاظات حجم 4 كبير 44 قطعة" class="product-img">
                     </div>
                 </div>
-
-                <div class="product-card" data-category="newborn">
+                <div class="product-card" data-category="large">
                     <div class="product-image">
-                        <img src="New products/5.jpg" alt="منتج جديد 5" class="product-img">
+                        <img src="Products/New/10.png" alt="حفاظات حجم 4 كبير 32 قطعة" class="product-img">
                     </div>
                 </div>
-
-                <div class="product-card" data-category="small">
+                <div class="product-card" data-category="large">
                     <div class="product-image">
-                        <img src="New products/6.jpg" alt="منتج جديد 6" class="product-img">
+                        <img src="Products/New/6.png" alt="حفاظات حجم 5 كبير جداً 36 قطعة" class="product-img">
                     </div>
                 </div>
-
-                <div class="product-card" data-category="medium">
+                <div class="product-card" data-category="large">
                     <div class="product-image">
-                        <img src="New products/7.jpg" alt="منتج جديد 7" class="product-img">
+                        <img src="Products/New/14.png" alt="حفاظات حجم 5 كبير جداً 26 قطعة" class="product-img">
                     </div>
                 </div>
-
-                
+                <div class="product-card" data-category="large">
+                    <div class="product-image">
+                        <img src="Products/New/7.png" alt="حفاظات حجم 6 XXL 30 قطعة" class="product-img">
+                    </div>
+                </div>
+                <div class="product-card" data-category="large">
+                    <div class="product-image">
+                        <img src="Products/New/12.png" alt="حفاظات حجم 6 XXL 24 قطعة" class="product-img">
+                    </div>
+                </div>
+                <div class="product-card" data-category="large">
+                    <div class="product-image">
+                        <img src="Products/New/1.png" alt="حفاظات حجم 7 XXXL 27 قطعة" class="product-img">
+                    </div>
+                </div>
+                <div class="product-card" data-category="large">
+                    <div class="product-image">
+                        <img src="Products/New/13.png" alt="حفاظات حجم 7 XXXL 22 قطعة" class="product-img">
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
 

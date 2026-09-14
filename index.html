@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>يامون بيبي - حفاظات أطفال عالية الجودة</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -69,6 +71,46 @@
             transform: translateY(-4px);
             box-shadow: 0 14px 32px rgba(255, 183, 3, 0.55);
             color: #3b2a00;
+        }
+
+        .home-raffle {
+            padding: 48px 0;
+            background: linear-gradient(180deg, #f7fbff 0%, #d8efff 100%);
+        }
+
+        .home-raffle-inner {
+            max-width: 920px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .home-raffle-inner img {
+            width: 100%;
+            display: block;
+            border-radius: 18px;
+            box-shadow: 0 16px 36px rgba(11, 79, 134, 0.16);
+            background: #fff;
+        }
+
+        .home-raffle-actions {
+            margin-top: 22px;
+        }
+
+        .home-raffle-actions .btn-raffle {
+            margin-bottom: 10px;
+            animation: none;
+        }
+
+        .home-raffle-date {
+            margin: 0;
+            color: #0b4f86;
+            font-weight: 800;
+        }
+
+        .home-raffle-note {
+            margin: 8px 0 0;
+            color: #5a6d80;
+            font-size: 0.92rem;
         }
 
         @media (max-width: 768px) {
@@ -372,12 +414,12 @@
             <div class="products-grid">
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="Products/1.jpg" alt="حفاظات حديثي الولادة" class="product-img">
+                        <img src="Products/New/5.png" alt="حفاظات حجم 1 حديث الولادة" class="product-img">
                         <div class="product-badge new">جديد</div>
                     </div>
                     <div class="product-info">
-                        <h3>حفاظات حجم 3</h3>
-                        <p> مخصص للأطفال من وزن 6 كيلو ولغاية 12 كيلو </p>
+                        <h3>حفاظات حجم 1</h3>
+                        <p>حديث الولادة — من 2 إلى 5 كغ</p>
                         <div class="product-features">
                             <span class="feature-tag">حماية عالية</span>
                             <span class="feature-tag">مريح</span>
@@ -386,11 +428,11 @@
                 </div>
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="Products/2.jpg" alt="حفاظات حجم 4" class="product-img">
+                        <img src="Products/New/4.png" alt="حفاظات حجم 2 صغير" class="product-img">
                     </div>
                     <div class="product-info">
-                        <h3>حفاظات حج 4</h3>
-                        <p>مخصص للأطفال من وزن 10 كيلو ولغاية 18 كيلو</p>
+                        <h3>حفاظات حجم 2</h3>
+                        <p>صغير — من 3 إلى 6 كغ</p>
                         <div class="product-features">
                             <span class="feature-tag">امتصاص سريع</span>
                             <span class="feature-tag">جودة عالية</span>
@@ -399,11 +441,11 @@
                 </div>
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="Products/3.jpg" alt="حفاظات حجم 4" class="product-img">
+                        <img src="Products/New/3.png" alt="حفاظات حجم 3 وسط" class="product-img">
                     </div>
                     <div class="product-info">
-                        <h3>حفاظات حجم 5</h3>
-                        <p>مخصص للأطفال من وزن 14 كيلو ولغاية 25 كيلو</p>
+                        <h3>حفاظات حجم 3</h3>
+                        <p>وسط — من 4 إلى 9 كغ</p>
                         <div class="product-features">
                             <span class="feature-tag">مقاوم للتسرب</span>
                             <span class="feature-tag">ناعم</span>
@@ -412,11 +454,11 @@
                 </div>
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="Products/4.jpg" alt="حفاظات حجم 6" class="product-img">
+                        <img src="Products/New/2.png" alt="حفاظات حجم 4 كبير" class="product-img">
                     </div>
                     <div class="product-info">
-                        <h3>حفاظات حجم 6</h3>
-                        <p>مخصص للاطفال + 16 كيلو</p>
+                        <h3>حفاظات حجم 4</h3>
+                        <p>كبير — من 7 إلى 14 كغ</p>
                         <div class="product-features">
                             <span class="feature-tag">مريح</span>
                             <span class="feature-tag">آمن</span>
@@ -425,20 +467,40 @@
                 </div>
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="Products/5.jpg" alt="حفاظات حج 7" class="product-img">
+                        <img src="Products/New/6.png" alt="حفاظات حجم 5 كبير جداً" class="product-img">
                     </div>
                     <div class="product-info">
-                        <h3>حفاظات حج 7</h3>
-                        <p>مخصص للأطفال + 18 كيلو</p>
+                        <h3>حفاظات حجم 5</h3>
+                        <p>كبير جداً — من 11 إلى 18 كغ</p>
                         <div class="product-features">
                             <span class="feature-tag">قوي</span>
                             <span class="feature-tag">دائم</span>
                         </div>
                     </div>
                 </div>
-              
-                       
-                   
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Products/New/7.png" alt="حفاظات حجم 6 XXL" class="product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3>حفاظات حجم 6</h3>
+                        <p>كبير جداً — +18 كغ</p>
+                        <div class="product-features">
+                            <span class="feature-tag">امتصاص عالٍ</span>
+                            <span class="feature-tag">مريح</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Products/New/1.png" alt="حفاظات حجم 7 XXXL" class="product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3>حفاظات حجم 7</h3>
+                        <p>كبير جداً جداً — +20 كغ</p>
+                        <div class="product-features">
+                            <span class="feature-tag">قوي</span>
+                            <span class="feature-tag">دائم</span>
                         </div>
                     </div>
                 </div>
