@@ -52,9 +52,14 @@ function coupon_ticket_src($file) {
 
 function coupon_cards_config() {
     $root = dirname(__DIR__);
+    $parent = dirname($root);
     foreach ([
         $root . '/cards-secret.php',
         $root . '/includes/cards-secret.php',
+        $parent . '/cards-secret.php',
+        $parent . '/yamoonbaby.com/cards-secret.php',
+        $parent . '/www.yamoonbaby.com/cards-secret.php',
+        $root . '/includes/cards-secret.example.php',
     ] as $file) {
         if (!is_readable($file)) {
             continue;
