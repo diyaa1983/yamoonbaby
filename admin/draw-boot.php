@@ -41,14 +41,15 @@ if (!panel_draw_unlocked()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تأكيد السحب</title>
+    <title>يامون بيبي</title>
+    <?php echo panel_brand_links(); ?>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
     <div class="login-screen">
         <div class="login-box">
-            <div class="logo-mark" style="margin:0 auto;">YB</div>
+            <img class="login-logo" src="<?php echo panel_h(panel_web_root() . '/assets/img/logo.png'); ?>" alt="يامون بيبي">
             <h1>تأكيد فتح السحب</h1>
             <p>أدخل كلمة سر المدير للمتابعة</p>
             <?php if ($drawError): ?><div class="alert alert-err"><?php echo panel_h($drawError); ?></div><?php endif; ?>

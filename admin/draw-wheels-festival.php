@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>السحب</title>
+    <title>يامون بيبي</title>
+    <?php echo panel_brand_links(); ?>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;800;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -96,7 +97,7 @@
     <div class="wrap">
         <a class="back" href="draw.php">كل النماذج</a>
         <div class="ticket">
-            <img class="hero" src="../cards/yamoon-ticket.jpg?v=20260915b" alt="">
+            <img class="hero" src="../cards/yamoon-ticket.jpg?v=20260916a" alt="">
             <div class="ribbon">مستقبلك يبدأ من هنا • اربح شقة في طبربور</div>
             <div class="board-wrap">
                 <div class="board-label">رقم المشاركة</div>

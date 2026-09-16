@@ -46,12 +46,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
         $error = 'انتهت صلاحية الجلسة. أعد المحاولة.';
     } elseif (panel_login_blocked()) {
         $error = 'محاولات كثيرة. انتظر قليلاً ثم أعد المحاولة.';
+        panel_otp_clear();
     } else {
-        $username = trim((string) ($_POST['username'] ?? ''));
-        $password = (string) ($_POST['password'] ?? '');
         $action = (string) ($_POST['action'] ?? 'login');
+        $pending = panel_otp_pending();
 
-        if ($action === 'setup' && !$hasUsers) {
+        if ($action === 'cancel_otp') {
+            panel_otp_clear();
+            $info = 'تم إلغاء التحقق. أدخل اسم المستخدم وكلمة السر من جديد.';
+        } elseif ($action === 'verify_otp') {
+            if (!$pending) {
+                $error = 'انتهت صلاحية رمز التحقق. سجّل الدخول من جديد.';
+            } else {
+                $code = preg_replace('/\D+/', '', (string) ($_POST['otp_code'] ?? ''));
+                $pending['tries'] = (int) $pending['tries'] + 1;
+                $_SESSION['panel_otp'] = $pending;
+                if ($pending['tries'] > 5) {
+                    panel_otp_clear();
+                    panel_login_fail();
+                    $error = 'محاولات كثيرة لرمز التحقق. سجّل الدخول من جديد.';
+                } elseif (!preg_match('/^\d{6}$/', $code) || !password_verify($code, $pending['hash'])) {
+                    $error = 'رمز التحقق غير صحيح.';
+                } else {
+                    panel_login_success($pending['id'], $pending['username'], $pending['role']);
+                    header('Location: home.php');
+                    exit;
+                }
+            }
+        } elseif ($action === 'resend_otp') {
+            if (!$pending) {
+                $error = 'انتهت صلاحية رمز التحقق. سجّل الدخول من جديد.';
+            } elseif ((int) $pending['sent_at'] > time() - 45) {
+                $error = 'انتظر قليلاً قبل إعادة إرسال الرمز.';
+            } else {
+                $sendErr = panel_otp_start($pdo, $pending, $pending['email']);
+                if ($sendErr !== '') {
+                    $error = 'تعذر إعادة إرسال رمز التحقق. راجع إعدادات البريد في الإعدادات.';
+                } else {
+                    $info = 'تم إرسال رمز جديد إلى ' . panel_mask_email($pending['email']) . '.';
+                }
+            }
+        } elseif ($action === 'setup' && !$hasUsers) {
+            $username = trim((string) ($_POST['username'] ?? ''));
+            $password = (string) ($_POST['password'] ?? '');
             if (!preg_match('/^[A-Za-z0-9_.-]{3,40}$/', $username) || strlen($password) < 8) {
                 $error = 'اسم المستخدم 3 إلى 40 حرفاً، وكلمة السر 8 أحرف على الأقل.';
             } else {
@@ -63,20 +100,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
                 exit;
             }
         } else {
+            $username = trim((string) ($_POST['username'] ?? ''));
+            $password = (string) ($_POST['password'] ?? '');
             $stmt = $pdo->prepare('SELECT id, username, password_hash, role FROM panel_users WHERE username = ? LIMIT 1');
             $stmt->execute([$username]);
             $row = $stmt->fetch();
             if ($row && password_verify($password, $row['password_hash'])) {
-                panel_login_success($row['id'], $row['username'], $row['role']);
-                header('Location: home.php');
-                exit;
+                $adminEmail = $row['role'] === 'admin' ? panel_admin_email($pdo) : '';
+                $smtpReady = $row['role'] === 'admin' && panel_smtp_ready(panel_smtp_config($pdo));
+                if ($row['role'] === 'admin' && $adminEmail !== '' && $smtpReady) {
+                    $sendErr = panel_otp_start($pdo, $row, $adminEmail);
+                    if ($sendErr !== '') {
+                        $error = 'كلمة السر صحيحة لكن تعذر إرسال رمز التحقق. راجع بيانات البريد في الإعدادات.';
+                    } else {
+                        $info = 'تم إرسال رمز التحقق إلى ' . panel_mask_email($adminEmail) . '.';
+                    }
+                } else {
+                    panel_login_success($row['id'], $row['username'], $row['role']);
+                    header('Location: home.php');
+                    exit;
+                }
+            } else {
+                panel_login_fail();
+                $error = 'اسم المستخدم أو كلمة السر غير صحيحة.';
             }
-            panel_login_fail();
-            $error = 'اسم المستخدم أو كلمة السر غير صحيحة.';
         }
     }
 }
 
+$otpPending = $pdo ? panel_otp_pending() : null;
 $csrf = $pdo ? panel_csrf_token() : '';
 ?>
 <!DOCTYPE html>
@@ -84,17 +136,41 @@ $csrf = $pdo ? panel_csrf_token() : '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دخول لوحة السحب</title>
+    <title>يامون بيبي</title>
+    <?php echo panel_brand_links(); ?>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
     <div class="login-screen">
     <div class="login-box">
-        <div class="logo-mark" style="margin:0 auto;">YB</div>
+        <img class="login-logo" src="<?php echo panel_h(panel_web_root() . '/assets/img/logo.png'); ?>" alt="يامون بيبي">
         <h1>يامون بيبي</h1>
+        <?php if ($otpPending): ?>
+        <p>أدخل رمز التحقق المرسل إلى <?php echo panel_h(panel_mask_email($otpPending['email'])); ?></p>
+        <?php if ($error): ?><div class="alert alert-err"><?php echo panel_h($error); ?></div><?php endif; ?>
+        <?php if ($info): ?><div class="alert alert-ok"><?php echo panel_h($info); ?></div><?php endif; ?>
+        <form method="post">
+            <input type="hidden" name="csrf" value="<?php echo panel_h($csrf); ?>">
+            <input type="hidden" name="action" value="verify_otp">
+            <label>رمز التحقق</label>
+            <input class="otp-input" type="text" name="otp_code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required autofocus>
+            <button class="btn btn-gold" type="submit">تأكيد الدخول</button>
+        </form>
+        <form method="post" style="margin-top:8px;">
+            <input type="hidden" name="csrf" value="<?php echo panel_h($csrf); ?>">
+            <input type="hidden" name="action" value="resend_otp">
+            <button class="btn btn-ghost" type="submit">إعادة إرسال الرمز</button>
+        </form>
+        <form method="post">
+            <input type="hidden" name="csrf" value="<?php echo panel_h($csrf); ?>">
+            <input type="hidden" name="action" value="cancel_otp">
+            <button class="btn btn-light" type="submit">رجوع لتسجيل الدخول</button>
+        </form>
+        <?php else: ?>
         <p><?php echo $hasUsers ? 'دخول نظام إدارة السحب' : 'أنشئ حساب المدير الأول'; ?></p>
         <?php if ($error): ?><div class="alert alert-err"><?php echo panel_h($error); ?></div><?php endif; ?>
+        <?php if ($info): ?><div class="alert alert-ok"><?php echo panel_h($info); ?></div><?php endif; ?>
         <?php if ($pdo): ?>
         <form method="post">
             <input type="hidden" name="csrf" value="<?php echo panel_h($csrf); ?>">
@@ -105,6 +181,7 @@ $csrf = $pdo ? panel_csrf_token() : '';
             <input type="password" name="password" required autocomplete="<?php echo $hasUsers ? 'current-password' : 'new-password'; ?>">
             <button class="btn btn-gold" type="submit"><?php echo $hasUsers ? 'دخول' : 'إنشاء المدير ودخول'; ?></button>
         </form>
+        <?php endif; ?>
         <?php endif; ?>
     </div>
     </div>

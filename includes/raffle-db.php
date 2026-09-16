@@ -75,11 +75,16 @@ function raffle_ensure_settings(PDO $pdo) {
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS panel_settings (
             setting_key VARCHAR(64) NOT NULL,
-            setting_value VARCHAR(255) NOT NULL,
+            setting_value VARCHAR(512) NOT NULL,
             updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (setting_key)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
     );
+    try {
+        $pdo->exec('ALTER TABLE panel_settings MODIFY setting_value VARCHAR(512) NOT NULL');
+    } catch (Exception $e) {
+        // already migrated
+    }
 }
 
 function raffle_setting(PDO $pdo, $key, $default = '') {

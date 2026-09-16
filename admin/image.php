@@ -25,13 +25,15 @@ if (!$row) {
 }
 
 $path = raffle_entry_image($row['coupon'], $row['phone']);
-if ($path === '' || !is_readable($path)) {
+$archive = realpath(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Archive');
+$real = ($path !== '' && is_readable($path)) ? realpath($path) : false;
+if ($archive === false || $real === false || strpos($real, $archive) !== 0) {
     http_response_code(404);
     exit;
 }
 
 $finfo = new finfo(FILEINFO_MIME_TYPE);
-$mime = $finfo->file($path) ?: 'application/octet-stream';
+$mime = $finfo->file($real) ?: 'application/octet-stream';
 if (!preg_match('#^image/(jpeg|png|webp)$#', $mime)) {
     http_response_code(403);
     exit;
@@ -40,4 +42,4 @@ if (!preg_match('#^image/(jpeg|png|webp)$#', $mime)) {
 header('Content-Type: ' . $mime);
 header('X-Content-Type-Options: nosniff');
 header('Cache-Control: private, no-store');
-readfile($path);
+readfile($real);

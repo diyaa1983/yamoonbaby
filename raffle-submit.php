@@ -220,10 +220,7 @@ try {
     }
 } catch (RuntimeException $e) {
     http_response_code(500);
-    $message = $e->getMessage() === 'missing-config'
-        ? 'إعداد قاعدة البيانات غير جاهز على السيرفر.'
-        : 'تعذر حفظ المشاركة الآن.';
-    echo json_encode(['ok' => false, 'error' => $message], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['ok' => false, 'error' => 'تعذر حفظ المشاركة الآن.'], JSON_UNESCAPED_UNICODE);
     exit;
 } catch (PDOException $e) {
     $sqlState = (string) $e->getCode();
@@ -233,17 +230,8 @@ try {
         echo json_encode(['ok' => false, 'error' => 'البطاقة مستخدمة.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
-    if ($driverCode === 1045) {
-        $message = 'كلمة مرور MySQL غير صحيحة. ضع نفس كلمة مرور Workbench في db-config.php';
-    } elseif ($driverCode === 1049) {
-        $message = 'قاعدة yamoonbaby-data غير موجودة في MySQL.';
-    } elseif ($driverCode === 2002) {
-        $message = 'تعذر الاتصال بـ MySQL. تأكد أن السيرفر المحلي يعمل كما في Workbench.';
-    } else {
-        $message = 'تعذر حفظ المشاركة الآن.';
-    }
     http_response_code(500);
-    echo json_encode(['ok' => false, 'error' => $message], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['ok' => false, 'error' => 'تعذر حفظ المشاركة الآن.'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 

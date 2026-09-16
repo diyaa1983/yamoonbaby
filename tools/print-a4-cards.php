@@ -91,10 +91,10 @@ $pdfExists = is_file(dirname(__DIR__) . '/cards/' . $pdfName);
         }
         .qr-box {
             position: absolute;
-            left: 76.76%;
-            top: 28.17%;
-            width: 16.89%;
-            height: 30.22%;
+            left: 76.66%;
+            top: 28.08%;
+            width: 17.19%;
+            height: 30.50%;
             background: #fff;
             overflow: hidden;
         }
@@ -107,10 +107,10 @@ $pdfExists = is_file(dirname(__DIR__) . '/cards/' . $pdfName);
         }
         .num-box {
             position: absolute;
-            left: 75.88%;
-            top: 65.49%;
-            width: 19.34%;
-            height: 6.16%;
+            left: 76.46%;
+            top: 65.86%;
+            width: 18.16%;
+            height: 5.32%;
             background: transparent;
             border: 0;
             outline: 0;

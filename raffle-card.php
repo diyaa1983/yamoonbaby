@@ -8,6 +8,22 @@ header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 header('Cache-Control: no-store, no-cache, must-revalidate');
 
+$rateFile = sys_get_temp_dir() . '/yamoon_card_' . md5($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+$now = time();
+$hits = [];
+if (is_file($rateFile)) {
+    $hits = array_filter(array_map('intval', explode(',', (string) file_get_contents($rateFile))), function ($t) use ($now) {
+        return $t > $now - 600;
+    });
+}
+if (count($hits) >= 20) {
+    http_response_code(429);
+    echo json_encode(['ok' => false, 'error' => 'محاولات كثيرة. حاول بعد قليل.'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+$hits[] = $now;
+file_put_contents($rateFile, implode(',', $hits));
+
 $cfg = coupon_cards_config();
 if (!$cfg) {
     http_response_code(500);

@@ -44,6 +44,96 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             panel_audit($pdo, $user['username'], 'registration_toggled', null, null, $open === '1' ? 'open' : 'closed');
             $message = $open === '1' ? 'تم تفعيل التسجيل عبر QR.' : 'تم إيقاف التسجيل عبر QR.';
         }
+    } elseif ((string) ($_POST['action'] ?? '') === 'save_smtp') {
+        $tab = 'settings';
+        if (!$isAdmin) {
+            $error = 'هذه العملية للمدير فقط.';
+        } else {
+            $host = trim((string) ($_POST['smtp_host'] ?? ''));
+            $port = (int) ($_POST['smtp_port'] ?? 587);
+            $secure = (string) ($_POST['smtp_secure'] ?? 'tls');
+            $smtpUser = trim((string) ($_POST['smtp_user'] ?? ''));
+            $smtpPass = (string) ($_POST['smtp_pass'] ?? '');
+            $from = trim((string) ($_POST['smtp_from'] ?? ''));
+            $fromName = trim((string) ($_POST['smtp_from_name'] ?? 'Yamoon Baby'));
+            if (!in_array($secure, ['tls', 'ssl', 'none'], true)) {
+                $secure = 'tls';
+            }
+            if ($host === '' || $smtpUser === '') {
+                $error = 'أدخل خادم SMTP واسم مستخدم البريد (الإيميل الكامل).';
+            } elseif ($port < 1 || $port > 65535) {
+                $error = 'منفذ SMTP غير صحيح.';
+            } elseif ($from !== '' && !filter_var($from, FILTER_VALIDATE_EMAIL)) {
+                $error = 'بريد المرسل غير صحيح.';
+            } elseif ($smtpPass === '' && raffle_setting($pdo, 'smtp_pass', '') === '') {
+                $error = 'أدخل كلمة سر صندوق البريد.';
+            }
+            if ($error === '') {
+                if ($from === '') {
+                    $from = $smtpUser;
+                }
+                raffle_set_setting($pdo, 'smtp_host', $host);
+                raffle_set_setting($pdo, 'smtp_port', (string) $port);
+                raffle_set_setting($pdo, 'smtp_secure', $secure);
+                raffle_set_setting($pdo, 'smtp_user', $smtpUser);
+                raffle_set_setting($pdo, 'smtp_from', $from);
+                raffle_set_setting($pdo, 'smtp_from_name', $fromName === '' ? 'Yamoon Baby' : substr($fromName, 0, 80));
+                if ($smtpPass !== '') {
+                    raffle_set_setting($pdo, 'smtp_pass', panel_encrypt_secret($smtpPass));
+                }
+                panel_audit($pdo, $user['username'], 'smtp_updated', null, null, $smtpUser);
+                $message = 'تم حفظ إعدادات بريد الإرسال.';
+            }
+        }
+    } elseif ((string) ($_POST['action'] ?? '') === 'test_smtp') {
+        $tab = 'settings';
+        if (!$isAdmin) {
+            $error = 'هذه العملية للمدير فقط.';
+        } else {
+            $to = panel_admin_email($pdo);
+            $cfg = panel_smtp_config($pdo);
+            if (!panel_smtp_ready($cfg)) {
+                $error = 'احفظ إعدادات SMTP أولاً مع كلمة سر البريد.';
+            } elseif ($to === '' || !filter_var($to, FILTER_VALIDATE_EMAIL)) {
+                $error = 'احفظ بريد المدير الرئيسي من شاشة المستخدمين أولاً ليصله الاختبار.';
+            } else {
+                try {
+                    panel_smtp_send(
+                        $cfg,
+                        $to,
+                        'اختبار البريد — يامون بيبي',
+                        panel_mail_html('تم اختبار بريد الإرسال بنجاح.', 'يمكنك الآن تفعيل رمز التحقق عند دخول المدير.')
+                    );
+                    $message = 'تم إرسال رسالة اختبار إلى ' . panel_mask_email($to) . '.';
+                } catch (Exception $e) {
+                    $error = 'فشل الاختبار. تأكد من الخادم والمنفذ وكلمة سر البريد.';
+                }
+            }
+        }
+    } elseif ((string) ($_POST['action'] ?? '') === 'save_admin_email') {
+        $tab = 'users';
+        if (!$isAdmin) {
+            $error = 'هذه العملية للمدير فقط.';
+        } else {
+            $adminPassword = (string) ($_POST['admin_password'] ?? '');
+            $email = trim((string) ($_POST['admin_email'] ?? ''));
+            $stmt = $pdo->prepare('SELECT password_hash FROM panel_users WHERE id = ? LIMIT 1');
+            $stmt->execute([$user['id']]);
+            $me = $stmt->fetch();
+            if (!$me || !password_verify($adminPassword, $me['password_hash'])) {
+                $error = 'كلمة سر المدير غير صحيحة.';
+            } elseif ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $error = 'صيغة البريد الإلكتروني غير صحيحة.';
+            } elseif (strlen($email) > 120) {
+                $error = 'البريد الإلكتروني طويل جداً.';
+            } else {
+                raffle_set_setting($pdo, 'admin_email', $email);
+                panel_audit($pdo, $user['username'], 'email_updated', null, null, $email === '' ? 'disabled' : $email);
+                $message = $email === ''
+                    ? 'تم إلغاء بريد التحقق. دخول المدير سيتم بكلمة السر فقط.'
+                    : 'تم حفظ البريد. عند دخول المدير سيُرسل رمز تحقق إلى هذا الإيميل.';
+            }
+        }
     } elseif (!$isAdmin) {
         $error = 'هذه العملية للمدير فقط.';
     } else {
@@ -156,8 +246,27 @@ $users = [];
 $audits = [];
 $auditPage = 1;
 $auditPages = 1;
+$adminEmail = '';
+$smtpReady = false;
+$smtpCfg = [
+    'host' => '',
+    'port' => '587',
+    'secure' => 'tls',
+    'user' => '',
+    'pass' => '',
+    'from' => '',
+    'from_name' => 'Yamoon Baby',
+];
+$registrationOpen = false;
 if ($isAdmin && $tab === 'users') {
     $users = $pdo->query('SELECT id, username, role, created_at FROM panel_users ORDER BY id')->fetchAll();
+    $adminEmail = panel_admin_email($pdo);
+    $smtpReady = panel_smtp_ready(panel_smtp_config($pdo));
+}
+if ($isAdmin && $tab === 'settings') {
+    $registrationOpen = raffle_registration_open($pdo);
+    $smtpCfg = panel_smtp_config($pdo);
+    $smtpReady = panel_smtp_ready($smtpCfg);
 }
 if ($isAdmin && $tab === 'audit') {
     $allAudits = $pdo->query('SELECT id, actor, action, coupon, entry_id, details, created_at FROM raffle_audit ORDER BY id DESC LIMIT 500')->fetchAll();
@@ -199,7 +308,8 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $isAdmin ? 'لوحة المدير' : 'شاشة المستخدم'; ?></title>
+    <title>يامون بيبي</title>
+    <?php echo panel_brand_links(); ?>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="admin.css">
@@ -208,7 +318,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
 <div class="app">
     <aside class="sidebar no-print">
         <div class="logo">
-            <div class="logo-mark">YB</div>
+            <img class="sidebar-logo" src="<?php echo panel_h(panel_web_root() . '/assets/img/logo.png'); ?>" alt="يامون بيبي">
             <div>
                 <h1>يامون بيبي</h1>
                 <p><?php echo $isAdmin ? 'نظام إدارة السحب' : 'شاشة العرض'; ?></p>
@@ -219,6 +329,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
             <a class="<?php echo $tab === 'report' ? 'active' : ''; ?>" href="home.php?tab=report"><i class="fas fa-chart-line"></i> تقرير البطاقات</a>
             <?php if ($isAdmin): ?>
                 <a href="../tools/print-test-cards.php"><i class="fas fa-print"></i> طباعة كوبون تجريبي</a>
+                <a href="../tools/print-a3-cards.php"><i class="fas fa-print"></i> طباعة A3 — 10 بطاقات</a>
                 <a href="draw.php"><i class="fas fa-dharmachakra"></i> السحب على الفائز</a>
                 <a class="<?php echo $tab === 'audit' ? 'active' : ''; ?>" href="home.php?tab=audit"><i class="fas fa-clock-rotate-left"></i> سجل العمليات</a>
                 <a class="<?php echo $tab === 'users' ? 'active' : ''; ?>" href="home.php?tab=users"><i class="fas fa-users-gear"></i> المستخدمون</a>
@@ -348,16 +459,6 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
     </div>
     <?php endif; ?>
 
-    <?php
-        $registrationOpen = false;
-        if ($isAdmin && $tab === 'settings') {
-            try {
-                $registrationOpen = raffle_registration_open($pdo);
-            } catch (Exception $e) {
-                $registrationOpen = false;
-            }
-        }
-    ?>
     <?php if ($tab === 'settings'): ?>
     <?php if ($isAdmin): ?>
     <div class="card">
@@ -374,6 +475,47 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
                 تفعيل التسجيل
             </label>
             <button class="btn btn-gold" type="submit">حفظ حالة التسجيل</button>
+        </form>
+    </div>
+    <div class="card">
+        <h3>بريد الإرسال (SMTP)</h3>
+        <p class="muted">هذه بيانات صندوق البريد الذي يُرسل منه رمز الدخول. أنشئ إيميلاً من cPanel مثل <strong dir="ltr">noreply@yamoonbaby.com</strong> ثم أدخل بياناته هنا.</p>
+        <p class="reg-status <?php echo $smtpReady ? 'on' : 'off'; ?>">
+            الحالة الآن: <?php echo $smtpReady ? 'جاهز للإرسال' : 'غير مكتمل'; ?>
+        </p>
+        <form method="post" class="settings-form settings-form-wide" autocomplete="off">
+            <input type="hidden" name="csrf" value="<?php echo panel_h($csrf); ?>">
+            <input type="hidden" name="action" value="save_smtp">
+            <label for="smtp_host">خادم SMTP</label>
+            <input type="text" id="smtp_host" name="smtp_host" required maxlength="120" dir="ltr" value="<?php echo panel_h($smtpCfg['host']); ?>" placeholder="mail.yamoonbaby.com">
+            <div class="grid-2">
+                <label>
+                    <span>المنفذ</span>
+                    <input type="number" name="smtp_port" min="1" max="65535" required value="<?php echo panel_h($smtpCfg['port']); ?>">
+                </label>
+                <label>
+                    <span>التشفير</span>
+                    <select name="smtp_secure">
+                        <option value="tls" <?php echo $smtpCfg['secure'] === 'tls' ? 'selected' : ''; ?>>TLS — المنفذ 587</option>
+                        <option value="ssl" <?php echo $smtpCfg['secure'] === 'ssl' ? 'selected' : ''; ?>>SSL — المنفذ 465</option>
+                        <option value="none" <?php echo $smtpCfg['secure'] === 'none' ? 'selected' : ''; ?>>بدون</option>
+                    </select>
+                </label>
+            </div>
+            <label for="smtp_user">إيميل الإرسال / اسم المستخدم</label>
+            <input type="text" id="smtp_user" name="smtp_user" required maxlength="120" dir="ltr" value="<?php echo panel_h($smtpCfg['user']); ?>" placeholder="noreply@yamoonbaby.com">
+            <label for="smtp_pass">كلمة سر هذا الإيميل</label>
+            <input type="password" id="smtp_pass" name="smtp_pass" maxlength="200" dir="ltr" placeholder="<?php echo $smtpCfg['pass'] !== '' ? 'اتركه فارغاً للإبقاء على المحفوظ' : 'كلمة سر صندوق البريد'; ?>">
+            <label for="smtp_from">بريد المرسل الظاهر</label>
+            <input type="email" id="smtp_from" name="smtp_from" maxlength="120" dir="ltr" value="<?php echo panel_h($smtpCfg['from']); ?>" placeholder="noreply@yamoonbaby.com">
+            <label for="smtp_from_name">الاسم الظاهر</label>
+            <input type="text" id="smtp_from_name" name="smtp_from_name" maxlength="80" value="<?php echo panel_h($smtpCfg['from_name']); ?>">
+            <button class="btn btn-gold" type="submit">حفظ إعدادات البريد</button>
+        </form>
+        <form method="post" style="margin-top:12px;">
+            <input type="hidden" name="csrf" value="<?php echo panel_h($csrf); ?>">
+            <input type="hidden" name="action" value="test_smtp">
+            <button class="btn btn-blue" type="submit">إرسال رسالة اختبار</button>
         </form>
     </div>
     <?php endif; ?>
@@ -437,6 +579,27 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
     <?php endif; ?>
 
     <?php if ($isAdmin && $tab === 'users'): ?>
+    <div class="card">
+        <h3>بريد المدير الرئيسي</h3>
+        <p class="muted">هذا البريد للمستخدم الرئيسي فقط، ويصل إليه رمز التحقق بعد ضبط <strong>بريد الإرسال (SMTP)</strong> من شاشة الإعدادات. اتركه فارغاً لإيقاف الرمز.</p>
+        <?php if ($adminEmail !== ''): ?>
+        <p class="reg-status on">بريد الاستلام: <?php echo panel_h(panel_mask_email($adminEmail)); ?></p>
+        <?php else: ?>
+        <p class="reg-status off">لم يُحفظ بريد الاستلام بعد</p>
+        <?php endif; ?>
+        <?php if (!$smtpReady): ?>
+        <p class="reg-status off">بريد الإرسال غير مكتمل — اضبطه من الإعدادات ثم أعد حفظ هذا البريد</p>
+        <?php endif; ?>
+        <form method="post" class="settings-form" autocomplete="off">
+            <input type="hidden" name="csrf" value="<?php echo panel_h($csrf); ?>">
+            <input type="hidden" name="action" value="save_admin_email">
+            <label for="admin_email">البريد الإلكتروني</label>
+            <input type="email" id="admin_email" name="admin_email" maxlength="120" value="<?php echo panel_h($adminEmail); ?>" placeholder="name@example.com" dir="ltr">
+            <label for="admin_email_password">كلمة سر المدير للتأكيد</label>
+            <input type="password" id="admin_email_password" name="admin_password" required autocomplete="current-password">
+            <button class="btn btn-gold" type="submit">حفظ البريد</button>
+        </form>
+    </div>
     <div class="card">
         <h3>المستخدمون الحاليون</h3>
         <div class="table-wrap">

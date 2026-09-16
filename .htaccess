@@ -2,7 +2,7 @@ Options -Indexes
 AddType image/webp .webp
 
 <IfModule mod_authz_core.c>
-    <FilesMatch "(\.git|\.env|\.bak|\.backup|admin-secret\.php|db-config\.php|cards-secret\.php|coupon-token\.php|raffle-session\.php|raffle-db\.php|\.sql|\.log|\.ppk)$">
+    <FilesMatch "(\.git|\.env|\.bak|\.backup|\.py|\.sql|\.log|\.ppk|admin-secret\.php|db-config\.php|cards-secret\.php|coupon-token\.php|raffle-session\.php|raffle-db\.php|a3-tokens\.php)$">
         Require all denied
     </FilesMatch>
     <FilesMatch "^(draw.*\.html|info\.php|test\.php|status\.php)$">
@@ -13,6 +13,8 @@ AddType image/webp .webp
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule (^|/)\.git - [F,L]
+    RewriteRule ^cards/pdf(/|$) - [F,L]
+    RewriteRule ^tools/a3-tokens\.php$ - [F,L]
     RewriteRule ^styles\.css$ assets/css/styles.css [L]
     RewriteRule ^script\.js$ assets/js/script.js [L]
     RewriteRule ^jordan-areas\.js$ assets/js/jordan-areas.js [L]
@@ -35,8 +37,20 @@ AddType image/webp .webp
 
 <IfModule mod_headers.c>
     Header always set Content-Security-Policy "frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    Header always set X-Frame-Options "DENY"
     Header always set X-Content-Type-Options "nosniff"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    Header always set Permissions-Policy "camera=(self), microphone=(), geolocation=()"
     Header always set X-XSS-Protection "0"
+    Header always unset X-Powered-By
+</IfModule>
+<IfModule mod_setenvif.c>
+    SetEnvIf HTTPS "on" IS_HTTPS
+    SetEnvIf X-Forwarded-Proto "https" IS_HTTPS
+</IfModule>
+<IfModule mod_headers.c>
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=IS_HTTPS
+</IfModule>
+<IfModule mod_php.c>
+    php_flag expose_php off
 </IfModule>

@@ -1,2 +1,7 @@
 Options -Indexes
 DirectoryIndex index.php
+<IfModule mod_authz_core.c>
+    <FilesMatch "(a3-tokens\.php|.*\.py)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
