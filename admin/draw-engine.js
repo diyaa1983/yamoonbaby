@@ -38,7 +38,6 @@
             '#yamoonCelebrate.show{display:flex}',
             '#yamoonCelebrate .yc-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 22%;transform:scale(1.06);z-index:0}',
             '#yamoonCelebrate .yc-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(10,36,18,.18) 0%,rgba(8,28,16,.28) 48%,rgba(8,28,16,.55) 100%)}',
-            '#yamoonCelebrate .yc-ticket{position:absolute;z-index:2;left:3%;bottom:5%;width:min(36vw,430px);border-radius:16px;box-shadow:0 24px 50px rgba(0,0,0,.38);pointer-events:none}',
             '#ycFireworks{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}',
             '#yamoonCelebrate .yc-card{position:relative;z-index:4;width:min(640px,92vw);background:rgba(255,253,247,.92);border:4px solid #f4c430;border-radius:36px;padding:28px 22px 24px;text-align:center;box-shadow:0 28px 90px rgba(0,0,0,.4);backdrop-filter:blur(12px)}',
             '#yamoonCelebrate .yc-label{color:#e11d48;font-weight:900;font-size:clamp(1.2rem,3vw,1.7rem);margin-bottom:14px}',
@@ -50,7 +49,6 @@
             '#yamoonCelebrate .yc-phone{direction:ltr;unicode-bidi:isolate;font-size:clamp(1.35rem,3.6vw,2rem);font-weight:800;color:#be185d}',
             '#yamoonCelebrate .yc-city{font-size:clamp(1.25rem,3.2vw,1.8rem);font-weight:800;color:#12315a}',
             '#yamoonCelebrate .yc-close{margin-top:18px;border:0;border-radius:999px;padding:12px 28px;font:inherit;font-weight:800;background:linear-gradient(135deg,#ffe66d,#ffb703);color:#3b2a00;cursor:pointer}',
-            '@media (max-width:800px){#yamoonCelebrate .yc-ticket{display:none}}',
             '@keyframes ycPop{0%{transform:scale(.28) rotate(-12deg);opacity:.15}62%{transform:scale(1.14) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}',
             '@keyframes ycGlow{0%,100%{box-shadow:0 0 0 0 rgba(251,191,36,.2)}50%{box-shadow:0 0 48px 14px rgba(251,191,36,.32)}}',
             '#yamoonCount{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,rgba(18,53,28,.35),rgba(6,16,12,.88));z-index:75}',
@@ -68,7 +66,6 @@
         box.innerHTML =
             '<img class="yc-bg" src="../assets/img/login-hero.jpg" alt="">' +
             '<div class="yc-shade"></div>' +
-            '<img class="yc-ticket" src="../cards/yamoon-ticket.jpg" alt="">' +
             '<canvas id="ycFireworks"></canvas>' +
             '<div class="yc-card">' +
                 '<div class="yc-label">مبارك للفائز</div>' +
