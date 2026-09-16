@@ -312,9 +312,9 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
     <?php echo panel_brand_links(); ?>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin.css?v=20260916g">
 </head>
-<body>
+<body class="dash">
 <div class="app">
     <aside class="sidebar no-print">
         <div class="logo">
@@ -342,21 +342,49 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
         </div>
     </aside>
     <main class="main">
-        <div class="topbar">
-            <div>
-                <h2><?php echo panel_h($title); ?></h2>
+        <section class="dash-hero no-print">
+            <img class="dash-hero-bg" src="<?php echo panel_h(panel_web_root() . '/assets/img/login-hero.jpg'); ?>" alt="">
+            <div class="dash-hero-shade"></div>
+            <div class="dash-hero-inner">
+                <div class="dash-hero-copy">
+                    <p class="topbar-kicker">لوحة يامون بيبي</p>
+                    <h2><?php echo panel_h($title); ?></h2>
+                    <span>السحب على الجائزة الكبرى</span>
+                    <strong>شقة والعديد من الجوائز</strong>
+                    <em>موعد السحب 25 / 05 / 2027</em>
+                </div>
             </div>
-            <div class="actions no-print">
-                <a class="btn btn-ghost" href="../index.html">الموقع</a>
-                <a class="btn btn-gold" href="logout.php">خروج</a>
+            <div class="actions dash-hero-actions">
+                <a class="btn btn-ghost" href="../index.html"><i class="fas fa-globe"></i> الموقع</a>
+                <a class="btn btn-gold" href="logout.php"><i class="fas fa-sign-out-alt"></i> خروج</a>
             </div>
-        </div>
+        </section>
+        <h2 class="dash-print-title"><?php echo panel_h($title); ?></h2>
+        <div class="dash-workspace">
 
         <?php if ($tab === 'cards'): ?>
         <div class="stats">
-            <div class="stat"><span>إجمالي البطاقات</span><b><?php echo $totalCards; ?></b></div>
-            <div class="stat"><span>نتائج التصفية</span><b><?php echo $filteredCount; ?></b></div>
-            <div class="stat"><span><?php echo $isAdmin ? 'المستخدمون' : 'صلاحية العرض'; ?></span><b><?php echo $isAdmin ? $totalUsers : 'قراءة فقط'; ?></b></div>
+            <div class="stat">
+                <span class="stat-icon i-ticket"><i class="fas fa-ticket-alt"></i></span>
+                <div>
+                    <span>إجمالي البطاقات</span>
+                    <b><?php echo $totalCards; ?></b>
+                </div>
+            </div>
+            <div class="stat">
+                <span class="stat-icon i-filter"><i class="fas fa-filter"></i></span>
+                <div>
+                    <span>نتائج التصفية</span>
+                    <b><?php echo $filteredCount; ?></b>
+                </div>
+            </div>
+            <div class="stat">
+                <span class="stat-icon i-users"><i class="fas fa-<?php echo $isAdmin ? 'users' : 'eye'; ?>"></i></span>
+                <div>
+                    <span><?php echo $isAdmin ? 'المستخدمون' : 'صلاحية العرض'; ?></span>
+                    <b><?php echo $isAdmin ? $totalUsers : 'قراءة فقط'; ?></b>
+                </div>
+            </div>
         </div>
         <?php endif; ?>
 
@@ -425,7 +453,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
                 ?>
                     <tr>
                         <td><?php echo $rowStart + $index + 1; ?></td>
-                        <td><?php echo panel_h($row['coupon']); ?></td>
+                        <td><span class="coupon-code">YM<?php echo panel_h($row['coupon']); ?></span></td>
                         <td><?php echo panel_h($row['full_name'] !== '' ? $row['full_name'] : '—'); ?></td>
                         <td><?php echo panel_h($row['phone']); ?></td>
                         <td><?php echo panel_h($row['governorate']); ?></td>
@@ -655,6 +683,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
         </form>
     </div>
     <?php endif; ?>
+        </div>
     </main>
 </div>
 
