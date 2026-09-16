@@ -2,6 +2,7 @@
     var fireworkRaf = 0;
     var fireworkTimer = null;
     var fireworkResize = null;
+    var countTimer = 0;
     var WHEEL_COLORS = ['#ff7eb3', '#5ec8d8', '#ffd36a', '#6aa9ff', '#ff9a7a', '#7ed6b8', '#f4c430', '#4f8fc9', '#ffb3c7'];
 
     function digitsFor(index) {
@@ -45,7 +46,17 @@
             '#yamoonCelebrate .yc-name{font-size:clamp(1.5rem,4vw,2.3rem);font-weight:900;color:#0b4f86}',
             '#yamoonCelebrate .yc-phone{direction:ltr;unicode-bidi:isolate;font-size:clamp(1.35rem,3.6vw,2rem);font-weight:800;color:#be185d}',
             '#yamoonCelebrate .yc-city{font-size:clamp(1.25rem,3.2vw,1.8rem);font-weight:800;color:#12315a}',
-            '#yamoonCelebrate .yc-close{margin-top:18px;border:0;border-radius:999px;padding:12px 28px;font:inherit;font-weight:800;background:linear-gradient(135deg,#ffe66d,#ffb703);color:#3b2a00;cursor:pointer}'
+            '#yamoonCelebrate .yc-close{margin-top:18px;border:0;border-radius:999px;padding:12px 28px;font:inherit;font-weight:800;background:linear-gradient(135deg,#ffe66d,#ffb703);color:#3b2a00;cursor:pointer}',
+            '@keyframes ycPop{0%{transform:scale(.28) rotate(-12deg);opacity:.15}62%{transform:scale(1.14) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}',
+            '@keyframes ycGlow{0%,100%{box-shadow:0 0 0 0 rgba(251,191,36,.2)}50%{box-shadow:0 0 48px 14px rgba(251,191,36,.32)}}',
+            '#yamoonCount{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,rgba(18,53,28,.35),rgba(6,16,12,.88));z-index:75}',
+            '#yamoonCount.show{display:flex}',
+            '#yamoonCount .yc-count-wrap{text-align:center}',
+            '#yamoonCount .yc-count-label{color:#ffe082;font-weight:800;font-size:clamp(1.05rem,2.6vw,1.55rem);margin-bottom:18px;text-shadow:0 8px 24px rgba(0,0,0,.45)}',
+            '#ycCountDigit{width:min(46vw,300px);height:min(46vw,300px);margin:0 auto;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 28%,#fff8dc,#fbbf24 52%,#b45309);color:#3b2a00;font-size:clamp(5.2rem,20vw,9.4rem);font-weight:900;line-height:1;border:6px solid rgba(255,255,255,.55);animation:ycGlow 1.1s ease-in-out infinite}',
+            '#ycCountDigit.pop{animation:ycPop .4s cubic-bezier(.18,1.4,.32,1),ycGlow 1.1s ease-in-out infinite}',
+            '#ycCountDigit span{direction:ltr;unicode-bidi:isolate}',
+            '#yamoonCount .yc-count-sub{margin-top:18px;color:#fff;font-weight:800;opacity:.92}'
         ].join('');
         document.head.appendChild(style);
         var box = document.createElement('div');
@@ -64,6 +75,55 @@
             '</div>';
         document.body.appendChild(box);
         document.getElementById('ycClose').onclick = hideCelebrate;
+        if (!document.getElementById('yamoonCount')) {
+            var countBox = document.createElement('div');
+            countBox.id = 'yamoonCount';
+            countBox.innerHTML =
+                '<div class="yc-count-wrap">' +
+                    '<div class="yc-count-label">العدّ قبل إعلان الفائز</div>' +
+                    '<div id="ycCountDigit"><span>0</span></div>' +
+                    '<div class="yc-count-sub">من 0 إلى 9</div>' +
+                '</div>';
+            document.body.appendChild(countBox);
+        }
+    }
+
+    function hideCount() {
+        if (countTimer) {
+            clearTimeout(countTimer);
+            countTimer = 0;
+        }
+        var el = document.getElementById('yamoonCount');
+        if (el) el.classList.remove('show');
+    }
+
+    function revealWinner(num, hit, onComplete) {
+        ensureCelebrate();
+        hideCelebrate();
+        var overlay = document.getElementById('yamoonCount');
+        var digit = document.getElementById('ycCountDigit');
+        overlay.classList.add('show');
+        var n = 0;
+        function showDigit(value) {
+            digit.innerHTML = '<span>' + value + '</span>';
+            digit.classList.remove('pop');
+            void digit.offsetWidth;
+            digit.classList.add('pop');
+        }
+        function tick() {
+            showDigit(n);
+            if (n >= 9) {
+                countTimer = setTimeout(function () {
+                    hideCount();
+                    showCelebrate(num, hit);
+                    if (typeof onComplete === 'function') onComplete(num, hit);
+                }, 680);
+                return;
+            }
+            n += 1;
+            countTimer = setTimeout(tick, 420);
+        }
+        tick();
     }
 
     function stopFireworks() {
@@ -191,6 +251,7 @@
     }
 
     function hideCelebrate() {
+        hideCount();
         var el = document.getElementById('yamoonCelebrate');
         if (el) el.classList.remove('show');
         stopFireworks();
@@ -278,15 +339,17 @@
                 return;
             }
             var hit = findEntry(entries, num);
-            if (info) {
-                info.textContent = hit
-                    ? (hit.full_name + ' — ' + hit.phone + ' — ' + hit.governorate)
-                    : 'رقم البطاقة: ' + num;
-            }
+            if (info) info.textContent = 'رقم البطاقة: ' + num;
             if (!celebrated) {
                 celebrated = true;
-                showCelebrate(num, hit);
-                if (typeof opts.onComplete === 'function') opts.onComplete(num, hit);
+                revealWinner(num, hit, function () {
+                    if (info) {
+                        info.textContent = hit
+                            ? (hit.full_name + ' — ' + hit.phone + ' — ' + hit.governorate)
+                            : 'رقم البطاقة: ' + num;
+                    }
+                    if (typeof opts.onComplete === 'function') opts.onComplete(num, hit);
+                });
             }
         }
 
@@ -496,15 +559,17 @@
                 return;
             }
             var hit = findEntry(entries, num);
-            if (info) {
-                info.textContent = hit
-                    ? (hit.full_name + ' — ' + hit.phone + ' — ' + hit.governorate)
-                    : 'رقم البطاقة: ' + num;
-            }
+            if (info) info.textContent = 'رقم البطاقة: ' + num;
             if (!celebrated) {
                 celebrated = true;
-                showCelebrate(num, hit);
-                if (typeof opts.onComplete === 'function') opts.onComplete(num, hit);
+                revealWinner(num, hit, function () {
+                    if (info) {
+                        info.textContent = hit
+                            ? (hit.full_name + ' — ' + hit.phone + ' — ' + hit.governorate)
+                            : 'رقم البطاقة: ' + num;
+                    }
+                    if (typeof opts.onComplete === 'function') opts.onComplete(num, hit);
+                });
             }
         }
 
