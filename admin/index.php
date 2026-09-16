@@ -139,10 +139,12 @@ $csrf = $pdo ? panel_csrf_token() : '';
     <title>يامون بيبي</title>
     <?php echo panel_brand_links(); ?>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin.css?v=20260916d">
 </head>
-<body>
-    <div class="login-screen">
+<body class="login-page">
+    <div class="login-split">
+    <?php require __DIR__ . '/login-scene.php'; ?>
+    <section class="login-panel">
     <div class="login-box">
         <img class="login-logo" src="<?php echo panel_h(panel_web_root() . '/assets/img/logo.png'); ?>" alt="يامون بيبي">
         <h1>يامون بيبي</h1>
@@ -184,6 +186,7 @@ $csrf = $pdo ? panel_csrf_token() : '';
         <?php endif; ?>
         <?php endif; ?>
     </div>
+    </section>
     </div>
 </body>
 </html>
