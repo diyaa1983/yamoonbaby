@@ -47,7 +47,7 @@
         </div>
         <div class="info" id="info" data-idle=""></div>
     </div>
-    <script src="draw-engine.js"></script>
+    <script src="draw-engine.js?v=20260916h"></script>
     <script>
         var api = YamoonDraw.createReels({
             root: '#root', board: '#board', info: '#info', entries: <?php echo $drawEntriesJson; ?>, cell: 120

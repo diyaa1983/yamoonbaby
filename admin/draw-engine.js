@@ -5,7 +5,7 @@
     var WHEEL_COLORS = ['#ff7eb3', '#5ec8d8', '#ffd36a', '#6aa9ff', '#ff9a7a', '#7ed6b8', '#f4c430', '#4f8fc9', '#ffb3c7'];
 
     function digitsFor(index) {
-        return index === 0 ? [0, 1, 2, 3, 4] : [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        return index === 0 ? [0, 1, 2, 3, 4] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     }
 
     function stepFor(index) {
