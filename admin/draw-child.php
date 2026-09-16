@@ -75,7 +75,7 @@
             <div class="date">موعد السحب: 25/05/2027</div>
         </div>
     </div>
-    <script src="draw-engine.js?v=20260916i"></script>
+    <script src="draw-engine.js?v=20260916j"></script>
     <script>
         var child = document.getElementById('yamoonChild');
         var track = document.getElementById('childTrack');

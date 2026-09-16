@@ -34,10 +34,13 @@
         if (document.getElementById('yamoonCelebrate')) return;
         var style = document.createElement('style');
         style.textContent = [
-            '#yamoonCelebrate{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(6,10,28,.82);z-index:80;overflow:hidden}',
+            '#yamoonCelebrate{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#12351c;z-index:80;overflow:hidden}',
             '#yamoonCelebrate.show{display:flex}',
-            '#ycFireworks{position:absolute;inset:0;width:100%;height:100%;z-index:1}',
-            '#yamoonCelebrate .yc-card{position:relative;z-index:3;width:min(720px,94vw);background:linear-gradient(180deg,#fff,#fff4d6);border:4px solid #f4c430;border-radius:36px;padding:28px 22px 24px;text-align:center;box-shadow:0 28px 90px rgba(0,0,0,.45)}',
+            '#yamoonCelebrate .yc-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 22%;transform:scale(1.06);z-index:0}',
+            '#yamoonCelebrate .yc-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(10,36,18,.18) 0%,rgba(8,28,16,.28) 48%,rgba(8,28,16,.55) 100%)}',
+            '#yamoonCelebrate .yc-ticket{position:absolute;z-index:2;left:3%;bottom:5%;width:min(36vw,430px);border-radius:16px;box-shadow:0 24px 50px rgba(0,0,0,.38);pointer-events:none}',
+            '#ycFireworks{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}',
+            '#yamoonCelebrate .yc-card{position:relative;z-index:4;width:min(640px,92vw);background:rgba(255,253,247,.92);border:4px solid #f4c430;border-radius:36px;padding:28px 22px 24px;text-align:center;box-shadow:0 28px 90px rgba(0,0,0,.4);backdrop-filter:blur(12px)}',
             '#yamoonCelebrate .yc-label{color:#e11d48;font-weight:900;font-size:clamp(1.2rem,3vw,1.7rem);margin-bottom:14px}',
             '#yamoonCelebrate .yc-grid{display:grid;gap:10px}',
             '#yamoonCelebrate .yc-field{background:#fff;border:2px solid #fde68a;border-radius:18px;padding:10px 14px}',
@@ -47,6 +50,7 @@
             '#yamoonCelebrate .yc-phone{direction:ltr;unicode-bidi:isolate;font-size:clamp(1.35rem,3.6vw,2rem);font-weight:800;color:#be185d}',
             '#yamoonCelebrate .yc-city{font-size:clamp(1.25rem,3.2vw,1.8rem);font-weight:800;color:#12315a}',
             '#yamoonCelebrate .yc-close{margin-top:18px;border:0;border-radius:999px;padding:12px 28px;font:inherit;font-weight:800;background:linear-gradient(135deg,#ffe66d,#ffb703);color:#3b2a00;cursor:pointer}',
+            '@media (max-width:800px){#yamoonCelebrate .yc-ticket{display:none}}',
             '@keyframes ycPop{0%{transform:scale(.28) rotate(-12deg);opacity:.15}62%{transform:scale(1.14) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}',
             '@keyframes ycGlow{0%,100%{box-shadow:0 0 0 0 rgba(251,191,36,.2)}50%{box-shadow:0 0 48px 14px rgba(251,191,36,.32)}}',
             '#yamoonCount{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,rgba(18,53,28,.35),rgba(6,16,12,.88));z-index:75}',
@@ -62,6 +66,9 @@
         var box = document.createElement('div');
         box.id = 'yamoonCelebrate';
         box.innerHTML =
+            '<img class="yc-bg" src="../assets/img/login-hero.jpg" alt="">' +
+            '<div class="yc-shade"></div>' +
+            '<img class="yc-ticket" src="../cards/yamoon-ticket.jpg" alt="">' +
             '<canvas id="ycFireworks"></canvas>' +
             '<div class="yc-card">' +
                 '<div class="yc-label">مبارك للفائز</div>' +
@@ -148,7 +155,8 @@
         var ctx = canvas.getContext('2d');
         var rockets = [];
         var sparks = [];
-        var colors = ['#ff6b9d', '#4ecdc4', '#ffe66d', '#e11d48', '#ffc107', '#7ec8e3', '#ffffff', '#fb7185'];
+        var confetti = [];
+        var colors = ['#ffd36a', '#ffe082', '#ff6b9d', '#fb7185', '#4ecdc4', '#7ed6b8', '#ffffff', '#ffb703', '#e11d48', '#6aa9ff'];
 
         function sizeCanvas() {
             canvas.width = window.innerWidth;
@@ -157,38 +165,72 @@
         fireworkResize = sizeCanvas;
         sizeCanvas();
         window.addEventListener('resize', sizeCanvas);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         function launch() {
             rockets.push({
-                x: canvas.width * (0.1 + Math.random() * 0.8),
-                y: canvas.height + 8,
-                vx: (Math.random() - 0.5) * 2,
-                vy: -(8.5 + Math.random() * 7),
+                x: canvas.width * (0.08 + Math.random() * 0.84),
+                y: canvas.height + 10,
+                vx: (Math.random() - 0.5) * 2.4,
+                vy: -(9.2 + Math.random() * 7.5),
                 color: colors[Math.floor(Math.random() * colors.length)]
             });
         }
 
         function burst(x, y, color) {
-            var count = 72 + Math.floor(Math.random() * 36);
+            var count = 96 + Math.floor(Math.random() * 48);
             for (var i = 0; i < count; i++) {
-                var angle = (Math.PI * 2 * i) / count + Math.random() * 0.18;
-                var speed = 1.1 + Math.random() * 5.2;
+                var angle = (Math.PI * 2 * i) / count + Math.random() * 0.2;
+                var speed = 1.4 + Math.random() * 6.4;
                 sparks.push({
                     x: x,
                     y: y,
                     vx: Math.cos(angle) * speed,
                     vy: Math.sin(angle) * speed,
                     life: 1,
-                    decay: 0.01 + Math.random() * 0.018,
-                    color: i % 7 === 0 ? '#ffffff' : color,
-                    size: 1.4 + Math.random() * 2.4
+                    decay: 0.008 + Math.random() * 0.016,
+                    color: i % 6 === 0 ? '#ffffff' : (i % 5 === 0 ? '#ffe082' : color),
+                    size: 1.8 + Math.random() * 3.2
+                });
+            }
+            for (var c = 0; c < 18; c++) {
+                confetti.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 7,
+                    vy: -2 - Math.random() * 5,
+                    life: 1,
+                    decay: 0.006 + Math.random() * 0.01,
+                    rot: Math.random() * 360,
+                    vr: (Math.random() - 0.5) * 14,
+                    w: 7 + Math.random() * 9,
+                    h: 4 + Math.random() * 5,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                });
+            }
+        }
+
+        function rainConfetti() {
+            for (var i = 0; i < 10; i++) {
+                confetti.push({
+                    x: Math.random() * canvas.width,
+                    y: -12,
+                    vx: (Math.random() - 0.5) * 1.6,
+                    vy: 1.4 + Math.random() * 2.6,
+                    life: 1,
+                    decay: 0.003 + Math.random() * 0.004,
+                    rot: Math.random() * 360,
+                    vr: (Math.random() - 0.5) * 10,
+                    w: 8 + Math.random() * 10,
+                    h: 4 + Math.random() * 6,
+                    color: colors[Math.floor(Math.random() * colors.length)]
                 });
             }
         }
 
         function frame() {
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.fillStyle = 'rgba(6, 10, 28, 0.22)';
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.16)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.globalCompositeOperation = 'lighter';
 
@@ -197,11 +239,17 @@
                 rocket.x += rocket.vx;
                 rocket.y += rocket.vy;
                 rocket.vy += 0.055;
+                ctx.strokeStyle = rocket.color;
+                ctx.lineWidth = 2.4;
                 ctx.beginPath();
-                ctx.fillStyle = rocket.color;
-                ctx.arc(rocket.x, rocket.y, 2.6, 0, Math.PI * 2);
+                ctx.moveTo(rocket.x, rocket.y);
+                ctx.lineTo(rocket.x - rocket.vx * 5, rocket.y - rocket.vy * 5);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.fillStyle = '#fff8dc';
+                ctx.arc(rocket.x, rocket.y, 3.2, 0, Math.PI * 2);
                 ctx.fill();
-                if (rocket.vy >= -1.1 || rocket.y < canvas.height * 0.22) {
+                if (rocket.vy >= -1.05 || rocket.y < canvas.height * 0.2) {
                     burst(rocket.x, rocket.y, rocket.color);
                     rockets.splice(i, 1);
                 }
@@ -211,8 +259,8 @@
                 var spark = sparks[s];
                 spark.x += spark.vx;
                 spark.y += spark.vy;
-                spark.vy += 0.034;
-                spark.vx *= 0.99;
+                spark.vy += 0.036;
+                spark.vx *= 0.985;
                 spark.life -= spark.decay;
                 if (spark.life <= 0) {
                     sparks.splice(s, 1);
@@ -224,6 +272,27 @@
                 ctx.arc(spark.x, spark.y, spark.size, 0, Math.PI * 2);
                 ctx.fill();
             }
+
+            ctx.globalCompositeOperation = 'source-over';
+            for (var k = confetti.length - 1; k >= 0; k--) {
+                var piece = confetti[k];
+                piece.x += piece.vx;
+                piece.y += piece.vy;
+                piece.vy += 0.05;
+                piece.rot += piece.vr;
+                piece.life -= piece.decay;
+                if (piece.life <= 0 || piece.y > canvas.height + 20) {
+                    confetti.splice(k, 1);
+                    continue;
+                }
+                ctx.save();
+                ctx.globalAlpha = Math.max(piece.life, 0);
+                ctx.translate(piece.x, piece.y);
+                ctx.rotate(piece.rot * Math.PI / 180);
+                ctx.fillStyle = piece.color;
+                ctx.fillRect(-piece.w / 2, -piece.h / 2, piece.w, piece.h);
+                ctx.restore();
+            }
             ctx.globalAlpha = 1;
             fireworkRaf = requestAnimationFrame(frame);
         }
@@ -231,12 +300,15 @@
         launch();
         launch();
         launch();
+        launch();
+        rainConfetti();
         fireworkTimer = setInterval(function () {
             var overlay = document.getElementById('yamoonCelebrate');
             if (!overlay || !overlay.classList.contains('show')) return;
             launch();
-            if (Math.random() > 0.4) launch();
-        }, 380);
+            if (Math.random() > 0.25) launch();
+            rainConfetti();
+        }, 320);
         fireworkRaf = requestAnimationFrame(frame);
     }
 
