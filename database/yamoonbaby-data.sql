@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS raffle_entries (
   phone CHAR(10) NOT NULL,
   governorate VARCHAR(40) NOT NULL,
   coupon CHAR(6) NOT NULL,
+  product_rating TINYINT UNSIGNED NULL,
+  attend_ceremony TINYINT(1) NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uniq_coupon (coupon)

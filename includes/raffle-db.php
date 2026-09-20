@@ -108,7 +108,34 @@ function raffle_registration_open(PDO $pdo) {
     return raffle_setting($pdo, 'registration_open', '0') === '1';
 }
 
+function raffle_ensure_entries_schema(PDO $pdo) {
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    $columns = [
+        'product_rating' => 'TINYINT UNSIGNED NULL',
+        'attend_ceremony' => 'TINYINT(1) NULL',
+    ];
+    foreach ($columns as $name => $definition) {
+        try {
+            $pdo->exec('ALTER TABLE raffle_entries ADD COLUMN ' . $name . ' ' . $definition);
+        } catch (Exception $e) {
+            // already migrated
+        }
+    }
+    $done = true;
+}
+
+function raffle_attend_label($value) {
+    if ($value === null || $value === '') {
+        return '—';
+    }
+    return ((int) $value) === 1 ? 'نعم' : 'لا';
+}
+
 function panel_ensure_schema(PDO $pdo) {
+    raffle_ensure_entries_schema($pdo);
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS panel_users (
             id INT UNSIGNED NOT NULL AUTO_INCREMENT,

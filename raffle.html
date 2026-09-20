@@ -136,6 +136,51 @@
             box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.14);
         }
 
+        .score-row,
+        .choice-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .score-opt,
+        .choice-opt {
+            position: relative;
+        }
+
+        .score-opt input,
+        .choice-opt input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .score-opt span,
+        .choice-opt span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 42px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1.5px solid #b7dcff;
+            background: #f7fbff;
+            color: #0b4f86;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .choice-opt span {
+            min-width: 88px;
+        }
+
+        .score-opt input:checked + span,
+        .choice-opt input:checked + span {
+            background: #1e88e5;
+            border-color: #1e88e5;
+            color: #fff;
+        }
+
         .hint {
             font-size: 0.82rem;
             color: #6b7c8d;
@@ -451,6 +496,29 @@
                             </select>
                         </div>
                         <div class="form-group full">
+                            <label>تقييمك للمنتج</label>
+                            <div class="score-row" role="radiogroup" aria-label="تقييم المنتج من 1 إلى 10">
+                                <label class="score-opt"><input type="radio" name="product_rating" value="1" required><span>1</span></label>
+                                <label class="score-opt"><input type="radio" name="product_rating" value="2"><span>2</span></label>
+                                <label class="score-opt"><input type="radio" name="product_rating" value="3"><span>3</span></label>
+                                <label class="score-opt"><input type="radio" name="product_rating" value="4"><span>4</span></label>
+                                <label class="score-opt"><input type="radio" name="product_rating" value="5"><span>5</span></label>
+                                <label class="score-opt"><input type="radio" name="product_rating" value="6"><span>6</span></label>
+                                <label class="score-opt"><input type="radio" name="product_rating" value="7"><span>7</span></label>
+                                <label class="score-opt"><input type="radio" name="product_rating" value="8"><span>8</span></label>
+                                <label class="score-opt"><input type="radio" name="product_rating" value="9"><span>9</span></label>
+                                <label class="score-opt"><input type="radio" name="product_rating" value="10"><span>10</span></label>
+                            </div>
+                            <span class="hint">اختر درجة من 1 إلى 10</span>
+                        </div>
+                        <div class="form-group full">
+                            <label>هل ستقوم بحضور حفل تسليم الجوائز؟</label>
+                            <div class="choice-row" role="radiogroup" aria-label="حضور حفل تسليم الجوائز">
+                                <label class="choice-opt"><input type="radio" name="attend_ceremony" value="1" required><span>نعم</span></label>
+                                <label class="choice-opt"><input type="radio" name="attend_ceremony" value="0"><span>لا</span></label>
+                            </div>
+                        </div>
+                        <div class="form-group full">
                             <label>صورة الكوبون</label>
                             <div class="upload-box">
                                 <input type="file" id="couponImage" name="coupon_image" accept="image/*" capture="environment" required>
@@ -477,7 +545,7 @@
                 <div class="success-box" id="successBox">
                     <i class="fas fa-check-circle"></i>
                     <h3>تم تسجيلك في السحب</h3>
-                    <p>تم حفظ اسمك ورقم هاتفك ومحافظتك ورقم الكوبون في سجل السحب.</p>
+                    <p>تم حفظ بياناتك وتقييم المنتج وحضور الحفل ورقم الكوبون في سجل السحب.</p>
                 </div>
             </div>
             <div class="guidelines">
@@ -720,10 +788,12 @@
                     /^(079|078|077)\d{7}$/.test(phone.value) &&
                     isAllowedCoupon(couponValue) &&
                     governorate.value &&
-                    couponImage.files.length > 0;
+                    couponImage.files.length > 0 &&
+                    form.querySelector('input[name="product_rating"]:checked') &&
+                    form.querySelector('input[name="attend_ceremony"]:checked');
 
                 if (!valid) {
-                    showAlert('يرجى إدخال الاسم الكامل ورقم الهاتف والمحافظة وصورة الكوبون بشكل صحيح. رقم الهاتف 10 خانات ويبدأ بـ 079 أو 078 أو 077.');
+                    showAlert('يرجى إدخال الاسم والهاتف والمحافظة وتقييم المنتج وحضور الحفل وصورة الكوبون. رقم الهاتف 10 خانات ويبدأ بـ 079 أو 078 أو 077.');
                     return;
                 }
 
@@ -737,6 +807,8 @@
                     payload.append('card_token', cardToken);
                     payload.append('coupon', couponValue);
                     payload.append('governorate', governorate.value);
+                    payload.append('product_rating', form.querySelector('input[name="product_rating"]:checked').value);
+                    payload.append('attend_ceremony', form.querySelector('input[name="attend_ceremony"]:checked').value);
                     payload.append('website_url', document.getElementById('websiteUrl').value);
                     payload.append('coupon_image', imageFile, 'coupon.jpg');
 

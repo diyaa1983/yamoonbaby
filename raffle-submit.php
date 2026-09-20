@@ -69,6 +69,9 @@ $allowedGovernorates = [
 $fullName = trim((string) ($data['full_name'] ?? ''));
 $phone = preg_replace('/\D/', '', english_digits($data['phone'] ?? ''));
 $governorate = trim((string) ($data['governorate'] ?? ''));
+$productRating = (int) english_digits($data['product_rating'] ?? '');
+$attendRaw = (string) ($data['attend_ceremony'] ?? '');
+$attendCeremony = $attendRaw === '1' ? 1 : ($attendRaw === '0' ? 0 : null);
 function raffle_save_small_jpeg($tmpPath, $destPath) {
     $info = @getimagesize($tmpPath);
     if (!$info) {
@@ -117,6 +120,7 @@ function raffle_save_small_jpeg($tmpPath, $destPath) {
 
 try {
     $pdo = raffle_pdo();
+    raffle_ensure_entries_schema($pdo);
     if (!raffle_registration_open($pdo)) {
         http_response_code(403);
         echo json_encode(['ok' => false, 'closed' => true, 'error' => 'التسجيل غير مفعّل حالياً. سيتم فتحه لاحقاً.'], JSON_UNESCAPED_UNICODE);
@@ -160,9 +164,11 @@ if (
     $fullName === '' || mb_strlen($fullName) > 80
     || !preg_match('/^(079|078|077)\d{7}$/', $phone)
     || !in_array($governorate, $allowedGovernorates, true)
+    || $productRating < 1 || $productRating > 10
+    || $attendCeremony === null
 ) {
     http_response_code(422);
-    echo json_encode(['ok' => false, 'error' => 'يرجى إدخال الاسم الكامل ورقم الهاتف والمحافظة بشكل صحيح.'], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['ok' => false, 'error' => 'يرجى إدخال الاسم والهاتف والمحافظة وتقييم المنتج وحضور الحفل بشكل صحيح.'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -203,9 +209,9 @@ $imagePath = $archiveDir . DIRECTORY_SEPARATOR . $imageName;
 
 try {
     $stmt = $pdo->prepare(
-        'INSERT INTO raffle_entries (full_name, phone, governorate, coupon) VALUES (?, ?, ?, ?)'
+        'INSERT INTO raffle_entries (full_name, phone, governorate, coupon, product_rating, attend_ceremony) VALUES (?, ?, ?, ?, ?, ?)'
     );
-    $stmt->execute([$fullName, $phone, $governorate, $coupon]);
+    $stmt->execute([$fullName, $phone, $governorate, $coupon, $productRating, $attendCeremony]);
     $entryId = (int) $pdo->lastInsertId();
     foreach (glob($archiveDir . DIRECTORY_SEPARATOR . $coupon . '_' . $phone . '.*') ?: [] as $old) {
         if (is_file($old)) {

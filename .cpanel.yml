@@ -16,7 +16,7 @@ deployment:
     - /bin/cp -f login.php $DEPLOYPATH
     - /bin/cp -f logout.php $DEPLOYPATH
     - /bin/cp -f .htaccess $DEPLOYPATH
-    - mkdir -p $DEPLOYPATH/assets/css $DEPLOYPATH/assets/js $DEPLOYPATH/assets/img/products $DEPLOYPATH/assets/img/qr $DEPLOYPATH/includes $DEPLOYPATH/tools $DEPLOYPATH/cards $DEPLOYPATH/admin
+    - mkdir -p $DEPLOYPATH/assets/css $DEPLOYPATH/assets/js $DEPLOYPATH/assets/img/products $DEPLOYPATH/assets/img/qr $DEPLOYPATH/includes $DEPLOYPATH/tools $DEPLOYPATH/cards $DEPLOYPATH/cards/New $DEPLOYPATH/cards/Final $DEPLOYPATH/admin
     - /bin/cp -f assets/css/styles.css $DEPLOYPATH/assets/css/
     - /bin/cp -f assets/js/script.js $DEPLOYPATH/assets/js/
     - /bin/cp -f assets/js/jordan-areas.js $DEPLOYPATH/assets/js/
@@ -44,6 +44,9 @@ deployment:
     - /bin/cp -f cards/yamoon-ticket-blank.jpg $DEPLOYPATH/tools/ticket-blank.jpg
     - /bin/cp -f cards/yamoon-ticket-back.jpg $DEPLOYPATH/tools/ticket-back.jpg
     - /bin/cp -f cards/yamoon-ticket.jpg $DEPLOYPATH/cards/
+    - /bin/cp -f cards/New/page-1-final.jpg $DEPLOYPATH/cards/New/
+    - /bin/cp -f cards/New/page-2-final.jpg $DEPLOYPATH/cards/New/
+    - /bin/cp -f cards/Final/page-1.jpg $DEPLOYPATH/cards/Final/
     - /bin/cp -f cards/yamoon-ticket-blank.jpg $DEPLOYPATH/cards/
     - /bin/cp -f cards/yamoon-ticket-back.jpg $DEPLOYPATH/cards/
     - /bin/cp -f cards/.htaccess $DEPLOYPATH/cards/

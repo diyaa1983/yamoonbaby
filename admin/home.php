@@ -329,7 +329,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
             <a class="<?php echo $tab === 'report' ? 'active' : ''; ?>" href="home.php?tab=report"><i class="fas fa-chart-line"></i> تقرير البطاقات</a>
             <?php if ($isAdmin): ?>
                 <a href="../tools/print-test-cards.php"><i class="fas fa-print"></i> طباعة كوبون تجريبي</a>
-                <a href="../tools/print-a3-cards.php"><i class="fas fa-print"></i> طباعة A3 — 10 بطاقات</a>
+                <a href="../tools/print-a3-cards.php"><i class="fas fa-print"></i> طباعة A4 — 6 بطاقات</a>
                 <a href="draw.php"><i class="fas fa-dharmachakra"></i> السحب على الفائز</a>
                 <a class="<?php echo $tab === 'audit' ? 'active' : ''; ?>" href="home.php?tab=audit"><i class="fas fa-clock-rotate-left"></i> سجل العمليات</a>
                 <a class="<?php echo $tab === 'users' ? 'active' : ''; ?>" href="home.php?tab=users"><i class="fas fa-users-gear"></i> المستخدمون</a>
@@ -423,14 +423,16 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
         <div class="table-wrap">
             <table class="data-table">
                 <colgroup>
-                    <col style="width:7%">
-                    <col style="width:13%">
-                    <col style="width:16%">
+                    <col style="width:6%">
+                    <col style="width:12%">
                     <col style="width:14%">
                     <col style="width:12%">
-                    <col style="width:16%">
                     <col style="width:10%">
-                    <?php if ($isAdmin && $tab === 'cards'): ?><col style="width:12%"><?php endif; ?>
+                    <col style="width:8%">
+                    <col style="width:10%">
+                    <col style="width:14%">
+                    <col style="width:8%">
+                    <?php if ($isAdmin && $tab === 'cards'): ?><col style="width:6%"><?php endif; ?>
                 </colgroup>
                 <thead>
                     <tr>
@@ -439,6 +441,8 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
                         <th>الاسم</th>
                         <th>رقم الهاتف</th>
                         <th>المحافظة</th>
+                        <th>التقييم</th>
+                        <th>حضور الحفل</th>
                         <th>التاريخ</th>
                         <th>صورة</th>
                         <?php if ($isAdmin && $tab === 'cards'): ?><th>حذف</th><?php endif; ?>
@@ -446,7 +450,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
                 </thead>
                 <tbody>
                 <?php if (!$entries): ?>
-                    <tr><td colspan="<?php echo $isAdmin && $tab === 'cards' ? 8 : 7; ?>" class="muted">لا توجد بطاقات مطابقة.</td></tr>
+                    <tr><td colspan="<?php echo $isAdmin && $tab === 'cards' ? 10 : 9; ?>" class="muted">لا توجد بطاقات مطابقة.</td></tr>
                 <?php endif; ?>
                 <?php foreach ($entries as $index => $row):
                     $hasImage = raffle_entry_image($row['coupon'], $row['phone']) !== '';
@@ -457,6 +461,8 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
                         <td><?php echo panel_h($row['full_name'] !== '' ? $row['full_name'] : '—'); ?></td>
                         <td><?php echo panel_h($row['phone']); ?></td>
                         <td><?php echo panel_h($row['governorate']); ?></td>
+                        <td><?php echo isset($row['product_rating']) && $row['product_rating'] !== null && $row['product_rating'] !== '' ? (int) $row['product_rating'] : '—'; ?></td>
+                        <td><?php echo panel_h(raffle_attend_label($row['attend_ceremony'] ?? null)); ?></td>
                         <td><?php echo panel_h(panel_when($row['created_at'])); ?></td>
                         <td>
                             <?php if ($hasImage): ?>

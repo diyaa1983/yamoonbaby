@@ -4,7 +4,7 @@ require dirname(__DIR__) . '/includes/coupon-token.php';
 $cfg = coupon_cards_config_or_fail();
 $start = max(1, min(500000, (int) ($_GET['start'] ?? 1)));
 $cards = [];
-for ($n = 0; $n < 10; $n++) {
+for ($n = 0; $n < 6; $n++) {
     $value = $start + $n;
     if ($value > 500000) {
         break;
@@ -14,13 +14,24 @@ for ($n = 0; $n < 10; $n++) {
 $first = $cards[0] ?? '000001';
 $last = $cards[count($cards) - 1] ?? $first;
 $next = min(500000, ((int) $last) + 1);
+$boxes = [
+    ['qr' => [50.435, 6.644, 9.079, 6.419], 'num' => [49.874, 14.590, 10.708, 1.176], 'rot' => false],
+    ['qr' => [50.420, 32.037, 9.079, 6.420], 'num' => [49.859, 39.984, 10.707, 1.177], 'rot' => false],
+    ['qr' => [50.455, 57.818, 9.079, 6.419], 'num' => [49.894, 65.764, 10.708, 1.176], 'rot' => false],
+    ['qr' => [50.471, 83.488, 9.047, 6.397], 'num' => [49.894, 91.408, 10.708, 1.172], 'rot' => false],
+    ['qr' => [81.504, 35.551, 9.079, 6.419], 'num' => [77.680, 35.164, 1.664, 7.550], 'rot' => true],
+    ['qr' => [81.504, 82.930, 9.079, 6.419], 'num' => [77.680, 82.533, 1.664, 7.572], 'rot' => true],
+];
+$boxCss = static function (array $box) {
+    return 'left:' . $box[0] . '%;top:' . $box[1] . '%;width:' . $box[2] . '%;height:' . $box[3] . '%';
+};
 ?>
 <!DOCTYPE html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بطاقات A3 — YM<?php echo htmlspecialchars($first . '-' . $last, ENT_QUOTES, 'UTF-8'); ?></title>
+    <title>بطاقات A4 — YM<?php echo htmlspecialchars($first . '-' . $last, ENT_QUOTES, 'UTF-8'); ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
@@ -30,7 +41,7 @@ $next = min(500000, ((int) $last) + 1);
             font-family: Cairo, Tahoma, Arial, sans-serif;
         }
         .toolbar {
-            max-width: 297mm;
+            max-width: 210mm;
             margin: 16px auto;
             padding: 0 12px;
             display: flex;
@@ -53,39 +64,22 @@ $next = min(500000, ((int) $last) + 1);
         }
         .page {
             position: relative;
-            width: 297mm;
-            height: 420mm;
+            width: 210mm;
+            height: 297mm;
             margin: 0 auto 24px;
             background: #fff;
             box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
             overflow: hidden;
         }
-        .card {
+        .page-bg {
             position: absolute;
-            width: 140.511mm;
-            height: 73.237mm;
-            overflow: hidden;
-            background: #fff;
-        }
-        .ticket {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            direction: ltr;
-            background: #fff;
-        }
-        .ticket-bg {
-            display: block;
+            inset: 0;
             width: 100%;
             height: 100%;
             object-fit: fill;
         }
-        .qr-box {
+        .qr-box, .num-box {
             position: absolute;
-            left: 76.66%;
-            top: 28.08%;
-            width: 17.19%;
-            height: 30.50%;
             background: #fff;
             overflow: hidden;
         }
@@ -97,24 +91,30 @@ $next = min(500000, ((int) $last) + 1);
             display: block;
         }
         .num-box {
-            position: absolute;
-            left: 76.46%;
-            top: 65.86%;
-            width: 18.16%;
-            height: 5.32%;
-            background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: Arial, Helvetica, sans-serif;
             font-weight: 900;
-            font-size: 3.1mm;
-            letter-spacing: 0.06mm;
+            font-size: 2.2mm;
+            letter-spacing: 0.04mm;
             color: #000;
         }
-        @page { size: A3 portrait; margin: 0; }
+        .num-box.rot {
+            overflow: hidden;
+        }
+        .num-box.rot span {
+            display: block;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            white-space: nowrap;
+            font-size: 2.3mm;
+            font-weight: 900;
+            letter-spacing: 0.08mm;
+        }
+        @page { size: A4 portrait; margin: 0; }
         @media print {
-            html, body { width: 297mm; background: #fff; }
+            html, body { width: 210mm; background: #fff; }
             .toolbar { display: none !important; }
             .page { margin: 0; box-shadow: none; }
             .page + .page { page-break-before: always; break-before: page; }
@@ -123,41 +123,22 @@ $next = min(500000, ((int) $last) + 1);
 </head>
 <body>
     <div class="toolbar">
-        <h1>A3 — 10 بطاقات — من YM<?php echo htmlspecialchars($first, ENT_QUOTES, 'UTF-8'); ?> إلى YM<?php echo htmlspecialchars($last, ENT_QUOTES, 'UTF-8'); ?></h1>
+        <h1>A4 — 6 بطاقات — من YM<?php echo htmlspecialchars($first, ENT_QUOTES, 'UTF-8'); ?> إلى YM<?php echo htmlspecialchars($last, ENT_QUOTES, 'UTF-8'); ?></h1>
         <div>
             <a href="print-a3-cards.php?start=<?php echo (int) $next; ?>">الصفحة التالية</a>
             <button type="button" onclick="window.print()">طباعة / حفظ PDF</button>
         </div>
     </div>
     <div class="page">
+        <img class="page-bg" src="../cards/Final/page-1.jpg?v=20260917c" alt="">
         <?php foreach ($cards as $i => $coupon):
-            $col = $i % 2;
-            $row = intdiv($i, 2);
-            $left = 8.081 + $col * (140.511 + 1.151);
-            $top = 19.276 + $row * (73.237 + 1.236);
+            $box = $boxes[$i];
             $token = coupon_encrypt($coupon, $cfg['secret']);
             $url = $cfg['base_url'] . '?t=' . rawurlencode($token);
         ?>
-        <div class="card" style="left:<?php echo number_format($left, 3, '.', ''); ?>mm;top:<?php echo number_format($top, 3, '.', ''); ?>mm;">
-            <div class="ticket">
-                <img class="ticket-bg" src="<?php echo htmlspecialchars(coupon_ticket_src('yamoon-ticket-blank.jpg'), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($coupon, ENT_QUOTES, 'UTF-8'); ?>">
-                <div class="qr-box" id="qr-<?php echo $i; ?>" data-url="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8'); ?>"></div>
-                <div class="num-box"><?php echo htmlspecialchars(coupon_public_label($coupon), ENT_QUOTES, 'UTF-8'); ?></div>
-            </div>
-        </div>
-        <?php endforeach; ?>
-    </div>
-    <div class="page">
-        <?php foreach ($cards as $i => $coupon):
-            $col = 1 - ($i % 2);
-            $row = intdiv($i, 2);
-            $left = 8.081 + $col * (140.511 + 1.151);
-            $top = 19.276 + $row * (73.237 + 1.236);
-        ?>
-        <div class="card" style="left:<?php echo number_format($left, 3, '.', ''); ?>mm;top:<?php echo number_format($top, 3, '.', ''); ?>mm;">
-            <div class="ticket">
-                <img class="ticket-bg" src="<?php echo htmlspecialchars(coupon_ticket_src('yamoon-ticket-back.jpg'), ENT_QUOTES, 'UTF-8'); ?>" alt="ظهر البطاقة">
-            </div>
+        <div class="qr-box" id="qr-<?php echo $i; ?>" data-url="<?php echo htmlspecialchars($url, ENT_QUOTES, 'UTF-8'); ?>" style="<?php echo $boxCss($box['qr']); ?>"></div>
+        <div class="num-box<?php echo $box['rot'] ? ' rot' : ''; ?>" style="<?php echo $boxCss($box['num']); ?>">
+            <span><?php echo htmlspecialchars(coupon_public_label($coupon), ENT_QUOTES, 'UTF-8'); ?></span>
         </div>
         <?php endforeach; ?>
     </div>

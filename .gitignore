@@ -53,3 +53,14 @@ assets/img/products/*.jpeg
 # Uploaded coupon photos
 Archive/*
 !Archive/.htaccess
+
+# Local print runs — too large for GitHub
+cards/pdf/A4-cutstack*/
+cards/pdf/A4-*.pdf
+cards/pdf/_a4-template.jpg
+cards/pdf/*.log
+cards/Final/
+cards/New/
+cards/Neew-New/
+tools/__pycache__/
+tools/*.pyc

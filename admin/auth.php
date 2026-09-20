@@ -450,7 +450,8 @@ function panel_filter_entries(PDO $pdo) {
     $from = preg_replace('/[^0-9\-]/', '', (string) ($_GET['from'] ?? ''));
     $to = preg_replace('/[^0-9\-]/', '', (string) ($_GET['to'] ?? ''));
     $governorate = trim((string) ($_GET['governorate'] ?? ''));
-    $sql = 'SELECT id, full_name, phone, governorate, coupon, created_at FROM raffle_entries WHERE 1=1';
+    raffle_ensure_entries_schema($pdo);
+    $sql = 'SELECT id, full_name, phone, governorate, coupon, product_rating, attend_ceremony, created_at FROM raffle_entries WHERE 1=1';
     $params = [];
     if ($from !== '') {
         $sql .= ' AND DATE(created_at) >= ?';
