@@ -282,7 +282,11 @@ $from = panel_h($_GET['from'] ?? '');
 $to = panel_h($_GET['to'] ?? '');
 $gov = (string) ($_GET['governorate'] ?? '');
 $q = (string) ($_GET['q'] ?? '');
+$nameQ = (string) ($_GET['name'] ?? '');
+$phoneQ = (string) ($_GET['phone'] ?? '');
 $searchCoupon = panel_search_coupon();
+$searchName = panel_search_name();
+$searchPhone = panel_search_phone();
 $csrf = panel_csrf_token();
 $totalCards = (int) $pdo->query('SELECT COUNT(*) FROM raffle_entries')->fetchColumn();
 $totalAudits = $isAdmin ? (int) $pdo->query('SELECT COUNT(*) FROM raffle_audit')->fetchColumn() : 0;
@@ -301,6 +305,8 @@ function panel_pager_url($tab, $pageNum) {
         'to' => (string) ($_GET['to'] ?? ''),
         'governorate' => (string) ($_GET['governorate'] ?? ''),
         'q' => (string) ($_GET['q'] ?? ''),
+        'name' => (string) ($_GET['name'] ?? ''),
+        'phone' => (string) ($_GET['phone'] ?? ''),
     ];
     return 'home.php?' . http_build_query(array_filter($query, static function ($value) {
         return $value !== '';
@@ -318,7 +324,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
     <?php echo panel_brand_links(); ?>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css?v=20260920d">
+    <link rel="stylesheet" href="admin.css?v=20260920e">
 </head>
 <body class="dash">
 <div class="app">
@@ -402,8 +408,16 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
         <form class="filters no-print" method="get">
             <input type="hidden" name="tab" value="<?php echo panel_h($tab); ?>">
             <label class="filter-item filter-search">
-                <span>بحث برقم البطاقة</span>
+                <span>رقم البطاقة</span>
                 <input type="search" name="q" value="<?php echo panel_h($q); ?>" placeholder="YM000001 أو 1" inputmode="numeric" autocomplete="off">
+            </label>
+            <label class="filter-item filter-search">
+                <span>الاسم</span>
+                <input type="search" name="name" value="<?php echo panel_h($nameQ); ?>" placeholder="اسم المشترك" autocomplete="off">
+            </label>
+            <label class="filter-item filter-search">
+                <span>رقم الهاتف</span>
+                <input type="search" name="phone" value="<?php echo panel_h($phoneQ); ?>" placeholder="07xxxxxxxx" inputmode="tel" autocomplete="off">
             </label>
             <label class="filter-item">
                 <span>من تاريخ</span>
@@ -424,7 +438,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
             </label>
             <div class="filter-actions">
                 <button class="btn btn-blue" type="submit">بحث</button>
-                <?php if ($q !== '' || $from !== '' || $to !== '' || $gov !== ''): ?>
+                <?php if ($q !== '' || $nameQ !== '' || $phoneQ !== '' || $from !== '' || $to !== '' || $gov !== ''): ?>
                     <a class="btn btn-ghost" href="home.php?tab=<?php echo panel_h($tab); ?>">مسح</a>
                 <?php endif; ?>
                 <?php if ($tab === 'report'): ?>
@@ -435,8 +449,15 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
         </form>
         <?php if ($searchCoupon === '__none__'): ?>
             <p class="search-note">رقم البطاقة غير صحيح. أدخل حتى 6 أرقام أو YM متبوعاً بالرقم.</p>
-        <?php elseif ($searchCoupon !== ''): ?>
-            <p class="search-note">نتيجة البحث عن البطاقة <strong>YM<?php echo panel_h($searchCoupon); ?></strong></p>
+        <?php elseif ($searchPhone === '__none__'): ?>
+            <p class="search-note">رقم الهاتف غير صحيح. أدخل أرقام الهاتف فقط.</p>
+        <?php elseif ($searchCoupon !== '' || $searchName !== '' || $searchPhone !== ''): ?>
+            <p class="search-note">
+                نتيجة البحث
+                <?php if ($searchCoupon !== ''): ?> عن البطاقة <strong>YM<?php echo panel_h($searchCoupon); ?></strong><?php endif; ?>
+                <?php if ($searchName !== ''): ?> عن الاسم <strong><?php echo panel_h($searchName); ?></strong><?php endif; ?>
+                <?php if ($searchPhone !== ''): ?> عن الهاتف <strong><?php echo panel_h($searchPhone); ?></strong><?php endif; ?>
+            </p>
         <?php endif; ?>
 
         <div class="table-wrap">

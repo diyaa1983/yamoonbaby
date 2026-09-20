@@ -469,6 +469,27 @@ function panel_search_coupon() {
     return str_pad($digits, 6, '0', STR_PAD_LEFT);
 }
 
+function panel_search_name() {
+    $name = trim((string) ($_GET['name'] ?? ''));
+    $name = preg_replace('/\s+/u', ' ', $name);
+    if (function_exists('mb_substr')) {
+        return mb_substr($name, 0, 80);
+    }
+    return substr($name, 0, 80);
+}
+
+function panel_search_phone() {
+    $digits = panel_digits($_GET['phone'] ?? '');
+    if ($digits === '' && trim((string) ($_GET['phone'] ?? '')) !== '') {
+        return '__none__';
+    }
+    return substr($digits, 0, 15);
+}
+
+function panel_like($value) {
+    return '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $value) . '%';
+}
+
 function panel_rating_label($value) {
     if ($value === null || $value === '') {
         return '—';
@@ -482,6 +503,8 @@ function panel_filter_entries(PDO $pdo) {
     $to = preg_replace('/[^0-9\-]/', '', (string) ($_GET['to'] ?? ''));
     $governorate = trim((string) ($_GET['governorate'] ?? ''));
     $coupon = panel_search_coupon();
+    $name = panel_search_name();
+    $phone = panel_search_phone();
     raffle_ensure_entries_schema($pdo);
     $sql = 'SELECT id, full_name, phone, governorate, coupon, product_rating, attend_ceremony, created_at FROM raffle_entries WHERE 1=1';
     $params = [];
@@ -500,6 +523,14 @@ function panel_filter_entries(PDO $pdo) {
     if ($coupon !== '') {
         $sql .= ' AND coupon = ?';
         $params[] = $coupon;
+    }
+    if ($name !== '') {
+        $sql .= ' AND full_name LIKE ?';
+        $params[] = panel_like($name);
+    }
+    if ($phone !== '') {
+        $sql .= ' AND phone LIKE ?';
+        $params[] = panel_like($phone);
     }
     $sql .= ' ORDER BY id DESC';
     $stmt = $pdo->prepare($sql);
