@@ -506,3 +506,68 @@ function panel_filter_entries(PDO $pdo) {
     $stmt->execute($params);
     return $stmt->fetchAll();
 }
+
+function panel_excel_text($value) {
+    $value = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/', '', (string) $value);
+    return htmlspecialchars($value, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+}
+
+function panel_excel_row(array $cells) {
+    $xml = '<Row>';
+    foreach ($cells as $value) {
+        $xml .= '<Cell><Data ss:Type="String">' . panel_excel_text($value) . '</Data></Cell>';
+    }
+    return $xml . '</Row>';
+}
+
+function panel_send_excel_report(array $rows) {
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>'
+        . '<?mso-application progid="Excel.Sheet"?>'
+        . '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"'
+        . ' xmlns:o="urn:schemas-microsoft-com:office:office"'
+        . ' xmlns:x="urn:schemas-microsoft-com:office:excel"'
+        . ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'
+        . '<Styles>'
+        . '<Style ss:ID="header"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#12351C" ss:Pattern="Solid"/></Style>'
+        . '</Styles>'
+        . '<Worksheet ss:Name="تقرير البطاقات"><Table>'
+        . '<Column ss:Width="40"/>'
+        . '<Column ss:Width="90"/>'
+        . '<Column ss:Width="120"/>'
+        . '<Column ss:Width="90"/>'
+        . '<Column ss:Width="80"/>'
+        . '<Column ss:Width="80"/>'
+        . '<Column ss:Width="100"/>'
+        . '<Column ss:Width="110"/>';
+    $xml .= '<Row>'
+        . '<Cell ss:StyleID="header"><Data ss:Type="String">#</Data></Cell>'
+        . '<Cell ss:StyleID="header"><Data ss:Type="String">رقم البطاقة</Data></Cell>'
+        . '<Cell ss:StyleID="header"><Data ss:Type="String">الاسم</Data></Cell>'
+        . '<Cell ss:StyleID="header"><Data ss:Type="String">رقم الهاتف</Data></Cell>'
+        . '<Cell ss:StyleID="header"><Data ss:Type="String">المحافظة</Data></Cell>'
+        . '<Cell ss:StyleID="header"><Data ss:Type="String">رأيك بالمنتج</Data></Cell>'
+        . '<Cell ss:StyleID="header"><Data ss:Type="String">رغبة حضور الحفل</Data></Cell>'
+        . '<Cell ss:StyleID="header"><Data ss:Type="String">التاريخ</Data></Cell>'
+        . '</Row>';
+    foreach ($rows as $i => $row) {
+        $ts = strtotime((string) ($row['created_at'] ?? ''));
+        $xml .= panel_excel_row([
+            (string) ($i + 1),
+            'YM' . (string) ($row['coupon'] ?? ''),
+            (string) (($row['full_name'] ?? '') !== '' ? $row['full_name'] : '—'),
+            (string) ($row['phone'] ?? ''),
+            (string) ($row['governorate'] ?? ''),
+            panel_rating_label($row['product_rating'] ?? null),
+            raffle_attend_label($row['attend_ceremony'] ?? null),
+            $ts ? date('d-m-Y H:i', $ts) : (string) ($row['created_at'] ?? ''),
+        ]);
+    }
+    $xml .= '</Table></Worksheet></Workbook>';
+
+    $name = 'yamoon-report-' . date('Ymd-His') . '.xls';
+    header('Content-Type: application/vnd.ms-excel; charset=UTF-8');
+    header('Content-Disposition: attachment; filename="' . $name . '"');
+    header('Cache-Control: no-store');
+    echo $xml;
+    exit;
+}

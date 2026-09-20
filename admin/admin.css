@@ -182,6 +182,7 @@ body {
     cursor: pointer;
 }
 .btn-gold { background: linear-gradient(135deg, #ffe66d, #fbbf24); color: #111; }
+.btn-excel { background: #107c41; color: #fff; }
 .btn-blue { background: #1f7a4c; color: #fff; }
 .btn-red { background: #fee2e2; color: #b91c1c; }
 .btn-ghost { background: #fff; color: #0f172a; border: 1px solid var(--line); }

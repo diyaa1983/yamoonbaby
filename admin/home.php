@@ -233,6 +233,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $allEntries = panel_filter_entries($pdo);
+if ($tab === 'report' && (string) ($_GET['export'] ?? '') === 'excel') {
+    panel_send_excel_report($allEntries);
+}
 $pageSize = panel_page_size();
 $page = max(1, (int) ($_GET['page'] ?? 1));
 $filteredCount = count($allEntries);
@@ -315,7 +318,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
     <?php echo panel_brand_links(); ?>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css?v=20260920c">
+    <link rel="stylesheet" href="admin.css?v=20260920d">
 </head>
 <body class="dash">
 <div class="app">
@@ -426,6 +429,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
                 <?php endif; ?>
                 <?php if ($tab === 'report'): ?>
                     <button class="btn btn-gold" type="button" onclick="window.print()">طباعة</button>
+                    <a class="btn btn-excel" href="<?php echo panel_h(panel_pager_url('report', 1) . '&export=excel'); ?>">تصدير Excel</a>
                 <?php endif; ?>
             </div>
         </form>
