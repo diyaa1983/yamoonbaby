@@ -446,10 +446,42 @@ function panel_page_size() {
     return in_array($size, panel_page_sizes(), true) ? $size : 20;
 }
 
+function panel_digits($value) {
+    $map = [
+        '٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4',
+        '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9',
+        '۰' => '0', '۱' => '1', '۲' => '2', '۳' => '3', '۴' => '4',
+        '۵' => '5', '۶' => '6', '۷' => '7', '۸' => '8', '۹' => '9',
+    ];
+    $value = strtr((string) $value, $map);
+    $value = preg_replace('/[Yy][Mm]/', '', $value);
+    return preg_replace('/\D+/', '', $value);
+}
+
+function panel_search_coupon() {
+    if (trim((string) ($_GET['q'] ?? '')) === '') {
+        return '';
+    }
+    $digits = panel_digits($_GET['q'] ?? '');
+    if ($digits === '' || strlen($digits) > 6) {
+        return '__none__';
+    }
+    return str_pad($digits, 6, '0', STR_PAD_LEFT);
+}
+
+function panel_rating_label($value) {
+    if ($value === null || $value === '') {
+        return '—';
+    }
+    $n = (int) $value;
+    return ($n >= 1 && $n <= 10) ? ($n . ' / 10') : '—';
+}
+
 function panel_filter_entries(PDO $pdo) {
     $from = preg_replace('/[^0-9\-]/', '', (string) ($_GET['from'] ?? ''));
     $to = preg_replace('/[^0-9\-]/', '', (string) ($_GET['to'] ?? ''));
     $governorate = trim((string) ($_GET['governorate'] ?? ''));
+    $coupon = panel_search_coupon();
     raffle_ensure_entries_schema($pdo);
     $sql = 'SELECT id, full_name, phone, governorate, coupon, product_rating, attend_ceremony, created_at FROM raffle_entries WHERE 1=1';
     $params = [];
@@ -464,6 +496,10 @@ function panel_filter_entries(PDO $pdo) {
     if ($governorate !== '' && in_array($governorate, panel_governorates(), true)) {
         $sql .= ' AND governorate = ?';
         $params[] = $governorate;
+    }
+    if ($coupon !== '') {
+        $sql .= ' AND coupon = ?';
+        $params[] = $coupon;
     }
     $sql .= ' ORDER BY id DESC';
     $stmt = $pdo->prepare($sql);

@@ -278,6 +278,8 @@ if ($isAdmin && $tab === 'audit') {
 $from = panel_h($_GET['from'] ?? '');
 $to = panel_h($_GET['to'] ?? '');
 $gov = (string) ($_GET['governorate'] ?? '');
+$q = (string) ($_GET['q'] ?? '');
+$searchCoupon = panel_search_coupon();
 $csrf = panel_csrf_token();
 $totalCards = (int) $pdo->query('SELECT COUNT(*) FROM raffle_entries')->fetchColumn();
 $totalAudits = $isAdmin ? (int) $pdo->query('SELECT COUNT(*) FROM raffle_audit')->fetchColumn() : 0;
@@ -295,6 +297,7 @@ function panel_pager_url($tab, $pageNum) {
         'from' => (string) ($_GET['from'] ?? ''),
         'to' => (string) ($_GET['to'] ?? ''),
         'governorate' => (string) ($_GET['governorate'] ?? ''),
+        'q' => (string) ($_GET['q'] ?? ''),
     ];
     return 'home.php?' . http_build_query(array_filter($query, static function ($value) {
         return $value !== '';
@@ -312,7 +315,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
     <?php echo panel_brand_links(); ?>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css?v=20260916g">
+    <link rel="stylesheet" href="admin.css?v=20260920c">
 </head>
 <body class="dash">
 <div class="app">
@@ -395,6 +398,10 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
     <div class="card">
         <form class="filters no-print" method="get">
             <input type="hidden" name="tab" value="<?php echo panel_h($tab); ?>">
+            <label class="filter-item filter-search">
+                <span>بحث برقم البطاقة</span>
+                <input type="search" name="q" value="<?php echo panel_h($q); ?>" placeholder="YM000001 أو 1" inputmode="numeric" autocomplete="off">
+            </label>
             <label class="filter-item">
                 <span>من تاريخ</span>
                 <input type="date" name="from" value="<?php echo $from; ?>">
@@ -413,12 +420,20 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
                 </select>
             </label>
             <div class="filter-actions">
-                <button class="btn btn-blue" type="submit">عرض</button>
+                <button class="btn btn-blue" type="submit">بحث</button>
+                <?php if ($q !== '' || $from !== '' || $to !== '' || $gov !== ''): ?>
+                    <a class="btn btn-ghost" href="home.php?tab=<?php echo panel_h($tab); ?>">مسح</a>
+                <?php endif; ?>
                 <?php if ($tab === 'report'): ?>
                     <button class="btn btn-gold" type="button" onclick="window.print()">طباعة</button>
                 <?php endif; ?>
             </div>
         </form>
+        <?php if ($searchCoupon === '__none__'): ?>
+            <p class="search-note">رقم البطاقة غير صحيح. أدخل حتى 6 أرقام أو YM متبوعاً بالرقم.</p>
+        <?php elseif ($searchCoupon !== ''): ?>
+            <p class="search-note">نتيجة البحث عن البطاقة <strong>YM<?php echo panel_h($searchCoupon); ?></strong></p>
+        <?php endif; ?>
 
         <div class="table-wrap">
             <table class="data-table">
@@ -441,8 +456,8 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
                         <th>الاسم</th>
                         <th>رقم الهاتف</th>
                         <th>المحافظة</th>
-                        <th>التقييم</th>
-                        <th>حضور الحفل</th>
+                        <th>رأيك بالمنتج</th>
+                        <th>رغبة حضور الحفل</th>
                         <th>التاريخ</th>
                         <th>صورة</th>
                         <?php if ($isAdmin && $tab === 'cards'): ?><th>حذف</th><?php endif; ?>
@@ -461,8 +476,27 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
                         <td><?php echo panel_h($row['full_name'] !== '' ? $row['full_name'] : '—'); ?></td>
                         <td><?php echo panel_h($row['phone']); ?></td>
                         <td><?php echo panel_h($row['governorate']); ?></td>
-                        <td><?php echo isset($row['product_rating']) && $row['product_rating'] !== null && $row['product_rating'] !== '' ? (int) $row['product_rating'] : '—'; ?></td>
-                        <td><?php echo panel_h(raffle_attend_label($row['attend_ceremony'] ?? null)); ?></td>
+                        <td>
+                            <?php
+                            $ratingText = panel_rating_label($row['product_rating'] ?? null);
+                            if ($ratingText === '—'):
+                            ?>
+                                —
+                            <?php else: ?>
+                                <span class="rating-pill"><?php echo panel_h($ratingText); ?></span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php
+                            $attendText = raffle_attend_label($row['attend_ceremony'] ?? null);
+                            $attendClass = $attendText === 'نعم' ? 'attend-yes' : ($attendText === 'لا' ? 'attend-no' : '');
+                            ?>
+                            <?php if ($attendClass === ''): ?>
+                                —
+                            <?php else: ?>
+                                <span class="<?php echo $attendClass; ?>"><?php echo panel_h($attendText); ?></span>
+                            <?php endif; ?>
+                        </td>
                         <td><?php echo panel_h(panel_when($row['created_at'])); ?></td>
                         <td>
                             <?php if ($hasImage): ?>
