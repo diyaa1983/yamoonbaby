@@ -293,8 +293,18 @@ $totalAudits = $isAdmin ? (int) $pdo->query('SELECT COUNT(*) FROM raffle_audit')
 $totalUsers = $isAdmin ? (int) $pdo->query('SELECT COUNT(*) FROM panel_users')->fetchColumn() : 0;
 
 function panel_when($value) {
-    $ts = strtotime((string) $value);
-    return $ts ? date('d-m-Y H:i', $ts) : (string) $value;
+    $raw = trim((string) $value);
+    if ($raw === '') {
+        return '';
+    }
+    raffle_apply_timezone();
+    try {
+        $dt = new DateTimeImmutable($raw, new DateTimeZone(raffle_timezone()));
+        return $dt->format('d-m-Y H:i');
+    } catch (Exception $e) {
+        $ts = strtotime($raw);
+        return $ts ? date('d-m-Y H:i', $ts) : $raw;
+    }
 }
 
 function panel_pager_url($tab, $pageNum) {

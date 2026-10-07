@@ -1,4 +1,17 @@
 <?php
+function raffle_timezone() {
+    return 'Asia/Amman';
+}
+
+function raffle_apply_timezone() {
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    date_default_timezone_set(raffle_timezone());
+    $done = true;
+}
+
 function raffle_root() {
     return dirname(__DIR__);
 }
@@ -52,10 +65,17 @@ function raffle_pdo() {
         array_unshift($dsns, 'mysql:host=' . $host . ';charset=utf8mb4');
     }
     $last = null;
+    raffle_apply_timezone();
     foreach (array_unique($dsns) as $dsn) {
         try {
             $pdo = new PDO($dsn, $user, $pass, $options);
             $pdo->exec('USE `' . $name . '`');
+            // Jordan time (Asia/Amman / UTC+3) for CURRENT_TIMESTAMP and reads.
+            try {
+                $pdo->exec("SET time_zone = 'Asia/Amman'");
+            } catch (PDOException $tzErr) {
+                $pdo->exec("SET time_zone = '+03:00'");
+            }
             return $pdo;
         } catch (PDOException $e) {
             $last = $e;

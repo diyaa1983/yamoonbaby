@@ -581,7 +581,14 @@ function panel_send_excel_report(array $rows) {
         . '<Cell ss:StyleID="header"><Data ss:Type="String">التاريخ</Data></Cell>'
         . '</Row>';
     foreach ($rows as $i => $row) {
-        $ts = strtotime((string) ($row['created_at'] ?? ''));
+        $when = (string) ($row['created_at'] ?? '');
+        try {
+            raffle_apply_timezone();
+            $when = (new DateTimeImmutable($when, new DateTimeZone(raffle_timezone())))->format('d-m-Y H:i');
+        } catch (Exception $e) {
+            $ts = strtotime($when);
+            $when = $ts ? date('d-m-Y H:i', $ts) : $when;
+        }
         $xml .= panel_excel_row([
             (string) ($i + 1),
             'YM' . (string) ($row['coupon'] ?? ''),
@@ -590,7 +597,7 @@ function panel_send_excel_report(array $rows) {
             (string) ($row['governorate'] ?? ''),
             panel_rating_label($row['product_rating'] ?? null),
             raffle_attend_label($row['attend_ceremony'] ?? null),
-            $ts ? date('d-m-Y H:i', $ts) : (string) ($row['created_at'] ?? ''),
+            $when,
         ]);
     }
     $xml .= '</Table></Worksheet></Workbook>';
