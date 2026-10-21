@@ -174,6 +174,59 @@
             min-width: 88px;
         }
 
+        .check-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .check-opt {
+            position: relative;
+            flex: 1 1 180px;
+        }
+
+        .check-opt input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .check-opt span {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1.5px solid #b7dcff;
+            background: #f7fbff;
+            color: #0b4f86;
+            font-weight: 800;
+            cursor: pointer;
+            text-align: right;
+        }
+
+        .check-opt span::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            flex: 0 0 20px;
+            border: 2px solid #1e88e5;
+            border-radius: 5px;
+            background: #fff;
+            box-sizing: border-box;
+        }
+
+        .check-opt input:checked + span {
+            background: #e8f4ff;
+            border-color: #1e88e5;
+        }
+
+        .check-opt input:checked + span::before {
+            background: #1e88e5;
+            box-shadow: inset 0 0 0 3px #fff;
+        }
+
         .score-opt input:checked + span,
         .choice-opt input:checked + span {
             background: #1e88e5;
@@ -532,6 +585,14 @@
                             </div>
                         </div>
                         <div class="form-group full">
+                            <label>مكان الشراء</label>
+                            <div class="check-row" role="radiogroup" aria-label="مكان الشراء">
+                                <label class="check-opt"><input type="radio" name="purchase_place" value="military" required><span>مؤسسة عسكرية</span></label>
+                                <label class="check-opt"><input type="radio" name="purchase_place" value="commercial"><span>سوق تجاري</span></label>
+                            </div>
+                            <span class="hint">اختر مكاناً واحداً فقط</span>
+                        </div>
+                        <div class="form-group full">
                             <label>صورة الكوبون</label>
                             <p class="photo-warning">لاعتماد البطاقة يجب كتابة الاسم ورقم الهاتف على البطاقة قبل تصويرها</p>
                             <div class="upload-box">
@@ -804,7 +865,8 @@
                     governorate.value &&
                     couponImage.files.length > 0 &&
                     form.querySelector('input[name="product_rating"]:checked') &&
-                    form.querySelector('input[name="attend_ceremony"]:checked');
+                    form.querySelector('input[name="attend_ceremony"]:checked') &&
+                    form.querySelector('input[name="purchase_place"]:checked');
 
                 if (!valid) {
                     showAlert('يرجى إدخال الاسم والهاتف والمحافظة وتقييم المنتج وحضور الحفل وصورة الكوبون. رقم الهاتف 10 خانات ويبدأ بـ 079 أو 078 أو 077.');
@@ -823,6 +885,7 @@
                     payload.append('governorate', governorate.value);
                     payload.append('product_rating', form.querySelector('input[name="product_rating"]:checked').value);
                     payload.append('attend_ceremony', form.querySelector('input[name="attend_ceremony"]:checked').value);
+                    payload.append('purchase_place', form.querySelector('input[name="purchase_place"]:checked').value);
                     payload.append('website_url', document.getElementById('websiteUrl').value);
                     payload.append('coupon_image', imageFile, 'coupon.jpg');
 

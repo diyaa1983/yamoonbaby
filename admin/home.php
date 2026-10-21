@@ -473,16 +473,17 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
         <div class="table-wrap">
             <table class="data-table">
                 <colgroup>
-                    <col style="width:6%">
+                    <col style="width:5%">
+                    <col style="width:11%">
                     <col style="width:12%">
-                    <col style="width:14%">
+                    <col style="width:11%">
+                    <col style="width:9%">
+                    <col style="width:8%">
+                    <col style="width:9%">
+                    <col style="width:11%">
                     <col style="width:12%">
-                    <col style="width:10%">
-                    <col style="width:8%">
-                    <col style="width:10%">
-                    <col style="width:14%">
-                    <col style="width:8%">
-                    <?php if ($isAdmin && $tab === 'cards'): ?><col style="width:6%"><?php endif; ?>
+                    <col style="width:7%">
+                    <?php if ($isAdmin && $tab === 'cards'): ?><col style="width:5%"><?php endif; ?>
                 </colgroup>
                 <thead>
                     <tr>
@@ -493,6 +494,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
                         <th>المحافظة</th>
                         <th>رأيك بالمنتج</th>
                         <th>رغبة حضور الحفل</th>
+                        <th>مكان الشراء</th>
                         <th>التاريخ</th>
                         <th>صورة</th>
                         <?php if ($isAdmin && $tab === 'cards'): ?><th>حذف</th><?php endif; ?>
@@ -500,7 +502,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
                 </thead>
                 <tbody>
                 <?php if (!$entries): ?>
-                    <tr><td colspan="<?php echo $isAdmin && $tab === 'cards' ? 10 : 9; ?>" class="muted">لا توجد بطاقات مطابقة.</td></tr>
+                    <tr><td colspan="<?php echo $isAdmin && $tab === 'cards' ? 11 : 10; ?>" class="muted">لا توجد بطاقات مطابقة.</td></tr>
                 <?php endif; ?>
                 <?php foreach ($entries as $index => $row):
                     $hasImage = raffle_entry_image($row['coupon'], $row['phone']) !== '';
@@ -532,6 +534,7 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
                                 <span class="<?php echo $attendClass; ?>"><?php echo panel_h($attendText); ?></span>
                             <?php endif; ?>
                         </td>
+                        <td><?php echo panel_h(raffle_purchase_place_label($row['purchase_place'] ?? null)); ?></td>
                         <td><?php echo panel_h(panel_when($row['created_at'])); ?></td>
                         <td>
                             <?php if ($hasImage): ?>

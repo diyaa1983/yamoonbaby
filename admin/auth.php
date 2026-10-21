@@ -506,7 +506,7 @@ function panel_filter_entries(PDO $pdo) {
     $name = panel_search_name();
     $phone = panel_search_phone();
     raffle_ensure_entries_schema($pdo);
-    $sql = 'SELECT id, full_name, phone, governorate, coupon, product_rating, attend_ceremony, created_at FROM raffle_entries WHERE 1=1';
+    $sql = 'SELECT id, full_name, phone, governorate, coupon, product_rating, attend_ceremony, purchase_place, created_at FROM raffle_entries WHERE 1=1';
     $params = [];
     if ($from !== '') {
         $sql .= ' AND DATE(created_at) >= ?';
@@ -569,6 +569,7 @@ function panel_send_excel_report(array $rows) {
         . '<Column ss:Width="80"/>'
         . '<Column ss:Width="80"/>'
         . '<Column ss:Width="100"/>'
+        . '<Column ss:Width="110"/>'
         . '<Column ss:Width="110"/>';
     $xml .= '<Row>'
         . '<Cell ss:StyleID="header"><Data ss:Type="String">#</Data></Cell>'
@@ -578,6 +579,7 @@ function panel_send_excel_report(array $rows) {
         . '<Cell ss:StyleID="header"><Data ss:Type="String">المحافظة</Data></Cell>'
         . '<Cell ss:StyleID="header"><Data ss:Type="String">رأيك بالمنتج</Data></Cell>'
         . '<Cell ss:StyleID="header"><Data ss:Type="String">رغبة حضور الحفل</Data></Cell>'
+        . '<Cell ss:StyleID="header"><Data ss:Type="String">مكان الشراء</Data></Cell>'
         . '<Cell ss:StyleID="header"><Data ss:Type="String">التاريخ</Data></Cell>'
         . '</Row>';
     foreach ($rows as $i => $row) {
@@ -597,6 +599,7 @@ function panel_send_excel_report(array $rows) {
             (string) ($row['governorate'] ?? ''),
             panel_rating_label($row['product_rating'] ?? null),
             raffle_attend_label($row['attend_ceremony'] ?? null),
+            raffle_purchase_place_label($row['purchase_place'] ?? null),
             $when,
         ]);
     }

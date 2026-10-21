@@ -72,6 +72,11 @@ $governorate = trim((string) ($data['governorate'] ?? ''));
 $productRating = (int) english_digits($data['product_rating'] ?? '');
 $attendRaw = (string) ($data['attend_ceremony'] ?? '');
 $attendCeremony = $attendRaw === '1' ? 1 : ($attendRaw === '0' ? 0 : null);
+$purchasePlace = (string) ($data['purchase_place'] ?? '');
+$allowedPurchasePlaces = array_keys(raffle_purchase_places());
+if (!in_array($purchasePlace, $allowedPurchasePlaces, true)) {
+    $purchasePlace = '';
+}
 function raffle_save_small_jpeg($tmpPath, $destPath) {
     $info = @getimagesize($tmpPath);
     if (!$info) {
@@ -166,9 +171,10 @@ if (
     || !in_array($governorate, $allowedGovernorates, true)
     || $productRating < 1 || $productRating > 10
     || $attendCeremony === null
+    || $purchasePlace === ''
 ) {
     http_response_code(422);
-    echo json_encode(['ok' => false, 'error' => 'يرجى إدخال الاسم والهاتف والمحافظة وتقييم المنتج وحضور الحفل بشكل صحيح.'], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['ok' => false, 'error' => 'يرجى إدخال الاسم والهاتف والمحافظة وتقييم المنتج وحضور الحفل ومكان الشراء بشكل صحيح.'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -209,9 +215,9 @@ $imagePath = $archiveDir . DIRECTORY_SEPARATOR . $imageName;
 
 try {
     $stmt = $pdo->prepare(
-        'INSERT INTO raffle_entries (full_name, phone, governorate, coupon, product_rating, attend_ceremony) VALUES (?, ?, ?, ?, ?, ?)'
+        'INSERT INTO raffle_entries (full_name, phone, governorate, coupon, product_rating, attend_ceremony, purchase_place) VALUES (?, ?, ?, ?, ?, ?, ?)'
     );
-    $stmt->execute([$fullName, $phone, $governorate, $coupon, $productRating, $attendCeremony]);
+    $stmt->execute([$fullName, $phone, $governorate, $coupon, $productRating, $attendCeremony, $purchasePlace]);
     $entryId = (int) $pdo->lastInsertId();
     foreach (glob($archiveDir . DIRECTORY_SEPARATOR . $coupon . '_' . $phone . '.*') ?: [] as $old) {
         if (is_file($old)) {

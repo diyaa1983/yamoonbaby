@@ -136,6 +136,7 @@ function raffle_ensure_entries_schema(PDO $pdo) {
     $columns = [
         'product_rating' => 'TINYINT UNSIGNED NULL',
         'attend_ceremony' => 'TINYINT(1) NULL',
+        'purchase_place' => 'VARCHAR(20) NULL',
     ];
     foreach ($columns as $name => $definition) {
         try {
@@ -152,6 +153,19 @@ function raffle_attend_label($value) {
         return '—';
     }
     return ((int) $value) === 1 ? 'نعم' : 'لا';
+}
+
+function raffle_purchase_places() {
+    return [
+        'military' => 'مؤسسة عسكرية',
+        'commercial' => 'سوق تجاري',
+    ];
+}
+
+function raffle_purchase_place_label($value) {
+    $map = raffle_purchase_places();
+    $key = (string) $value;
+    return $map[$key] ?? '—';
 }
 
 function panel_ensure_schema(PDO $pdo) {
