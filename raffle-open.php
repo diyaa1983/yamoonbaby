@@ -5,13 +5,13 @@ require __DIR__ . '/includes/raffle-db.php';
 
 $cfg = coupon_cards_config();
 if (!$cfg) {
-    header('Location: raffle.html?v=20261028b');
+    header('Location: raffle.html?v=20261028c');
     exit;
 }
 $token = (string) ($_GET['t'] ?? '');
 $coupon = coupon_from_token($token, $cfg['secret']);
 if ($coupon === '') {
-    header('Location: raffle.html?v=20261028b');
+    header('Location: raffle.html?v=20261028c');
     exit;
 }
 
@@ -26,9 +26,9 @@ try {
         exit;
     }
 } catch (Exception $e) {
-    header('Location: raffle.html?v=20261028b&t=' . rawurlencode($token));
+    header('Location: raffle.html?v=20261028c&t=' . rawurlencode($token));
     exit;
 }
 
-header('Location: raffle.html?v=20261028b&t=' . rawurlencode($token));
+header('Location: raffle.html?v=20261028c&t=' . rawurlencode($token));
 exit;

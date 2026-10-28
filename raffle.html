@@ -396,7 +396,17 @@
         .success-box {
             display: none;
             text-align: center;
-            padding: 40px 24px;
+            padding: 28px 20px 32px;
+        }
+
+        body.raffle-done .raffle-hero,
+        body.raffle-done .guidelines,
+        body.raffle-done .raffle-card-top {
+            display: none !important;
+        }
+
+        body.raffle-done .raffle-section {
+            padding-top: 18px;
         }
 
         .success-box i {
@@ -681,14 +691,14 @@
                 <div class="success-box" id="successBox">
                     <i class="fas fa-check-circle"></i>
                     <h3>تم تسجيلك في السحب</h3>
-                    <p>تم حفظ بياناتك وتقييم المنتج وحضور الحفل ورقم الكوبون في سجل السحب.</p>
-                    <div class="success-follow">
+                    <div class="success-follow" id="successFollow">
                         <p>خطوة مهمة بعد التسجيل</p>
-                        <a class="facebook-follow-btn" href="https://www.facebook.com/people/Ya-Moon-Baby/61572601671368/" target="_blank" rel="noopener noreferrer">
+                        <a class="facebook-follow-btn" id="facebookFollowBtn" href="https://www.facebook.com/people/Ya-Moon-Baby/61572601671368/" target="_blank" rel="noopener noreferrer">
                             <i class="fab fa-facebook"></i>
                             <span>تابعنا على الصفحة لتزيد فرصتك بالربح</span>
                         </a>
                     </div>
+                    <p>تم حفظ بياناتك وتقييم المنتج وحضور الحفل ورقم الكوبون في سجل السحب.</p>
                 </div>
             </div>
             <div class="guidelines">
@@ -981,7 +991,12 @@
                         }
                         form.style.display = 'none';
                         successBox.style.display = 'block';
-                        showAlert('تم تسجيلك في السحب بنجاح.');
+                        document.body.classList.add('raffle-done');
+                        window.scrollTo(0, 0);
+                        var followBox = document.getElementById('successFollow');
+                        if (followBox && followBox.scrollIntoView) {
+                            followBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
                     }).catch(function () {
                         showAlert('تعذر الاتصال بالخادم. تأكد أن Apache وMySQL يعملان.');
                         submitBtn.disabled = false;
