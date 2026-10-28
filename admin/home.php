@@ -281,6 +281,10 @@ if ($isAdmin && $tab === 'audit') {
 $from = panel_h($_GET['from'] ?? '');
 $to = panel_h($_GET['to'] ?? '');
 $gov = (string) ($_GET['governorate'] ?? '');
+$place = (string) ($_GET['purchase_place'] ?? '');
+if (!isset(raffle_purchase_places()[$place])) {
+    $place = '';
+}
 $q = (string) ($_GET['q'] ?? '');
 $nameQ = (string) ($_GET['name'] ?? '');
 $phoneQ = (string) ($_GET['phone'] ?? '');
@@ -314,6 +318,7 @@ function panel_pager_url($tab, $pageNum) {
         'from' => (string) ($_GET['from'] ?? ''),
         'to' => (string) ($_GET['to'] ?? ''),
         'governorate' => (string) ($_GET['governorate'] ?? ''),
+        'purchase_place' => (string) ($_GET['purchase_place'] ?? ''),
         'q' => (string) ($_GET['q'] ?? ''),
         'name' => (string) ($_GET['name'] ?? ''),
         'phone' => (string) ($_GET['phone'] ?? ''),
@@ -446,9 +451,18 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
                     <?php endforeach; ?>
                 </select>
             </label>
+            <label class="filter-item">
+                <span>مكان الشراء</span>
+                <select name="purchase_place">
+                    <option value="">كل الأماكن</option>
+                    <?php foreach (raffle_purchase_places() as $placeKey => $placeLabel): ?>
+                        <option value="<?php echo panel_h($placeKey); ?>" <?php echo $place === $placeKey ? 'selected' : ''; ?>><?php echo panel_h($placeLabel); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
             <div class="filter-actions">
                 <button class="btn btn-blue" type="submit">بحث</button>
-                <?php if ($q !== '' || $nameQ !== '' || $phoneQ !== '' || $from !== '' || $to !== '' || $gov !== ''): ?>
+                <?php if ($q !== '' || $nameQ !== '' || $phoneQ !== '' || $from !== '' || $to !== '' || $gov !== '' || $place !== ''): ?>
                     <a class="btn btn-ghost" href="home.php?tab=<?php echo panel_h($tab); ?>">مسح</a>
                 <?php endif; ?>
                 <?php if ($tab === 'report'): ?>
@@ -461,12 +475,13 @@ $title = $tab === 'report' ? 'تقرير البطاقات' : ($tab === 'audit' ?
             <p class="search-note">رقم البطاقة غير صحيح. أدخل حتى 6 أرقام أو YM متبوعاً بالرقم.</p>
         <?php elseif ($searchPhone === '__none__'): ?>
             <p class="search-note">رقم الهاتف غير صحيح. أدخل أرقام الهاتف فقط.</p>
-        <?php elseif ($searchCoupon !== '' || $searchName !== '' || $searchPhone !== ''): ?>
+        <?php elseif ($searchCoupon !== '' || $searchName !== '' || $searchPhone !== '' || $place !== ''): ?>
             <p class="search-note">
                 نتيجة البحث
                 <?php if ($searchCoupon !== ''): ?> عن البطاقة <strong>YM<?php echo panel_h($searchCoupon); ?></strong><?php endif; ?>
                 <?php if ($searchName !== ''): ?> عن الاسم <strong><?php echo panel_h($searchName); ?></strong><?php endif; ?>
                 <?php if ($searchPhone !== ''): ?> عن الهاتف <strong><?php echo panel_h($searchPhone); ?></strong><?php endif; ?>
+                <?php if ($place !== ''): ?> عن مكان الشراء <strong><?php echo panel_h(raffle_purchase_place_label($place)); ?></strong><?php endif; ?>
             </p>
         <?php endif; ?>
 

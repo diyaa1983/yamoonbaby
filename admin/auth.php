@@ -505,6 +505,11 @@ function panel_filter_entries(PDO $pdo) {
     $coupon = panel_search_coupon();
     $name = panel_search_name();
     $phone = panel_search_phone();
+    $purchasePlace = (string) ($_GET['purchase_place'] ?? '');
+    $allowedPlaces = array_keys(raffle_purchase_places());
+    if (!in_array($purchasePlace, $allowedPlaces, true)) {
+        $purchasePlace = '';
+    }
     raffle_ensure_entries_schema($pdo);
     $sql = 'SELECT id, full_name, phone, governorate, coupon, product_rating, attend_ceremony, purchase_place, created_at FROM raffle_entries WHERE 1=1';
     $params = [];
@@ -519,6 +524,10 @@ function panel_filter_entries(PDO $pdo) {
     if ($governorate !== '' && in_array($governorate, panel_governorates(), true)) {
         $sql .= ' AND governorate = ?';
         $params[] = $governorate;
+    }
+    if ($purchasePlace !== '') {
+        $sql .= ' AND purchase_place = ?';
+        $params[] = $purchasePlace;
     }
     if ($coupon !== '') {
         $sql .= ' AND coupon = ?';
