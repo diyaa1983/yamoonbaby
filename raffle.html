@@ -417,15 +417,18 @@
         }
 
         .success-follow {
-            margin-top: 8px;
-            padding-top: 18px;
-            border-top: 1px solid #d9ebff;
+            margin-top: 18px;
+            padding: 20px 16px 18px;
+            border-radius: 22px;
+            border: 2px solid #93c5fd;
+            background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
         }
 
         .success-follow p {
-            margin: 0 0 14px;
+            margin: 0 0 16px;
             color: #0b4f86;
-            font-weight: 800;
+            font-weight: 900;
+            font-size: 1.08rem;
             line-height: 1.7;
         }
 
@@ -433,20 +436,34 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            min-width: 220px;
-            padding: 13px 22px;
-            border-radius: 999px;
-            background: #1877f2;
+            gap: 12px;
+            width: min(100%, 420px);
+            padding: 18px 22px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #1877f2, #0d65d9);
             color: #fff !important;
-            font-weight: 800;
-            font-size: 1.02rem;
+            font-weight: 900;
+            font-size: 1.12rem;
+            line-height: 1.55;
             text-decoration: none;
-            box-shadow: 0 10px 24px rgba(24, 119, 242, 0.28);
+            text-align: center;
+            box-shadow: 0 14px 30px rgba(24, 119, 242, 0.35);
+            animation: followPulse 1.8s ease-in-out infinite;
+        }
+
+        .facebook-follow-btn i {
+            font-size: 1.45rem;
+            color: #fff;
+            margin: 0;
         }
 
         .facebook-follow-btn:hover {
-            background: #166fe5;
+            background: linear-gradient(135deg, #166fe5, #0b5ccc);
+        }
+
+        @keyframes followPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 14px 30px rgba(24, 119, 242, 0.35); }
+            50% { transform: scale(1.03); box-shadow: 0 18px 36px rgba(24, 119, 242, 0.45); }
         }
 
         .terms {
@@ -666,10 +683,10 @@
                     <h3>تم تسجيلك في السحب</h3>
                     <p>تم حفظ بياناتك وتقييم المنتج وحضور الحفل ورقم الكوبون في سجل السحب.</p>
                     <div class="success-follow">
-                        <p>تابعنا على فيسبوك لمعرفة موعد السحب والجوائز</p>
+                        <p>خطوة مهمة بعد التسجيل</p>
                         <a class="facebook-follow-btn" href="https://www.facebook.com/people/Ya-Moon-Baby/61572601671368/" target="_blank" rel="noopener noreferrer">
                             <i class="fab fa-facebook"></i>
-                            متابعة صفحة يامون بيبي
+                            <span>تابعنا على الصفحة لتزيد فرصتك بالربح</span>
                         </a>
                     </div>
                 </div>
